@@ -6,7 +6,7 @@ Survival game with Komaru the cat
 2. Make sure .NET 9 installed on your PC
 3. Enter command: `dotnet publish -c Release -r (win-x64/linux-x64) --self-contained=true -p:PublishSingleFile=true -p:PublishTrimmed=true`
 
-# TODO List (0% completed)
+# TODO List (3% completed)
 1. Tiles and items system [*]
 2. Inventory [X]
 3. Armor [X]
