@@ -7,7 +7,7 @@ Survival game with Komaru the cat
 3. Enter command: `dotnet publish -c Release -r (win-x64/linux-x64) --self-contained=true -p:PublishSingleFile=true -p:PublishTrimmed=true`
 
 # TODO List (3% completed)
-1. Tiles and items system [*]
+1. Tiles and items system [\*]
 2. Inventory [X]
 3. Armor [X]
 4. Mobs and AI [X]
@@ -20,5 +20,7 @@ Survival game with Komaru the cat
 
 ## Whats mean X, *, V?
 X - Task not started
-* - Task in progress
+
+\* - Task in progress
+
 V - Task completed
