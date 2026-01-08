@@ -10,7 +10,10 @@ public class GameObject
     public Vector2 Position { get; protected set; }
     public Vector2 Size { get; protected set; }
     protected int frame;
-    protected const float GRAVITY_ACELERATION = 5f;
+
+    protected const float DEFAULT_GRAVITY = 1f;
+    protected const float GRAVITY_ACELERATION = 10f;
+    protected const float MAXIMAL_GRAVITY = 200f;
 
     public Rectangle Rectangle
     {

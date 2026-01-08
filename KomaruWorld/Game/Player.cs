@@ -16,7 +16,7 @@ public class Player : GameObject
     private const float JUMP_FORCE = 500f;
     private bool isJumping = false;
     private bool isGrounded = false;
-    private float gravityMod = GRAVITY_ACELERATION;
+    public float GravityMod { get; private set; } = DEFAULT_GRAVITY;
     private float jumpMod = JUMP_FORCE;
     private const float ORIGINAL_JUMP_TIME = 0.5f;
     private float jumpTime = ORIGINAL_JUMP_TIME;
@@ -96,7 +96,6 @@ public class Player : GameObject
             if (nextHitbox.Intersects(tile.Hitbox))
             {
                 isGrounded = true;
-                gravityMod = GRAVITY_ACELERATION;
                 Position = new Vector2(moveMod > 0 ? tile.Hitbox.Left - Rectangle.Width : tile.Hitbox.Right, Position.Y);
                 velocity = 0f;
                 break;
@@ -108,16 +107,20 @@ public class Player : GameObject
 
     private void Gravity()
     {
-        gravityMod += GRAVITY_ACELERATION * deltaTime;
+        GravityMod += GRAVITY_ACELERATION * deltaTime;
+
+        if (GravityMod > MAXIMAL_GRAVITY)
+            GravityMod = MAXIMAL_GRAVITY;
+
         isGrounded = false;
-        var nextHitbox = new Rectangle(hitbox.X, (int)(hitbox.Y + gravityMod), hitbox.Width, hitbox.Height);
+        var nextHitbox = new Rectangle(hitbox.X, (int)(hitbox.Y + GravityMod), hitbox.Width, hitbox.Height);
 
         foreach (var tile in World.Tiles)
         {
             if (nextHitbox.Intersects(tile.Hitbox))
             {
                 isGrounded = true;
-                gravityMod = GRAVITY_ACELERATION;
+                GravityMod = DEFAULT_GRAVITY;
                 Position = new Vector2(Position.X, tile.Rectangle.Top - Rectangle.Height);
                 break;
             }
@@ -126,7 +129,7 @@ public class Player : GameObject
         if (isGrounded)
             return;
         
-        Position += new Vector2(0f, gravityMod);
+        Position += new Vector2(0f, GravityMod);
     }
 
     private void Jump()
@@ -148,7 +151,7 @@ public class Player : GameObject
             if (nextHitbox.Intersects(tile.Hitbox))
             {
                 isGrounded = true;
-                gravityMod = GRAVITY_ACELERATION;
+                GravityMod = DEFAULT_GRAVITY;
                 Position = new Vector2(Position.X, tile.Rectangle.Bottom);
                 velocity = 0f;
                 break;

@@ -6,6 +6,7 @@ namespace KomaruWorld;
 
 public class Game1 : Game
 {
+    public static Game1 Instance;
     private GraphicsDeviceManager _graphics;
     private SpriteBatch _spriteBatch;
 
@@ -21,6 +22,7 @@ public class Game1 : Game
         // TODO: Add your initialization logic here
 
         base.Initialize();
+        Instance = this;
     }
 
     protected override void LoadContent()
@@ -28,6 +30,12 @@ public class Game1 : Game
         _spriteBatch = new SpriteBatch(GraphicsDevice);
 
         // TODO: use this.Content to load your game content here
+
+        Text.Setup
+        (
+            new Atlas(Content.Load<Texture2D>("Sprites/Font"), GameParameters.GlyphSize.ToVector2()),
+            (GameParameters.GlyphSize.ToVector2() * 2).ToPoint()
+        );
 
         SceneManager.Load(new GameScene(Content, _spriteBatch, _graphics));
     }
