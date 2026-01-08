@@ -28,16 +28,15 @@ public class GameScene(ContentManager content, SpriteBatch spriteBatch, Graphics
         player = new Player(playerAtlas, new Vector2(200, 100), PlayerSize * 4, defaultFrame: 1);
 
         // Test
-        World.AddTile(new Tile(Content.Load<Texture2D>("Sprites/Tiles/GrassTile"), new Vector2(200, 300), TileSize * 4, true));
-        World.AddTile(new Tile(Content.Load<Texture2D>("Sprites/Tiles/GrassTile"), new Vector2(232, 300), TileSize * 4, true));
-        World.AddTile(new Tile(Content.Load<Texture2D>("Sprites/Tiles/GrassTile"), new Vector2(264, 300), TileSize * 4, true));
-        World.AddTile(new Tile(Content.Load<Texture2D>("Sprites/Tiles/GrassTile"), new Vector2(168, 300), TileSize * 4, true));
-        World.AddTile(new Tile(Content.Load<Texture2D>("Sprites/Tiles/GrassTile"), new Vector2(136, 300), TileSize * 4, true));
-        World.AddTile(new Tile(Content.Load<Texture2D>("Sprites/Tiles/GrassTile"), new Vector2(328, 236), TileSize * 4, true));
-        World.AddTile(new Tile(Content.Load<Texture2D>("Sprites/Tiles/GrassTile"), new Vector2(328, 268), TileSize * 4, true));
-        World.AddTile(new Tile(Content.Load<Texture2D>("Sprites/Tiles/GrassTile"), new Vector2(72, 236), TileSize * 4, true));
-        World.AddTile(new Tile(Content.Load<Texture2D>("Sprites/Tiles/GrassTile"), new Vector2(72, 268), TileSize * 4, true));
-        // World.AddTile(new Tile(Content.Load<Texture2D>("Sprites/Tiles/DirtTile"), new Vector2(36, 300), TileSize * 4, true));
+        World.AddTile(TilesBank.Grass(new Vector2(200, 300)));
+        World.AddTile(TilesBank.Stone(new Vector2(232, 300)));
+        World.AddTile(TilesBank.Grass(new Vector2(264, 300)));
+        World.AddTile(TilesBank.Leaf(new Vector2(168, 300)));
+        World.AddTile(TilesBank.Leaf(new Vector2(136, 300)));
+        World.AddTile(TilesBank.Log(new Vector2(328, 236)));
+        World.AddTile(TilesBank.Grass(new Vector2(328, 268)));
+        World.AddTile(TilesBank.Dirt(new Vector2(72, 236)));
+        World.AddTile(TilesBank.Dirt(new Vector2(72, 268)));
     }
 
     public override void Update(GameTime gameTime)

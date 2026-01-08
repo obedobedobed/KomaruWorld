@@ -13,7 +13,7 @@ public class GameObject
 
     protected const float DEFAULT_GRAVITY = 1f;
     protected const float GRAVITY_ACELERATION = 10f;
-    protected const float MAXIMAL_GRAVITY = 200f;
+    protected const float MAXIMAL_GRAVITY = 25f;
 
     public Rectangle Rectangle
     {
