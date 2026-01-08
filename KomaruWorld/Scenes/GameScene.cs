@@ -2,6 +2,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using MonoGame.Extended;
 using static KomaruWorld.GameParameters;
 
 namespace KomaruWorld;
@@ -9,12 +10,12 @@ namespace KomaruWorld;
 public class GameScene(ContentManager content, SpriteBatch spriteBatch, GraphicsDeviceManager graphicsManager)
 : Scene(content, spriteBatch, graphicsManager)
 {
+    private OrthographicCamera camera = new OrthographicCamera(graphicsManager.GraphicsDevice);
     private Player player;
     private KeyboardState lastKeyboard;
 
     // Debug
     private bool debugMenuOpened = false;
-    // private bool lockedFps = true;
 
     // FPS Counting
     private int countingFPS = 0;
@@ -37,12 +38,19 @@ public class GameScene(ContentManager content, SpriteBatch spriteBatch, Graphics
         World.AddTile(TilesBank.Grass(new Vector2(328, 268)));
         World.AddTile(TilesBank.Dirt(new Vector2(72, 236)));
         World.AddTile(TilesBank.Dirt(new Vector2(72, 268)));
+
+        camera.Position = player.Position;
     }
 
     public override void Update(GameTime gameTime)
     {
         World.Update(gameTime);
         player.Update(gameTime);
+
+        var playerPosCentered = player.Position - new Vector2
+        (GraphicsManager.PreferredBackBufferWidth / 2, GraphicsManager.PreferredBackBufferHeight / 2) +
+        player.Size / 2;
+        camera.Position = Vector2.Lerp(camera.Position, playerPosCentered, 0.1f);
 
         foreach (var _object in Objects)
             _object.Update(gameTime);
@@ -52,14 +60,6 @@ public class GameScene(ContentManager content, SpriteBatch spriteBatch, Graphics
         // Functions
         if (keyboard.IsKeyDown(Keys.F1) && !lastKeyboard.IsKeyDown(Keys.F1))
             debugMenuOpened = !debugMenuOpened;
-
-        // if (keyboard.IsKeyDown(Keys.F2) && !lastKeyboard.IsKeyDown(Keys.F2))
-        // {
-        //     GraphicsManager.SynchronizeWithVerticalRetrace = !GraphicsManager.SynchronizeWithVerticalRetrace;
-        //     Game1.Instance.IsFixedTimeStep = !Game1.Instance.IsFixedTimeStep;
-        //     lockedFps = !lockedFps;
-        //     GraphicsManager.ApplyChanges();
-        // }
 
         if ((timeToCountFps -= (float)gameTime.ElapsedGameTime.TotalSeconds) <= 0)
         {
@@ -75,20 +75,25 @@ public class GameScene(ContentManager content, SpriteBatch spriteBatch, Graphics
 
     public override void Draw()
     {
+        var view = camera.GetViewMatrix();
+
+        // Game world (applying transform matrix)
+        SpriteBatch.Begin(samplerState: SamplerState.PointClamp, transformMatrix: view);
+
         World.Draw(SpriteBatch);
         player.Draw(SpriteBatch);
 
         foreach (var _object in Objects)
             _object.Draw(SpriteBatch);
 
+        SpriteBatch.End(); 
+
+        // UI (not applying transform matrix)
+        SpriteBatch.Begin(samplerState: SamplerState.PointClamp);
+
         if (debugMenuOpened)
         {
-            // string vsyncString = lockedFps ? "VSync, p" : "P";
-            // string lockedFpsString = lockedFps ? "un" : string.Empty;
-
             Text.Write("DEBUG MENU (F1 TO CLOSE)", Vector2.Zero, Color.White, SpriteBatch);
-            // Text.Write($"FPS:{FPS} ({vsyncString}ress F2 for {lockedFpsString}lock)",
-            // new Vector2(0, GlyphSize.Y * 2 * 1 + 2 * 1), Color.White, SpriteBatch);
             Text.Write($"FPS:{FPS} (Fixed timestep)",
             new Vector2(0, GlyphSize.Y * 2 * 1 + 2 * 1), Color.White, SpriteBatch);
             Text.Write($"Player position: x:{(int)player.Position.X}, y:{(int)player.Position.Y}",
@@ -96,5 +101,7 @@ public class GameScene(ContentManager content, SpriteBatch spriteBatch, Graphics
             Text.Write($"Player gravity: {(int)player.GravityMod}",
             new Vector2(0, GlyphSize.Y * 2 * 3 + 2 * 3), Color.White, SpriteBatch);
         }
+
+        SpriteBatch.End();
     }
 }

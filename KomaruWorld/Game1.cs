@@ -31,6 +31,8 @@ public class Game1 : Game
 
         // TODO: use this.Content to load your game content here
 
+        TilesBank.LoadTextures(Content);
+
         Text.Setup
         (
             new Atlas(Content.Load<Texture2D>("Sprites/Font"), GameParameters.GlyphSize.ToVector2()),
@@ -58,11 +60,7 @@ public class Game1 : Game
 
         // TODO: Add your drawing code here
 
-        _spriteBatch.Begin(samplerState: SamplerState.PointClamp);
-
         SceneManager.Scene.Draw();
-
-        _spriteBatch.End();
 
         base.Draw(gameTime);
     }
