@@ -16,6 +16,7 @@ public class GameScene(ContentManager content, SpriteBatch spriteBatch, Graphics
     public OrthographicCamera camera { get; private set; } = new OrthographicCamera(graphicsManager.GraphicsDevice);
     private Player player;
     private KeyboardState lastKeyboard;
+    private Texture2D pixel;
 
     // World
     private int worldWidth = 60;
@@ -33,11 +34,14 @@ public class GameScene(ContentManager content, SpriteBatch spriteBatch, Graphics
     public override void Load()
     {
         Instance = this;
+        pixel = Content.Load<Texture2D>("Sprites/Pixel");
 
         WorldGenerator.Generate(worldWidth, worldHeight);
 
         var playerAtlas = new Atlas(texture: Content.Load<Texture2D>("Sprites/KomaruAtlas"), spriteSize: PlayerSize / SIZE_MOD);
-        player = new Player(playerAtlas, new Vector2(worldWidth * TileSize.X / 2, 100), PlayerSize, defaultFrame: 1);
+        var slotAtlas = new Atlas(texture: Content.Load<Texture2D>("Sprites/UI/SlotAtlas"), spriteSize: SlotSize / SIZE_MOD);
+        player = new Player(playerAtlas, new Vector2(worldWidth * TileSize.X / 2, 100), PlayerSize,
+        defaultFrame: 1, slotAtlas: slotAtlas);
 
         camera.Position = player.Position;
     }
@@ -90,6 +94,15 @@ public class GameScene(ContentManager content, SpriteBatch spriteBatch, Graphics
 
         // UI (not applying transform matrix)
         SpriteBatch.Begin(samplerState: SamplerState.PointClamp);
+
+        if (player.InInventory)
+        {
+            SpriteBatch.Draw(pixel, new Rectangle(0, 0, GraphicsManager.PreferredBackBufferWidth,
+            GraphicsManager.PreferredBackBufferHeight), new Color(0, 0, 0, 150));
+            player.Inventory.DrawInventory(SpriteBatch); 
+        }
+
+        player.Inventory.DrawHotbar(SpriteBatch);
 
         Texture2D tileInHandTexture = player.TileInHand switch
         {
