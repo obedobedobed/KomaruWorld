@@ -8,16 +8,18 @@ public static class World
 {
     public static List<Tile> Tiles { get; private set; } = new List<Tile>();
 
-    public static void AddTile(Tile tile)
+    public static bool AddTile(Tile tile)
     {
-        foreach (var _tile in Tiles)
-            if (tile.Position == _tile.Position)
-            {
-                RemoveTile(_tile);
-                break;
-            }
+        var tileOnSamePosition = SearchTile(tile.Position);
+
+        if (tileOnSamePosition?.TileType == tile.TileType)
+            return false;
+
+        if (tileOnSamePosition != null)
+            RemoveTile(tileOnSamePosition);
 
         Tiles.Add(tile);
+        return true;
     }
 
     public static void RemoveTile(Tile tile)

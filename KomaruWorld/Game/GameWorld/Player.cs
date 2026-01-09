@@ -22,13 +22,8 @@ public class Player : GameObject
     private float jumpTime = ORIGINAL_JUMP_TIME;
 
     // Inventory
-    public int TileInHand { get; private set; } = 0;
-    private Tiles[] tilesOrder =
-    {
-        Tiles.Grass, Tiles.Dirt, Tiles.Stone,
-        Tiles.Log, Tiles.Leaf, Tiles.Planks
-    };
     public Point cursorPosition { get; private set; } = Point.Zero;
+    public int HotbarSlot { get; private set; } = 0;
     public Inventory Inventory { get; private set; }
     public bool InInventory { get; private set; }
 
@@ -60,23 +55,33 @@ public class Player : GameObject
     public Player(Atlas atlas, Vector2 position, Vector2 size, int defaultFrame, Atlas slotAtlas)
     : base(atlas, position, size, defaultFrame)
     {
+        int slotsInHotbar = 5;
         int slotsInLine = 5;
         int slotsLines = 3;
 
-        float lineX = (Game1.Instance.Graphics.PreferredBackBufferWidth - SlotSize.X * slotsInLine -
+        float lineXHotbar = (Game1.Instance.Graphics.PreferredBackBufferWidth - SlotSize.X * slotsInHotbar -
+        UI_SPACING * (slotsInHotbar - 1)) / 2;
+        float lineXInventory = (Game1.Instance.Graphics.PreferredBackBufferWidth - SlotSize.X * slotsInLine -
         UI_SPACING * (slotsInLine - 1)) / 2;
 
         Inventory = new Inventory
         (
-            slotAtlas, hotbarSlotsPos: new Vector2(lineX, Game1.Instance.Graphics.PreferredBackBufferHeight - SlotSize.Y
-            - UI_SPACING), slotsPos: new Vector2(lineX, Game1.Instance.Graphics.PreferredBackBufferHeight / 2 -
+            slotAtlas, hotbarSlotsPos: new Vector2(lineXHotbar, Game1.Instance.Graphics.PreferredBackBufferHeight - SlotSize.Y
+            - UI_SPACING), slotsPos: new Vector2(lineXInventory, Game1.Instance.Graphics.PreferredBackBufferHeight / 2 -
             SlotSize.Y * slotsLines / 2 - SlotSize.Y * 1), slotsLines
         );
+
+        // Test
+        Inventory.HotbarSlots[0].UpdateItem(ItemsBank.Dirt, 50);
+        Inventory.HotbarSlots[1].UpdateItem(ItemsBank.Log, 10);
     }
 
     public override void Update(GameTime gameTime)
     {
         deltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
+
+        foreach (var item in Inventory.HotbarSlots)
+            item.UpdateFrame();
 
         GetInput();
         Move();
@@ -116,32 +121,42 @@ public class Player : GameObject
 
         cursorPosition = new Point
         (
-            (int)((mouse.X + GameScene.Instance.camera.Position.X) / TileSize.X),
-            (int)((mouse.Y + GameScene.Instance.camera.Position.Y) / TileSize.Y)
+            (int)((mouse.X + GameScene.Instance.Camera.Position.X) / TileSize.X),
+            (int)((mouse.Y + GameScene.Instance.Camera.Position.Y) / TileSize.Y)
         );
 
         if (mouse.ScrollWheelValue < lastMouse.ScrollWheelValue)
         {
-            TileInHand++;
-            if (TileInHand >= tilesOrder.Length)
-                TileInHand = 0;
+            HotbarSlot++;
+            if (HotbarSlot >= Inventory.HotbarSlots.Length)
+                HotbarSlot = 0;
         }
         else if (mouse.ScrollWheelValue > lastMouse.ScrollWheelValue)
         {
-            TileInHand--;
-            if (TileInHand < 0)
-                TileInHand = tilesOrder.Length - 1;
+            HotbarSlot--;
+            if (HotbarSlot < 0)
+                HotbarSlot = Inventory.HotbarSlots.Length - 1;
         }
 
         if (mouse.LeftButton == ButtonState.Pressed && !InInventory)
         {
+            var tileItem = Inventory.HotbarSlots[HotbarSlot].Item;
+
             Vector2 targetPosition = new Vector2
             (
                 cursorPosition.X * TileSize.X,
                 cursorPosition.Y * TileSize.Y
             );
             
-            World.AddTile(TilesBank.FindTile(tilesOrder[TileInHand], targetPosition));
+            if (tileItem != null && tileItem is PlaceableItem tile)
+            {
+                bool canAddTile = World.AddTile(TilesBank.FindTile(tile.ItemTile, targetPosition));
+                if (canAddTile)
+                    Inventory.HotbarSlots[HotbarSlot].CountItem(countBack: true);
+
+                if (Inventory.HotbarSlots[HotbarSlot].ItemCount <= 0)
+                    Inventory.HotbarSlots[HotbarSlot].UpdateItem(null);
+            }
         }
 
         if (mouse.RightButton == ButtonState.Pressed && !InInventory)

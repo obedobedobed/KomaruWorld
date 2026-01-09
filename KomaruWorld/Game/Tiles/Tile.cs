@@ -9,11 +9,13 @@ public class Tile : GameObject
     public Rectangle Hitbox { get { return CanCollide ? Rectangle : Rectangle.Empty; } }
     private static int totalTiles = 0;
     public int TileWorldID { get; private set; }
+    public Tiles TileType { get; private set; }
 
-    public Tile(Texture2D texture, Vector2 position, Vector2 size, bool canCollide)
+    public Tile(Texture2D texture, Vector2 position, Vector2 size, bool canCollide, Tiles tileType)
     : base(texture, position, size)
     {
         CanCollide = canCollide;
         TileWorldID = ++totalTiles;
+        TileType = tileType;
     }
 }

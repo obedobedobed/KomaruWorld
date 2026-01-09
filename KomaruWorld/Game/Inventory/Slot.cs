@@ -1,5 +1,6 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using static KomaruWorld.GameParameters;
 
 namespace KomaruWorld;
 
@@ -8,7 +9,7 @@ public class Slot : GameObject
     public Item Item { get; private set; }
     public int ItemCount { get; private set; }
 
-    private bool choosed;
+    private int slotId;
     private int defaultFrame;
     private int choosedFrame;
     private Vector2 itemSize;
@@ -18,28 +19,40 @@ public class Slot : GameObject
         {
             return new Rectangle
             (
-                (int)(Position.X + itemSize.X / 2),
-                (int)(Position.Y + itemSize.X / 2),
+                (int)(Position.X + Size.X / 2 - itemSize.X / 2),
+                (int)(Position.Y + Size.Y / 2 - itemSize.Y / 2),
                 (int)itemSize.X, (int)itemSize.Y
             );
         }
     }
+    private Vector2 itemCountPosition { get { return new Vector2(Position.X + Size.X, Position.Y + Size.Y - GlyphSize.Y); } }
 
-    public Slot(Atlas atlas, Vector2 position, Vector2 size, int defaultFrame, int choosedFrame, Vector2 itemSize) :
+    public Slot(Atlas atlas, Vector2 position, Vector2 size, int defaultFrame, int choosedFrame, Vector2 itemSize, int slotId) :
     base(atlas, position, size, defaultFrame)
     {
         this.defaultFrame = defaultFrame;
         this.choosedFrame = choosedFrame;
         this.itemSize = itemSize;
+        this.slotId = slotId;
     }
 
-    public void UpdateFrame() => frame = choosed ? choosedFrame : defaultFrame;
+    public void UpdateFrame() => frame = GameScene.Instance.Player.HotbarSlot == slotId ? choosedFrame : defaultFrame;
     public void UpdateItem(Item item) => Item = item;
-    public void CountItem(bool countBack) => ItemCount += countBack ? -1 : 1;
+    public void UpdateItem(Item item, int count)
+    {
+        Item = item;
+        ItemCount = count;
+    }
+    public void CountItem(bool countBack = false) => ItemCount += countBack ? -1 : 1;
     public override void Draw(SpriteBatch spriteBatch)
     {
         spriteBatch.Draw(atlas.Texture, Rectangle, atlas.Rectangles[frame], Color.White);
         if (Item != null)
+        {
             spriteBatch.Draw(Item.Texture, itemRectangle, Color.White);
+            if (ItemCount > 1)
+                Text.Write(ItemCount.ToString(), itemCountPosition, frame == defaultFrame ? Color.White : Color.Black,
+                spriteBatch, reverse: true);
+        }
     }
 }

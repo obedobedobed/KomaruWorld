@@ -13,8 +13,8 @@ public class GameScene(ContentManager content, SpriteBatch spriteBatch, Graphics
 : Scene(content, spriteBatch, graphicsManager)
 {
     public static GameScene Instance;
-    public OrthographicCamera camera { get; private set; } = new OrthographicCamera(graphicsManager.GraphicsDevice);
-    private Player player;
+    public OrthographicCamera Camera { get; private set; } = new OrthographicCamera(graphicsManager.GraphicsDevice);
+    public Player Player { get; private set; }
     private KeyboardState lastKeyboard;
     private Texture2D pixel;
 
@@ -40,21 +40,21 @@ public class GameScene(ContentManager content, SpriteBatch spriteBatch, Graphics
 
         var playerAtlas = new Atlas(texture: Content.Load<Texture2D>("Sprites/KomaruAtlas"), spriteSize: PlayerSize / SIZE_MOD);
         var slotAtlas = new Atlas(texture: Content.Load<Texture2D>("Sprites/UI/SlotAtlas"), spriteSize: SlotSize / SIZE_MOD);
-        player = new Player(playerAtlas, new Vector2(worldWidth * TileSize.X / 2, 100), PlayerSize,
+        Player = new Player(playerAtlas, new Vector2(worldWidth * TileSize.X / 2, 100), PlayerSize,
         defaultFrame: 1, slotAtlas: slotAtlas);
 
-        camera.Position = player.Position;
+        Camera.Position = Player.Position;
     }
 
     public override void Update(GameTime gameTime)
     {
         World.Update(gameTime);
-        player.Update(gameTime);
+        Player.Update(gameTime);
 
-        var playerPosCentered = player.Position - new Vector2
+        var playerPosCentered = Player.Position - new Vector2
         (GraphicsManager.PreferredBackBufferWidth / 2, GraphicsManager.PreferredBackBufferHeight / 2) +
-        player.Size / 2;
-        camera.Position = Vector2.Lerp(camera.Position, playerPosCentered, 0.1f);
+        Player.Size / 2;
+        Camera.Position = Vector2.Lerp(Camera.Position, playerPosCentered, 0.1f);
 
         foreach (var _object in Objects)
             _object.Update(gameTime);
@@ -79,13 +79,13 @@ public class GameScene(ContentManager content, SpriteBatch spriteBatch, Graphics
 
     public override void Draw()
     {
-        var view = camera.GetViewMatrix();
+        var view = Camera.GetViewMatrix();
 
         // Game world (applying transform matrix)
         SpriteBatch.Begin(samplerState: SamplerState.PointClamp, transformMatrix: view);
 
         World.Draw(SpriteBatch);
-        player.Draw(SpriteBatch);
+        Player.Draw(SpriteBatch);
 
         foreach (var _object in Objects)
             _object.Draw(SpriteBatch);
@@ -95,54 +95,39 @@ public class GameScene(ContentManager content, SpriteBatch spriteBatch, Graphics
         // UI (not applying transform matrix)
         SpriteBatch.Begin(samplerState: SamplerState.PointClamp);
 
-        if (player.InInventory)
+        if (Player.InInventory)
         {
             SpriteBatch.Draw(pixel, new Rectangle(0, 0, GraphicsManager.PreferredBackBufferWidth,
             GraphicsManager.PreferredBackBufferHeight), new Color(0, 0, 0, 150));
-            player.Inventory.DrawInventory(SpriteBatch); 
+            Player.Inventory.DrawInventory(SpriteBatch); 
         }
 
-        player.Inventory.DrawHotbar(SpriteBatch);
-
-        Texture2D tileInHandTexture = player.TileInHand switch
-        {
-            0 => TilesBank.GrassTexture,
-            1 => TilesBank.DirtTexture,
-            2 => TilesBank.StoneTexture, 
-            3 => TilesBank.LogTexture, 
-            4 => TilesBank.LeafTexture, 
-            5 => TilesBank.PlanksTexture,
-            _ => null
-        };
-
-        if (tileInHandTexture != null)
-            SpriteBatch.Draw
-            (
-                tileInHandTexture, new Rectangle
-                (
-                    (int)(GraphicsManager.PreferredBackBufferWidth - TileSize.X - UI_SPACING), UI_SPACING,
-                    (int)TileSize.X, (int)TileSize.Y
-                ), Color.White
-            );
+        Player.Inventory.DrawHotbar(SpriteBatch);
 
         if (debugMenuOpened)
         {
+            int slot = Player.HotbarSlot;
+            var slotItem = Player.Inventory?.HotbarSlots[slot];
+            string hotbarSlotString =  (slotItem?.Item != null)
+                ? $"{slot + 1} - {slotItem.Item.Name} (x{slotItem.ItemCount})"
+                : $"{slot + 1} - Air (x0)";
+
             Text.Write($"{GAME_NAME} - v{GAME_VERSION}",
             new Vector2(UI_SPACING, GlyphSize.Y * TEXT_SPACING * 0 + UI_SPACING - GlyphSize.Y / 2 * 0),
             Color.White, SpriteBatch);
             Text.Write($"FPS:{FPS} (Fixed timestep)",
             new Vector2(UI_SPACING, GlyphSize.Y * TEXT_SPACING * 1 + UI_SPACING - GlyphSize.Y / 2 * 1),
             Color.White, SpriteBatch);
-            Text.Write($"Position: x{(int)player.Position.X}, y{(int)player.Position.Y}",
+            Text.Write($"Position: x{(int)Player.Position.X}, y{(int)Player.Position.Y}",
             new Vector2(UI_SPACING, GlyphSize.Y * TEXT_SPACING * 2 + UI_SPACING - GlyphSize.Y / 2 * 2),
             Color.White, SpriteBatch);
-            Text.Write($"Gravity: {(int)player.GravityMod}",
+            Text.Write($"Gravity: {(int)Player.GravityMod}",
             new Vector2(UI_SPACING, GlyphSize.Y * TEXT_SPACING * 3 + UI_SPACING - GlyphSize.Y / 2 * 3),
             Color.White, SpriteBatch);
-            Text.Write($"Tile: {player.TileInHand}",
+            Text.Write($"Hotbar slot: {hotbarSlotString}",
             new Vector2(UI_SPACING, GlyphSize.Y * TEXT_SPACING * 4 + UI_SPACING - GlyphSize.Y / 2 * 4),
             Color.White, SpriteBatch);
-            Text.Write($"Cursor: x{player.cursorPosition.X}, y{player.cursorPosition.Y}",
+            Text.Write($"Cursor: x{Player.cursorPosition.X}, y{Player.cursorPosition.Y}",
             new Vector2(UI_SPACING, GlyphSize.Y * TEXT_SPACING * 5 + UI_SPACING - GlyphSize.Y / 2 * 5),
             Color.White, SpriteBatch);
 

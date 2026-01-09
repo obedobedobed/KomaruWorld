@@ -18,7 +18,7 @@ public class Inventory
                 HotbarSlots[i] = new Slot
                 (
                     slotAtlas, new Vector2(hotbarSlotsPos.X + xAdder, hotbarSlotsPos.Y), SlotSize,
-                    defaultFrame: 0, choosedFrame: 1, ItemSize
+                    defaultFrame: 0, choosedFrame: 1, ItemSize, slotId: i
                 );
 
                 xAdder += SlotSize.X + UI_SPACING;
@@ -32,10 +32,12 @@ public class Inventory
                 float xAdder = 0f;
                 for (int j = 0; j < Slots.Length / slotsLines; j++)
                 {
-                    Slots[i * (Slots.Length / slotsLines) + j] = new Slot
+                    int iteration = i * (Slots.Length / slotsLines) + j;
+
+                    Slots[iteration] = new Slot
                     (
                         slotAtlas, new Vector2(slotsPos.X + xAdder, slotsPos.Y + yAdder), SlotSize,
-                        defaultFrame: 0, choosedFrame: 1, ItemSize
+                        defaultFrame: 0, choosedFrame: 1, ItemSize, slotId: iteration
                     );
 
                     xAdder += SlotSize.X + UI_SPACING;

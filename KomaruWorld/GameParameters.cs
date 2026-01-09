@@ -12,7 +12,7 @@ public static class GameParameters
     public const int UI_SPACING = 1 * SIZE_MOD;
     public static readonly Vector2 PlayerSize = new Vector2(16, 16) * SIZE_MOD;
     public static readonly Vector2 SlotSize = new Vector2(16, 16) * SIZE_MOD;
-    public static readonly Vector2 ItemSize = new Vector2(12, 12) * SIZE_MOD;
+    public static readonly Vector2 ItemSize = new Vector2(10, 10) * SIZE_MOD;
     public static readonly Vector2 TileSize = new Vector2(8, 8) * SIZE_MOD;
     public static readonly Point GlyphSize = new Point(8 * TEXT_MOD, 8 * TEXT_MOD);
     public const float FRAME_TIME = 0.4f;
