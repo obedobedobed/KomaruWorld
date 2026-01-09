@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
@@ -76,13 +77,13 @@ public static class Text
         { '(', 63 },
         { ')', 64 },
         { '[', 65 },
-        { ']', 68 },
-        { '{', 69 },
-        { '}', 69 },
-        { '/', 70 },
-        { '\\', 71 },
-        { '*', 72 },
-        { '`', 73 },
+        { ']', 66 },
+        { '{', 67 },
+        { '}', 68 },
+        { '/', 69 },
+        { '\\', 70 },
+        { '*', 71 },
+        { '`', 72 },
         { '"', 73 },
         { '\'', 74 },
         { '&', 75 },
@@ -110,9 +111,19 @@ public static class Text
         Text.glyphSize = glyphSize;
     }
 
-    public static void Write(string text, Vector2 position, Color color, SpriteBatch spriteBatch)
+    public static void Write(string text, Vector2 position, Color color, SpriteBatch spriteBatch, bool reverse = false)
     {
-        int glyphPosition = (int)position.X;
+        int glyphPosition = !reverse ? (int)position.X : (int) position.X - glyphSize.X;
+
+        if (reverse)
+        {
+            string reversedText = string.Empty;
+
+            for (int i = text.Length - 1; i >= 0; i--)
+                reversedText += text[i];
+
+            text = reversedText;
+        }
 
         foreach (char _char in text)
         {
@@ -124,7 +135,7 @@ public static class Text
                 (glyphPosition, (int)position.Y, glyphSize.X, glyphSize.Y),
                 glyphes.Rectangles[glyphId], color);
 
-            glyphPosition += glyphSize.X;
+            glyphPosition += glyphSize.X * (reverse ? -1 : 1);
         }
     }
 }

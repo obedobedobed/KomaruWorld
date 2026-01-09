@@ -21,10 +21,22 @@ public class Player : GameObject
     private const float ORIGINAL_JUMP_TIME = 0.5f;
     private float jumpTime = ORIGINAL_JUMP_TIME;
 
+    // Inventory
+    public int TileInHand { get; private set; } = 0;
+    private Tiles[] tilesOrder =
+    {
+        Tiles.Grass, Tiles.Dirt, Tiles.Stone,
+        Tiles.Log, Tiles.Leaf, Tiles.Planks
+    };
+    public Point cursorPosition { get; private set; } = Point.Zero;
+
     // Game
     private float deltaTime = 0f;
     private Rectangle hitbox
     { get { return new Rectangle((int)Position.X + 2, (int)Position.Y, (int)Size.X - 4, (int)Size.Y); } }
+
+    // Input
+    private MouseState lastMouse;
 
     // Keybinds
     private readonly Keys key_MoveRight = Keys.D;
@@ -62,7 +74,10 @@ public class Player : GameObject
     private void GetInput()
     {
         var keyboard = Keyboard.GetState();
+        var mouse = Mouse.GetState();
         direction = Direction.Null;
+
+        // Keyboard input
 
         if (keyboard.IsKeyDown(key_MoveRight))
             direction = Direction.Right;
@@ -74,6 +89,51 @@ public class Player : GameObject
             isGrounded = false;
             isJumping = true;
         }
+
+        // Mouse Input
+
+        cursorPosition = new Point
+        (
+            (int)((mouse.X + GameScene.Instance.camera.Position.X) / TileSize.X / 4),
+            (int)((mouse.Y + GameScene.Instance.camera.Position.Y) / TileSize.Y / 4)
+        );
+
+        if (mouse.ScrollWheelValue < lastMouse.ScrollWheelValue)
+        {
+            TileInHand++;
+            if (TileInHand >= tilesOrder.Length)
+                TileInHand = 0;
+        }
+        else if (mouse.ScrollWheelValue > lastMouse.ScrollWheelValue)
+        {
+            TileInHand--;
+            if (TileInHand < 0)
+                TileInHand = tilesOrder.Length - 1;
+        }
+
+        if (mouse.LeftButton == ButtonState.Pressed)
+        {
+            Vector2 targetPosition = new Vector2
+            (
+                cursorPosition.X * TileSize.X * 4,
+                cursorPosition.Y * TileSize.Y * 4
+            );
+            
+            World.AddTile(TilesBank.FindTile(tilesOrder[TileInHand], targetPosition));
+        }
+
+        if (mouse.RightButton == ButtonState.Pressed)
+        {
+            Vector2 targetPosition = new Vector2
+            (
+                cursorPosition.X * TileSize.X * 4,
+                cursorPosition.Y * TileSize.Y * 4
+            );
+            
+            World.RemoveTile(World.SearchTile(targetPosition));
+        }
+
+        lastMouse = mouse;
     }
 
     private void Move()

@@ -8,12 +8,12 @@ namespace KomaruWorld;
 public static class TilesBank
 {
     // Textures
-    private static Texture2D GrassTexture;
-    private static Texture2D DirtTexture;
-    private static Texture2D StoneTexture;
-    private static Texture2D LogTexture;
-    private static Texture2D LeafTexture;
-    private static Texture2D PlanksTexture;
+    public static Texture2D GrassTexture { get; private set; }
+    public static Texture2D DirtTexture { get; private set; }
+    public static Texture2D StoneTexture { get; private set; }
+    public static Texture2D LogTexture { get; private set; }
+    public static Texture2D LeafTexture { get; private set; }
+    public static Texture2D PlanksTexture { get; private set; }
 
     public static void LoadTextures(ContentManager Content)
     {
@@ -32,4 +32,18 @@ public static class TilesBank
     public static Tile Log(Vector2 position) => new Tile(LogTexture, position, TileSize * 4, true);
     public static Tile Leaf(Vector2 position) => new Tile(LeafTexture, position, TileSize * 4, true);
     public static Tile Planks(Vector2 position) => new Tile(PlanksTexture, position, TileSize * 4, true);
+
+    public static Tile FindTile(Tiles tile, Vector2 position)
+    {
+        return tile switch
+        {
+            Tiles.Grass => Grass(position),
+            Tiles.Dirt => Dirt(position),
+            Tiles.Stone => Stone(position),
+            Tiles.Log => Log(position),
+            Tiles.Leaf => Leaf(position),
+            Tiles.Planks => Planks(position),
+            _ => null,
+        };
+    }
 }
