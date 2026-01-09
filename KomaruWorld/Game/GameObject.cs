@@ -1,5 +1,6 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using static KomaruWorld.GameParameters;
 
 namespace KomaruWorld;
 
@@ -11,9 +12,9 @@ public class GameObject
     public Vector2 Size { get; protected set; }
     protected int frame;
 
-    protected const float DEFAULT_GRAVITY = 1f;
-    protected const float GRAVITY_ACELERATION = 10f;
-    protected const float MAXIMAL_GRAVITY = 25f;
+    protected const float DEFAULT_GRAVITY = 0.25f * SIZE_MOD;
+    protected const float GRAVITY_ACELERATION = 2.5f * SIZE_MOD;
+    protected const float MAXIMAL_GRAVITY = 6f * SIZE_MOD;
 
     public Rectangle Rectangle
     {

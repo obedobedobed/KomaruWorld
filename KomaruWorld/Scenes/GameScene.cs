@@ -36,8 +36,8 @@ public class GameScene(ContentManager content, SpriteBatch spriteBatch, Graphics
 
         WorldGenerator.Generate(worldWidth, worldHeight);
 
-        var playerAtlas = new Atlas(texture: Content.Load<Texture2D>("Sprites/KomaruAtlas"), spriteSize: PlayerSize);
-        player = new Player(playerAtlas, new Vector2(worldWidth * TileSize.X * 4 / 2, 100), PlayerSize * 4, defaultFrame: 1);
+        var playerAtlas = new Atlas(texture: Content.Load<Texture2D>("Sprites/KomaruAtlas"), spriteSize: PlayerSize / SIZE_MOD);
+        player = new Player(playerAtlas, new Vector2(worldWidth * TileSize.X / 2, 100), PlayerSize, defaultFrame: 1);
 
         camera.Position = player.Position;
     }
@@ -107,40 +107,48 @@ public class GameScene(ContentManager content, SpriteBatch spriteBatch, Graphics
             (
                 tileInHandTexture, new Rectangle
                 (
-                    (int)(GraphicsManager.PreferredBackBufferWidth - TileSize.X * 4 - 4), 4,
-                    (int)TileSize.X * 4, (int)TileSize.Y * 4
+                    (int)(GraphicsManager.PreferredBackBufferWidth - TileSize.X - UI_SPACING), UI_SPACING,
+                    (int)TileSize.X, (int)TileSize.Y
                 ), Color.White
             );
 
         if (debugMenuOpened)
         {
-            Text.Write("DEBUG MENU (F1 TO CLOSE)",
-            new Vector2(2, GlyphSize.Y * 2 * 0 + 2 * 1), Color.White, SpriteBatch);
+            Text.Write($"{GAME_NAME} - v{GAME_VERSION}",
+            new Vector2(UI_SPACING, GlyphSize.Y * TEXT_SPACING * 0 + UI_SPACING - GlyphSize.Y / 2 * 0),
+            Color.White, SpriteBatch);
             Text.Write($"FPS:{FPS} (Fixed timestep)",
-            new Vector2(2, GlyphSize.Y * 2 * 1 + 2 * 2), Color.White, SpriteBatch);
+            new Vector2(UI_SPACING, GlyphSize.Y * TEXT_SPACING * 1 + UI_SPACING - GlyphSize.Y / 2 * 1),
+            Color.White, SpriteBatch);
             Text.Write($"Position: x{(int)player.Position.X}, y{(int)player.Position.Y}",
-            new Vector2(2, GlyphSize.Y * 2 * 2 + 2 * 3), Color.White, SpriteBatch);
+            new Vector2(UI_SPACING, GlyphSize.Y * TEXT_SPACING * 2 + UI_SPACING - GlyphSize.Y / 2 * 2),
+            Color.White, SpriteBatch);
             Text.Write($"Gravity: {(int)player.GravityMod}",
-            new Vector2(2, GlyphSize.Y * 2 * 3 + 2 * 4), Color.White, SpriteBatch);
+            new Vector2(UI_SPACING, GlyphSize.Y * TEXT_SPACING * 3 + UI_SPACING - GlyphSize.Y / 2 * 3),
+            Color.White, SpriteBatch);
             Text.Write($"Tile: {player.TileInHand}",
-            new Vector2(2, GlyphSize.Y * 2 * 4 + 2 * 5), Color.White, SpriteBatch);
+            new Vector2(UI_SPACING, GlyphSize.Y * TEXT_SPACING * 4 + UI_SPACING - GlyphSize.Y / 2 * 4),
+            Color.White, SpriteBatch);
             Text.Write($"Cursor: x{player.cursorPosition.X}, y{player.cursorPosition.Y}",
-            new Vector2(2, GlyphSize.Y * 2 * 5 + 2 * 6), Color.White, SpriteBatch);
+            new Vector2(UI_SPACING, GlyphSize.Y * TEXT_SPACING * 5 + UI_SPACING - GlyphSize.Y / 2 * 5),
+            Color.White, SpriteBatch);
+
+            int screenHeight = GraphicsManager.PreferredBackBufferHeight;
 
             long usedMemory = GC.GetTotalMemory(false) / 1024;
             long totalMemory = GC.GetGCMemoryInfo().TotalAvailableMemoryBytes / 1024 / 1024;
 
             Text.Write($"OS: {RuntimeInformation.OSDescription}",
-            new Vector2(2, GraphicsManager.PreferredBackBufferHeight - GlyphSize.Y * 2 * 4 - 2 * 4),
+            new Vector2(UI_SPACING, screenHeight - GlyphSize.Y * TEXT_SPACING * 4 + GlyphSize.Y / 2 * 4),
             Color.White, SpriteBatch);
             Text.Write($"CPU: {Environment.ProcessorCount} threads CPU",
-            new Vector2(2, GraphicsManager.PreferredBackBufferHeight - GlyphSize.Y * 2 * 3 - 2 * 3),
+            new Vector2(UI_SPACING, screenHeight - GlyphSize.Y * TEXT_SPACING * 3 + GlyphSize.Y / 2 * 3),
             Color.White, SpriteBatch);
             Text.Write($"Memory: {usedMemory}MB/{totalMemory}MB used",
-            new Vector2(2, GraphicsManager.PreferredBackBufferHeight - GlyphSize.Y * 2 * 2 - 2 * 2),
+            new Vector2(UI_SPACING, screenHeight - GlyphSize.Y * TEXT_SPACING * 2 + GlyphSize.Y / 2 * 2),
             Color.White, SpriteBatch);
             Text.Write($"GPU: {GraphicsAdapter.DefaultAdapter.Description}",
-            new Vector2(2, GraphicsManager.PreferredBackBufferHeight - GlyphSize.Y * 2 * 1 - 2 * 1),
+            new Vector2(UI_SPACING, screenHeight - GlyphSize.Y * TEXT_SPACING * 1 + GlyphSize.Y / 2 * 1),
             Color.White, SpriteBatch);
         }
 

@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using static KomaruWorld.GameParameters;
 
 namespace KomaruWorld;
 
@@ -15,6 +16,7 @@ public class Game1 : Game
         _graphics = new GraphicsDeviceManager(this);
         Content.RootDirectory = "Content";
         IsMouseVisible = true;
+        _graphics.PreferredBackBufferHeight = 450;
     }
 
     protected override void Initialize()
@@ -33,23 +35,20 @@ public class Game1 : Game
 
         TilesBank.LoadTextures(Content);
 
-        Text.Setup
-        (
-            new Atlas(Content.Load<Texture2D>("Sprites/Font"), GameParameters.GlyphSize.ToVector2()),
-            (GameParameters.GlyphSize.ToVector2() * 2).ToPoint()
-        );
+        Text.Setup(new Atlas(Content.Load<Texture2D>("Sprites/Font"), GlyphSize.ToVector2() / TEXT_MOD), GlyphSize);
 
         SceneManager.Load(new GameScene(Content, _spriteBatch, _graphics));
     }
 
     protected override void Update(GameTime gameTime)
     {
-        if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
+        if (Keyboard.GetState().IsKeyDown(Keys.Escape))
             Exit();
 
         // TODO: Add your update logic here
         
-        SceneManager.Update(gameTime);
+        if (IsActive)
+            SceneManager.Update(gameTime);
 
         base.Update(gameTime);
     }

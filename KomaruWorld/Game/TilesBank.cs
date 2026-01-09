@@ -26,12 +26,12 @@ public static class TilesBank
     }
 
     // Tiles
-    public static Tile Grass(Vector2 position) => new Tile(GrassTexture, position, TileSize * 4, true);
-    public static Tile Dirt(Vector2 position) => new Tile(DirtTexture, position, TileSize * 4, true);
-    public static Tile Stone(Vector2 position) => new Tile(StoneTexture, position, TileSize * 4, true);
-    public static Tile Log(Vector2 position) => new Tile(LogTexture, position, TileSize * 4, true);
-    public static Tile Leaf(Vector2 position) => new Tile(LeafTexture, position, TileSize * 4, true);
-    public static Tile Planks(Vector2 position) => new Tile(PlanksTexture, position, TileSize * 4, true);
+    public static Tile Grass(Vector2 position) => new Tile(GrassTexture, position, TileSize, true);
+    public static Tile Dirt(Vector2 position) => new Tile(DirtTexture, position, TileSize, true);
+    public static Tile Stone(Vector2 position) => new Tile(StoneTexture, position, TileSize, true);
+    public static Tile Log(Vector2 position) => new Tile(LogTexture, position, TileSize, true);
+    public static Tile Leaf(Vector2 position) => new Tile(LeafTexture, position, TileSize, true);
+    public static Tile Planks(Vector2 position) => new Tile(PlanksTexture, position, TileSize, true);
 
     public static Tile FindTile(Tiles tile, Vector2 position)
     {

@@ -28,10 +28,10 @@ public static class WorldGenerator
                 if (targetTile != null)
                     World.AddTile(targetTile);
 
-                xPos += TileSize.X * 4;
+                xPos += TileSize.X;
             }
 
-            yPos += TileSize.Y * 4;
+            yPos += TileSize.Y;
         }
     }
 }

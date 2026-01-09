@@ -8,12 +8,12 @@ namespace KomaruWorld;
 public class Player : GameObject
 {
     // Movement
-    private const float SPEED = 150f;
+    private const float SPEED = 35f * SIZE_MOD;
     private Direction direction = Direction.Null;
     private SpriteEffects flip = SpriteEffects.None;
 
     // Gravity
-    private const float JUMP_FORCE = 500f;
+    private const float JUMP_FORCE = 125f * SIZE_MOD;
     private bool isJumping = false;
     private bool isGrounded = false;
     public float GravityMod { get; private set; } = DEFAULT_GRAVITY;
@@ -94,8 +94,8 @@ public class Player : GameObject
 
         cursorPosition = new Point
         (
-            (int)((mouse.X + GameScene.Instance.camera.Position.X) / TileSize.X / 4),
-            (int)((mouse.Y + GameScene.Instance.camera.Position.Y) / TileSize.Y / 4)
+            (int)((mouse.X + GameScene.Instance.camera.Position.X) / TileSize.X),
+            (int)((mouse.Y + GameScene.Instance.camera.Position.Y) / TileSize.Y)
         );
 
         if (mouse.ScrollWheelValue < lastMouse.ScrollWheelValue)
@@ -115,8 +115,8 @@ public class Player : GameObject
         {
             Vector2 targetPosition = new Vector2
             (
-                cursorPosition.X * TileSize.X * 4,
-                cursorPosition.Y * TileSize.Y * 4
+                cursorPosition.X * TileSize.X,
+                cursorPosition.Y * TileSize.Y
             );
             
             World.AddTile(TilesBank.FindTile(tilesOrder[TileInHand], targetPosition));
@@ -126,8 +126,8 @@ public class Player : GameObject
         {
             Vector2 targetPosition = new Vector2
             (
-                cursorPosition.X * TileSize.X * 4,
-                cursorPosition.Y * TileSize.Y * 4
+                cursorPosition.X * TileSize.X,
+                cursorPosition.Y * TileSize.Y
             );
             
             World.RemoveTile(World.SearchTile(targetPosition));
