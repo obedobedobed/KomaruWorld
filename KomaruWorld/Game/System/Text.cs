@@ -1,7 +1,7 @@
 using System.Collections.Generic;
-using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using static KomaruWorld.GameParameters;
 
 namespace KomaruWorld;
 
@@ -105,6 +105,45 @@ public static class Text
         { '0', 91 },
     };
 
+    private static Dictionary<char, int> customWidthGlyphes = new Dictionary<char, int>
+    {
+        { 'i', 3 },  
+        { 'j', 6 },  
+        { 'k', 7 },  
+        { 'l', 5 },  
+        { 't', 5 },  
+        { 'x', 7 },  
+        { 'y', 7 },  
+        { 'I', 7 },  
+        { 'T', 7 },  
+        { 'X', 7 },  
+        { 'Y', 7 },  
+        { '.', 3 },  
+        { '!', 3 },  
+        { '?', 6 },  
+        { ':', 3 },  
+        { ',', 4 },  
+        { ';', 4 },  
+        { '-', 7 },  
+        { '+', 7 },  
+        { '=', 7 },  
+        { '(', 5 },  
+        { ')', 5 },  
+        { '[', 5 },  
+        { ']', 5 },  
+        { '{', 5 },  
+        { '}', 5 },  
+        { '/', 5 },  
+        { '\\', 5 },  
+        { '*', 6 },  
+        { '`', 3 },  
+        { '"', 6 },  
+        { '\'', 3 },  
+        { '^', 7 },  
+        { '%', 7 },  
+        { '$', 7 },  
+    };
+
     public static void Setup(Atlas glyphes, Point glyphSize)
     {
         Text.glyphes = glyphes;
@@ -127,15 +166,24 @@ public static class Text
 
         foreach (char _char in text)
         {
+            int glyphWidth;
+            if (!customWidthGlyphes.TryGetValue(_char, out glyphWidth))
+                glyphWidth = glyphSize.X;
+            else
+                glyphWidth *= TEXT_MOD;
+
             bool canFindGlyph = charToGlyphId.TryGetValue(_char, out int glyphId);
             if (!canFindGlyph)
                 throw new System.Exception($"Cannot find glyph {_char} in dictionary!");
             else
+            {
+
                 spriteBatch.Draw(glyphes.Texture, new Rectangle
                 (glyphPosition, (int)position.Y, glyphSize.X, glyphSize.Y),
                 glyphes.Rectangles[glyphId], color);
+            }
 
-            glyphPosition += glyphSize.X * (reverse ? -1 : 1);
+            glyphPosition += glyphWidth * (reverse ? -1 : 1);
         }
     }
 }

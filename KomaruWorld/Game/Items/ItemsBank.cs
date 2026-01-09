@@ -13,6 +13,7 @@ public static class ItemsBank
     public static Texture2D LogTexture { get; private set; }
     public static Texture2D LeafTexture { get; private set; }
     public static Texture2D PlanksTexture { get; private set; }
+    public static Texture2D StickTexture { get; private set; }
 
     public static void LoadTextures(ContentManager Content)
     {
@@ -22,6 +23,7 @@ public static class ItemsBank
         LogTexture = Content.Load<Texture2D>("Sprites/Tiles/LogTile");
         LeafTexture = Content.Load<Texture2D>("Sprites/Tiles/LeafTile");
         PlanksTexture = Content.Load<Texture2D>("Sprites/Tiles/PlanksTile");
+        StickTexture = Content.Load<Texture2D>("Sprites/Items/Stick");
     }
 
     // Items
@@ -31,4 +33,5 @@ public static class ItemsBank
     public static Item Log { get { return new PlaceableItem("Log", 99, LogTexture, Tiles.Log); } }
     public static Item Leaf { get { return new PlaceableItem("Leaf", 99, LeafTexture, Tiles.Leaf); } }
     public static Item Planks { get { return new PlaceableItem("Planks", 99, PlanksTexture, Tiles.Planks); } }
+    public static Item Stick { get { return new Item("Stick", 99, StickTexture); } }
 }

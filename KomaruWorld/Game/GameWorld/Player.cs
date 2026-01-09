@@ -72,8 +72,10 @@ public class Player : GameObject
         );
 
         // Test
-        Inventory.HotbarSlots[0].UpdateItem(ItemsBank.Dirt, 50);
-        Inventory.HotbarSlots[1].UpdateItem(ItemsBank.Log, 10);
+        Inventory.HotbarSlots[0].UpdateItem(ItemsBank.Dirt, 99);
+        Inventory.HotbarSlots[1].UpdateItem(ItemsBank.Log, 99);
+        Inventory.HotbarSlots[2].UpdateItem(ItemsBank.Stick, 1);
+        Inventory.Slots[0].UpdateItem(ItemsBank.Stick, 99);
     }
 
     public override void Update(GameTime gameTime)
