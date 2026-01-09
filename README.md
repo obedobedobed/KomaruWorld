@@ -9,8 +9,8 @@ Survival game with Komaru the cat
 3. Open terminal in .csproj file directory
 4. Enter command: `dotnet publish -c Release -r (win-x64/linux-x64) --self-contained=true -p:PublishSingleFile=true -p:PublishTrimmed=true`
 
-# TODO List (5% completed)
-1. Tiles and items system [\*]
+# TODO List (4% completed)
+1. Tiles and items system [\*] - 40% completed
 2. Inventory [X]
 3. Armor [X]
 4. Mobs and AI [X]
@@ -18,8 +18,10 @@ Survival game with Komaru the cat
 6. NPCs and dialogues [X]
 7. Main menu [X]
 8. World creation [X]
-9. World generation [*]
-10. Bosses [X]
+9. World generation [*] - 10% completed
+10. Light system [X]
+11. Daycycle [X]
+12. Bosses [X]
 
 ## Whats mean X, *, V?
 X - Task not started
