@@ -1,10 +1,13 @@
 # KomaruWorld
 Survival game with Komaru the cat
+<img width="796" height="397" alt="изображение" src="https://github.com/user-attachments/assets/fc606fd5-f9a8-4f22-8a3a-87bdc2b078af" />
+
 
 # How to build
 1. Download repository
 2. Make sure .NET 9 installed on your PC
-3. Enter command: `dotnet publish -c Release -r (win-x64/linux-x64) --self-contained=true -p:PublishSingleFile=true -p:PublishTrimmed=true`
+3. Open terminal in .csproj file directory
+4. Enter command: `dotnet publish -c Release -r (win-x64/linux-x64) --self-contained=true -p:PublishSingleFile=true -p:PublishTrimmed=true`
 
 # TODO List (5% completed)
 1. Tiles and items system [\*]
