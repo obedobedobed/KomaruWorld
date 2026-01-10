@@ -10,12 +10,13 @@ public class DropData
 
     public DropData(Item[] items, int[] chances, Range[] amounts)
     {
-        DropChance = new Dictionary<Item, int>(items.Length);
+        DropChance = new Dictionary<Item, int>();
+        DropAmount = new Dictionary<Item, Range>();
 
-        for (int i = 0; i < DropChance.Count; i++)
+        for (int i = 0; i < items.Length; i++)
             DropChance.Add(items[i], chances[i]);
 
-        for (int i = 0; i < DropAmount.Count; i++)
+        for (int i = 0; i < items.Length; i++)
             DropAmount.Add(items[i], amounts[i]);
     }
 

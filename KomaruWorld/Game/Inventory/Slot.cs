@@ -7,7 +7,7 @@ namespace KomaruWorld;
 public class Slot : GameObject
 {
     public Item Item { get; private set; }
-    public int ItemCount { get; private set; }
+    public int ItemAmount { get; private set; }
 
     private int slotId;
     private int defaultFrame;
@@ -41,17 +41,17 @@ public class Slot : GameObject
     public void UpdateItem(Item item, int count)
     {
         Item = item;
-        ItemCount = count;
+        ItemAmount = count;
     }
-    public void CountItem(bool countBack = false) => ItemCount += countBack ? -1 : 1;
+    public void CountItem(bool countBack = false) => ItemAmount += countBack ? -1 : 1;
     public override void Draw(SpriteBatch spriteBatch)
     {
         spriteBatch.Draw(atlas.Texture, Rectangle, atlas.Rectangles[frame], Color.White);
         if (Item != null)
         {
             spriteBatch.Draw(Item.Texture, itemRectangle, Color.White);
-            if (ItemCount > 1)
-                Text.Draw(ItemCount.ToString(), itemCountPosition, frame == defaultFrame ? Color.White : Color.Black,
+            if (ItemAmount > 1)
+                Text.Draw(ItemAmount.ToString(), itemCountPosition, frame == defaultFrame ? Color.White : Color.Black,
                 spriteBatch, TextDrawingMode.Left);
         }
     }

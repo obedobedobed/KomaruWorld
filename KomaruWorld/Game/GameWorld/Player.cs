@@ -16,7 +16,7 @@ public class Player : GameObject
     private const float JUMP_FORCE = 125f * SIZE_MOD;
     private bool isJumping = false;
     private bool isGrounded = false;
-    public float GravityMod { get; private set; } = DEFAULT_GRAVITY;
+    public float GravityVelocity { get; private set; } = DEFAULT_GRAVITY;
     private float jumpMod = JUMP_FORCE;
     private const float ORIGINAL_JUMP_TIME = 0.5f;
     private float jumpTime = ORIGINAL_JUMP_TIME;
@@ -156,7 +156,7 @@ public class Player : GameObject
                 if (canAddTile)
                     Inventory.HotbarSlots[HotbarSlot].CountItem(countBack: true);
 
-                if (Inventory.HotbarSlots[HotbarSlot].ItemCount <= 0)
+                if (Inventory.HotbarSlots[HotbarSlot].ItemAmount <= 0)
                     Inventory.HotbarSlots[HotbarSlot].UpdateItem(null);
             }
         }
@@ -169,7 +169,9 @@ public class Player : GameObject
                 cursorPosition.Y * TileSize.Y
             );
             
-            World.RemoveTile(World.SearchTile(targetPosition));
+            var tile = World.SearchTile(targetPosition);
+            tile?.Drop();
+            World.RemoveTile(tile);
         }
 
         lastMouse = mouse;
@@ -206,20 +208,20 @@ public class Player : GameObject
 
     private void Gravity()
     {
-        GravityMod += GRAVITY_ACELERATION * deltaTime;
+        GravityVelocity += GRAVITY_ACELERATION * deltaTime;
 
-        if (GravityMod > MAXIMAL_GRAVITY)
-            GravityMod = MAXIMAL_GRAVITY;
+        if (GravityVelocity > MAXIMAL_GRAVITY)
+            GravityVelocity = MAXIMAL_GRAVITY;
 
         isGrounded = false;
-        var nextHitbox = new Rectangle(hitbox.X, (int)(hitbox.Y + GravityMod), hitbox.Width, hitbox.Height);
+        var nextHitbox = new Rectangle(hitbox.X, (int)(hitbox.Y + GravityVelocity), hitbox.Width, hitbox.Height);
 
         foreach (var tile in World.Tiles)
         {
             if (nextHitbox.Intersects(tile.Hitbox))
             {
                 isGrounded = true;
-                GravityMod = DEFAULT_GRAVITY;
+                GravityVelocity = DEFAULT_GRAVITY;
                 Position = new Vector2(Position.X, tile.Rectangle.Top - Rectangle.Height);
                 break;
             }
@@ -228,7 +230,7 @@ public class Player : GameObject
         if (isGrounded)
             return;
         
-        Position += new Vector2(0f, GravityMod);
+        Position += new Vector2(0f, GravityVelocity);
     }
 
     private void Jump()
@@ -250,7 +252,7 @@ public class Player : GameObject
             if (nextHitbox.Intersects(tile.Hitbox))
             {
                 isGrounded = true;
-                GravityMod = DEFAULT_GRAVITY;
+                GravityVelocity = DEFAULT_GRAVITY;
                 Position = new Vector2(Position.X, tile.Rectangle.Bottom);
                 velocity = 0f;
                 break;

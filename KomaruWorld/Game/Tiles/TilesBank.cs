@@ -26,12 +26,12 @@ public static class TilesBank
     }
 
     // Tiles
-    public static Tile Grass(Vector2 position) => new Tile(GrassTexture, position, TileSize, true, Tiles.Grass);
-    public static Tile Dirt(Vector2 position) => new Tile(DirtTexture, position, TileSize, true, Tiles.Dirt);
-    public static Tile Stone(Vector2 position) => new Tile(StoneTexture, position, TileSize, true, Tiles.Stone);
-    public static Tile Log(Vector2 position) => new Tile(LogTexture, position, TileSize, true, Tiles.Log);
-    public static Tile Leaf(Vector2 position) => new Tile(LeafTexture, position, TileSize, true, Tiles.Leaf);
-    public static Tile Planks(Vector2 position) => new Tile(PlanksTexture, position, TileSize, true, Tiles.Planks);
+    public static Tile Grass(Vector2 position) => new Tile(GrassTexture, position, TileSize, true, Tiles.Grass, new DropData([ItemsBank.Grass], [100], [new Range(1, 1)]));
+    public static Tile Dirt(Vector2 position) => new Tile(DirtTexture, position, TileSize, true, Tiles.Dirt, new DropData([ItemsBank.Dirt], [100], [new Range(1, 1)]));
+    public static Tile Stone(Vector2 position) => new Tile(StoneTexture, position, TileSize, true, Tiles.Stone, new DropData([ItemsBank.Stone], [100], [new Range(1, 1)]));
+    public static Tile Log(Vector2 position) => new Tile(LogTexture, position, TileSize, true, Tiles.Log, new DropData([ItemsBank.Planks], [100], [new Range(4, 4)]));
+    public static Tile Leaf(Vector2 position) => new Tile(LeafTexture, position, TileSize, true, Tiles.Leaf, new DropData([], [], []));
+    public static Tile Planks(Vector2 position) => new Tile(PlanksTexture, position, TileSize, true, Tiles.Planks, new DropData([ItemsBank.Planks], [100], [new Range(1, 1)]));
 
     public static Tile FindTile(Tiles tile, Vector2 position)
     {
