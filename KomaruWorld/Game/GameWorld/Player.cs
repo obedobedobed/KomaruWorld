@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -92,6 +93,7 @@ public class Player : GameObject
         else
             Gravity();
         Animate();
+        CollectDroppedItems();
     }
 
     private void GetInput()
@@ -297,6 +299,22 @@ public class Player : GameObject
 
             timeToFrame = FRAME_TIME;
         }
+    }
+
+    private void CollectDroppedItems()
+    {
+        var itemsToRemove = new List<DroppedItem>();
+
+        foreach (var item in World.Items)
+            if (hitbox.Intersects(item.Rectangle))
+            {
+                bool collected = Inventory.CollectItem(item.Item);
+                if (collected)
+                    itemsToRemove.Add(item);
+            }
+
+        foreach (var item in itemsToRemove)
+            World.RemoveItem(item);
     }
 
     public override void Draw(SpriteBatch spriteBatch)

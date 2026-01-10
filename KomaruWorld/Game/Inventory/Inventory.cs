@@ -65,6 +65,39 @@ public class Inventory
         Text.Draw(slotItemName, itemNamePos, Color.White, spriteBatch, TextDrawingMode.Center);
     }
 
+    public bool CollectItem(Item item)
+    {
+        foreach (var slot in HotbarSlots)
+        {
+            if (slot.Item?.ID == item.ID && slot.ItemAmount < slot.Item?.MaxStack)
+            {
+                slot.CountItem();
+                return true;
+            }
+            else if (slot.Item == null)
+            {
+                slot.UpdateItem(item);
+                return true;
+            }
+        }
+
+        foreach (var slot in Slots)
+        {
+            if (slot.Item?.ID == item.ID && slot.ItemAmount < slot.Item?.MaxStack)
+            {
+                slot.CountItem();
+                return true;
+            }
+            else if (slot.Item == null)
+            {
+                slot.UpdateItem(item);
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     public void DrawInventory(SpriteBatch spriteBatch)
     {
         foreach (var slot in Slots)

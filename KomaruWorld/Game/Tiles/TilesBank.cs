@@ -30,7 +30,7 @@ public static class TilesBank
     public static Tile Dirt(Vector2 position) => new Tile(DirtTexture, position, TileSize, true, Tiles.Dirt, new DropData([ItemsBank.Dirt], [100], [new Range(1, 1)]));
     public static Tile Stone(Vector2 position) => new Tile(StoneTexture, position, TileSize, true, Tiles.Stone, new DropData([ItemsBank.Stone], [100], [new Range(1, 1)]));
     public static Tile Log(Vector2 position) => new Tile(LogTexture, position, TileSize, true, Tiles.Log, new DropData([ItemsBank.Planks], [100], [new Range(4, 4)]));
-    public static Tile Leaves(Vector2 position) => new Tile(LeavesTexture, position, TileSize, true, Tiles.Leaves, new DropData([ItemsBank.Leaf, ItemsBank.Stick], [100, 50], [new Range(1, 2), new Range(1, 1)]));
+    public static Tile Leaves(Vector2 position) => new Tile(LeavesTexture, position, TileSize, true, Tiles.Leaves, new DropData([ItemsBank.Leaf, ItemsBank.Stick], [100, 30], [new Range(1, 2), new Range(1, 1)]));
     public static Tile Planks(Vector2 position) => new Tile(PlanksTexture, position, TileSize, true, Tiles.Planks, new DropData([ItemsBank.Planks], [100], [new Range(1, 1)]));
 
     public static Tile FindTile(Tiles tile, Vector2 position)

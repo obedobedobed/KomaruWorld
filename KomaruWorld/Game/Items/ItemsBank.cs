@@ -29,12 +29,12 @@ public static class ItemsBank
     }
 
     // Items
-    public static Item Grass { get { return new PlaceableItem("Grass", 99, GrassTexture, Tiles.Grass); } }
-    public static Item Dirt { get { return new PlaceableItem("Dirt", 99, DirtTexture, Tiles.Dirt); } }
-    public static Item Stone { get { return new PlaceableItem("Stone", 99, StoneTexture, Tiles.Stone); } }
-    public static Item Log { get { return new PlaceableItem("Log", 99, LogTexture, Tiles.Log); } }
-    public static Item Leaves { get { return new PlaceableItem("Leaf", 99, LeavesTexture, Tiles.Leaves); } }
-    public static Item Planks { get { return new PlaceableItem("Planks", 99, PlanksTexture, Tiles.Planks); } }
-    public static Item Stick { get { return new Item("Stick", 99, StickTexture); } }
-    public static Item Leaf { get { return new Item("Leaf", 99, LeafTexture); } }
+    public static Item Grass { get { return new PlaceableItem("Grass", 99, GrassTexture, 0, Tiles.Grass); } }
+    public static Item Dirt { get { return new PlaceableItem("Dirt", 99, DirtTexture, 1, Tiles.Dirt); } }
+    public static Item Stone { get { return new PlaceableItem("Stone", 99, StoneTexture, 2, Tiles.Stone); } }
+    public static Item Log { get { return new PlaceableItem("Log", 99, LogTexture, 3, Tiles.Log); } }
+    public static Item Leaves { get { return new PlaceableItem("Leaf", 99, LeavesTexture, 4, Tiles.Leaves); } }
+    public static Item Planks { get { return new PlaceableItem("Planks", 99, PlanksTexture, 5, Tiles.Planks); } }
+    public static Item Stick { get { return new Item("Stick", 99, StickTexture, 6); } }
+    public static Item Leaf { get { return new Item("Leaf", 99, LeafTexture, 7); } }
 }

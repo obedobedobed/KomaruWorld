@@ -9,15 +9,17 @@ public static class World
     public static List<Tile> Tiles { get; private set; } = new List<Tile>();
     public static List<DroppedItem> Items { get; private set; } = new List<DroppedItem>();
 
-    public static bool AddTile(Tile tile)
+    public static bool AddTile(Tile tile, bool replace = false)
     {
         var tileOnSamePosition = SearchTile(tile.Position);
 
         if (tileOnSamePosition?.TileType == tile.TileType)
             return false;
 
-        if (tileOnSamePosition != null)
+        if (tileOnSamePosition != null && replace)
             RemoveTile(tileOnSamePosition);
+        if (tileOnSamePosition != null && !replace)
+            return false;
 
         Tiles.Add(tile);
         return true;

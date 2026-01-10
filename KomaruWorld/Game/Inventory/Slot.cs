@@ -37,7 +37,11 @@ public class Slot : GameObject
     }
 
     public void UpdateFrame() => frame = GameScene.Instance.Player.HotbarSlot == slotId ? choosedFrame : defaultFrame;
-    public void UpdateItem(Item item) => Item = item;
+    public void UpdateItem(Item item)
+    {
+        Item = item;
+        ItemAmount = 1;
+    }
     public void UpdateItem(Item item, int count)
     {
         Item = item;
