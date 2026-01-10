@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
 using static KomaruWorld.GameParameters;
 
 namespace KomaruWorld;
@@ -9,6 +10,7 @@ public class Game1 : Game
     public static Game1 Instance;
     public GraphicsDeviceManager Graphics { get; private set; }
     private SpriteBatch spriteBatch;
+    private Texture2D cursorTexture;
     public int FPS = 0;
 
     // FPS counting
@@ -22,6 +24,7 @@ public class Game1 : Game
         Content.RootDirectory = "Content";
         IsMouseVisible = true;
         Graphics.PreferredBackBufferHeight = 450;
+        IsMouseVisible = false;
         Instance = this;
     }
 
@@ -40,8 +43,8 @@ public class Game1 : Game
 
         TilesBank.LoadTextures(Content);
         ItemsBank.LoadTextures(Content);
-
         Text.Setup(new Atlas(Content.Load<Texture2D>("Sprites/Font"), GlyphSize.ToVector2() / TEXT_MOD), GlyphSize);
+        cursorTexture = Content.Load<Texture2D>("Sprites/Cursor");
 
         SceneManager.Load(new GameScene(Content, spriteBatch, Graphics));
     }
@@ -63,6 +66,12 @@ public class Game1 : Game
         // TODO: Add your drawing code here
 
         SceneManager.Scene.Draw();
+
+        var mouse = Mouse.GetState();
+        var cursorRectangle = new Rectangle(mouse.Position, CursorSize);
+        spriteBatch.Begin(samplerState: SamplerState.PointClamp);
+        spriteBatch.Draw(cursorTexture, cursorRectangle, Color.White);
+        spriteBatch.End();
 
         if ((fpsCountingTime -= (float)gameTime.ElapsedGameTime.TotalSeconds) <= 0)
         {
