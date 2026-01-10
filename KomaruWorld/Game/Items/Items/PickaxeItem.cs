@@ -3,7 +3,7 @@ using Microsoft.Xna.Framework.Graphics;
 namespace KomaruWorld;
 
 public class PickaxeItem(string name, Texture2D texture, int id, int damage)
-: Item(name, 1, texture, id)
+: Item(name, 1, texture, id, true)
 {
     public int Damage { get; private set; } = damage;
 }

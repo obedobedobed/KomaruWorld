@@ -51,11 +51,14 @@ public static class World
 
     public static void Update(GameTime gameTime)
     {
-        foreach (var tile in Tiles)
-            tile.Update(gameTime);
+        Tile[] tiles = Tiles.ToArray();
+        DroppedItem[] items = Items.ToArray();
 
-        foreach (var item in Items)
-            item.Update(gameTime);
+        foreach (var tile in tiles)
+            tile?.Update(gameTime);
+
+        foreach (var item in items)
+            item?.Update(gameTime);
     }
 
     public static void Draw(SpriteBatch spriteBatch)

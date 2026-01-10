@@ -11,15 +11,30 @@ public class Tile : GameObject
     public int TileWorldID { get; private set; }
     public Tiles TileType { get; private set; }
     public DropData DropData { get; private set; }
+    public ToolToDestroy ToolToDestroy { get; private set; }
+    private int health;
 
-    public Tile(Texture2D texture, Vector2 position, Vector2 size, bool canCollide, Tiles tileType, DropData drop)
-    : base(texture, position, size)
+    public Tile(Texture2D texture, Vector2 position, Vector2 size, bool canCollide, int health, Tiles tileType,
+    ToolToDestroy toolToDestroy, DropData drop) : base(texture, position, size)
     {
         CanCollide = canCollide;
         TileWorldID = ++totalTiles;
         TileType = tileType;
         DropData = drop;
+        ToolToDestroy = toolToDestroy;
+        this.health = health;
     }
+
+    public override void Update(GameTime gameTime)
+    {
+        if (health <= 0)
+        {
+            Drop();
+            World.RemoveTile(this);
+        }
+    }
+
+    public void TakeDamage(int damage) => health -= damage;
 
     public void Drop()
     {

@@ -142,36 +142,41 @@ public class Player : GameObject
 
         if (mouse.LeftButton == ButtonState.Pressed && !InInventory)
         {
-            var tileItem = Inventory.HotbarSlots[HotbarSlot].Item;
+            var item = Inventory.HotbarSlots[HotbarSlot].Item;
 
             Vector2 targetPosition = new Vector2
             (
                 cursorPosition.X * TileSize.X,
                 cursorPosition.Y * TileSize.Y
             );
-            
-            if (tileItem != null && tileItem is PlaceableItem tile)
-            {
-                bool canAddTile = World.AddTile(TilesBank.FindTile(tile.ItemTile, targetPosition));
-                if (canAddTile)
-                    Inventory.HotbarSlots[HotbarSlot].CountItem(countBack: true);
 
-                if (Inventory.HotbarSlots[HotbarSlot].ItemAmount <= 0)
-                    Inventory.HotbarSlots[HotbarSlot].UpdateItem(null);
-            }
-        }
+            if (item != null)
+                if (item is PlaceableItem tile)
+                {
+                    bool canAddTile = World.AddTile(TilesBank.FindTile(tile.ItemTile, targetPosition));
+                    if (canAddTile)
+                        Inventory.HotbarSlots[HotbarSlot].CountItem(countBack: true);
 
-        if (mouse.RightButton == ButtonState.Pressed && !InInventory)
-        {
-            Vector2 targetPosition = new Vector2
-            (
-                cursorPosition.X * TileSize.X,
-                cursorPosition.Y * TileSize.Y
-            );
-            
-            var tile = World.SearchTile(targetPosition);
-            tile?.Drop();
-            World.RemoveTile(tile);
+                    if (Inventory.HotbarSlots[HotbarSlot].ItemAmount <= 0)
+                        Inventory.HotbarSlots[HotbarSlot].UpdateItem(null);
+                }
+                else if (item.IsTool)
+                {
+                    var _tile = World.SearchTile(targetPosition);
+                    ToolToDestroy? tool = _tile?.ToolToDestroy;
+                    Item itemInSlot = Inventory.HotbarSlots[HotbarSlot]?.Item;
+
+                    if (tool != null && itemInSlot != null)
+                        if (tool == ToolToDestroy.Pickaxe && itemInSlot is PickaxeItem pickaxe)
+                            _tile.TakeDamage(pickaxe.Damage);
+                        else if (tool == ToolToDestroy.Axe && itemInSlot is AxeItem axe)
+                            _tile.TakeDamage(axe.Damage);
+                        else if (tool == ToolToDestroy.Both)
+                            if (itemInSlot is AxeItem _axe)
+                                _tile.TakeDamage(_axe.Damage);
+                            else if (itemInSlot is PickaxeItem _pickaxe)
+                                _tile.TakeDamage(_pickaxe.Damage);
+                }
         }
 
         lastMouse = mouse;
