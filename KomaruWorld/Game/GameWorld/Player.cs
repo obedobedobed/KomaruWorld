@@ -72,11 +72,9 @@ public class Player : GameObject
             SlotSize.Y * slotsLines / 2 - SlotSize.Y * 1), slotsLines
         );
 
-        // Test
-        Inventory.HotbarSlots[0].UpdateItem(ItemsBank.Dirt, 99);
-        Inventory.HotbarSlots[1].UpdateItem(ItemsBank.Log, 99);
-        Inventory.HotbarSlots[2].UpdateItem(ItemsBank.Stick, 1);
-        Inventory.Slots[0].UpdateItem(ItemsBank.Stick, 99);
+        Inventory.HotbarSlots[0].UpdateItem(ItemsBank.Sword);
+        Inventory.HotbarSlots[1].UpdateItem(ItemsBank.Pickaxe);
+        Inventory.HotbarSlots[2].UpdateItem(ItemsBank.Axe);
     }
 
     public override void Update(GameTime gameTime)

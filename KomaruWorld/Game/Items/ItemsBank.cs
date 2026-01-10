@@ -15,6 +15,9 @@ public static class ItemsBank
     public static Texture2D PlanksTexture { get; private set; }
     public static Texture2D StickTexture { get; private set; }
     public static Texture2D LeafTexture { get; private set; }
+    public static Texture2D AxeTexture { get; private set; }
+    public static Texture2D PickaxeTexture { get; private set; }
+    public static Texture2D SwordTexture { get; private set; }
 
     public static void LoadTextures(ContentManager Content)
     {
@@ -26,15 +29,21 @@ public static class ItemsBank
         PlanksTexture = Content.Load<Texture2D>("Sprites/Tiles/PlanksTile");
         StickTexture = Content.Load<Texture2D>("Sprites/Items/Stick");
         LeafTexture = Content.Load<Texture2D>("Sprites/Items/Leaf");
+        AxeTexture = Content.Load<Texture2D>("Sprites/Items/Tools/Axe");
+        PickaxeTexture = Content.Load<Texture2D>("Sprites/Items/Tools/Pickaxe");
+        SwordTexture = Content.Load<Texture2D>("Sprites/Items/Tools/Sword");
     }
 
     // Items
-    public static Item Grass { get { return new PlaceableItem("Grass", 99, GrassTexture, 0, Tiles.Grass); } }
-    public static Item Dirt { get { return new PlaceableItem("Dirt", 99, DirtTexture, 1, Tiles.Dirt); } }
-    public static Item Stone { get { return new PlaceableItem("Stone", 99, StoneTexture, 2, Tiles.Stone); } }
-    public static Item Log { get { return new PlaceableItem("Log", 99, LogTexture, 3, Tiles.Log); } }
-    public static Item Leaves { get { return new PlaceableItem("Leaf", 99, LeavesTexture, 4, Tiles.Leaves); } }
-    public static Item Planks { get { return new PlaceableItem("Planks", 99, PlanksTexture, 5, Tiles.Planks); } }
-    public static Item Stick { get { return new Item("Stick", 99, StickTexture, 6); } }
-    public static Item Leaf { get { return new Item("Leaf", 99, LeafTexture, 7); } }
+    public static Item Grass { get { return new PlaceableItem("Grass", 99, GrassTexture, id: 0, Tiles.Grass); } }
+    public static Item Dirt { get { return new PlaceableItem("Dirt", 99, DirtTexture, id: 1, Tiles.Dirt); } }
+    public static Item Stone { get { return new PlaceableItem("Stone", 99, StoneTexture, id: 2, Tiles.Stone); } }
+    public static Item Log { get { return new PlaceableItem("Log", 99, LogTexture, id: 3, Tiles.Log); } }
+    public static Item Leaves { get { return new PlaceableItem("Leaf", 99, LeavesTexture, id: 4, Tiles.Leaves); } }
+    public static Item Planks { get { return new PlaceableItem("Planks", 99, PlanksTexture, id: 5, Tiles.Planks); } }
+    public static Item Stick { get { return new Item("Stick", 99, StickTexture, id: 6); } }
+    public static Item Leaf { get { return new Item("Leaf", 99, LeafTexture, id: 7); } }
+    public static Item Axe { get { return new AxeItem("Axe", AxeTexture, id: 8, damage: 3); } }
+    public static Item Pickaxe { get { return new PickaxeItem("Pickaxe", PickaxeTexture, id: 9, damage: 1); } }
+    public static Item Sword { get { return new SwordItem("Sword", SwordTexture, id: 9, damage: 5); } }
 }
