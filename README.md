@@ -10,7 +10,7 @@ Survival game with Komaru the cat
 4. Enter command: `dotnet publish -c Release -r (win-x64/linux-x64) --self-contained=true -p:PublishSingleFile=true -p:PublishTrimmed=true`
 
 # TODO List (10% completed)
-1. Tiles and items system [\*] - 60% completed
+1. Tiles and items system [\*] - 65% completed
 2. Inventory [\*] - 45% completed
 3. Armor [X]
 4. Mobs and AI [X]
