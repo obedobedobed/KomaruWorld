@@ -1,6 +1,6 @@
 # KomaruWorld
 Survival game with Komaru the cat
-<img width="796" height="397" alt="изображение" src="https://github.com/user-attachments/assets/fc606fd5-f9a8-4f22-8a3a-87bdc2b078af" />
+<img width="796" height="397" alt="Cool house builded in this game" src="https://github.com/user-attachments/assets/fc606fd5-f9a8-4f22-8a3a-87bdc2b078af" />
 
 
 # How to build
