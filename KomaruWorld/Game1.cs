@@ -1,6 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
 using static KomaruWorld.GameParameters;
 
 namespace KomaruWorld;
@@ -10,6 +9,12 @@ public class Game1 : Game
     public static Game1 Instance;
     public GraphicsDeviceManager Graphics { get; private set; }
     private SpriteBatch spriteBatch;
+    public int FPS = 0;
+
+    // FPS counting
+    private int fpsCounting = 0;
+    private const float FPS_COUNT_TIME = 1f;
+    private float fpsCountingTime = FPS_COUNT_TIME;
 
     public Game1()
     {
@@ -58,6 +63,15 @@ public class Game1 : Game
         // TODO: Add your drawing code here
 
         SceneManager.Scene.Draw();
+
+        if ((fpsCountingTime -= (float)gameTime.ElapsedGameTime.TotalSeconds) <= 0)
+        {
+            FPS = fpsCounting;
+            fpsCounting = 0;
+            fpsCountingTime = FPS_COUNT_TIME;
+        }
+
+        fpsCounting++;
 
         base.Draw(gameTime);
     }

@@ -6,6 +6,6 @@ public enum Tiles
     Dirt,
     Stone,
     Log,
-    Leaf,
+    Leaves,
     Planks
 }

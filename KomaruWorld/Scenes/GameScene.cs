@@ -25,12 +25,6 @@ public class GameScene(ContentManager content, SpriteBatch spriteBatch, Graphics
     // Debug
     private bool debugMenuOpened = false;
 
-    // FPS Counting
-    private int countingFPS = 0;
-    private const float FPS_COUNT_TIME = 1f;
-    private float timeToCountFps = FPS_COUNT_TIME;
-    private int FPS = 0;
-
     public override void Load()
     {
         Instance = this;
@@ -65,14 +59,11 @@ public class GameScene(ContentManager content, SpriteBatch spriteBatch, Graphics
         if (keyboard.IsKeyDown(Keys.F1) && !lastKeyboard.IsKeyDown(Keys.F1))
             debugMenuOpened = !debugMenuOpened;
 
-        if ((timeToCountFps -= (float)gameTime.ElapsedGameTime.TotalSeconds) <= 0)
+        if (keyboard.IsKeyDown(Keys.F2) && !lastKeyboard.IsKeyDown(Keys.F2))
         {
-            FPS = countingFPS;
-            countingFPS = 0;
-            timeToCountFps = FPS_COUNT_TIME;
+            GraphicsManager.SynchronizeWithVerticalRetrace = !GraphicsManager.SynchronizeWithVerticalRetrace;
+            GraphicsManager.ApplyChanges();
         }
-
-        countingFPS++;
 
         lastKeyboard = keyboard;
     }
@@ -109,19 +100,23 @@ public class GameScene(ContentManager content, SpriteBatch spriteBatch, Graphics
             int slot = Player.HotbarSlot;
             var slotItem = Player.Inventory?.HotbarSlots[slot];
             string hotbarSlotString =  (slotItem?.Item != null)
-                ? $"{slot + 1} - {slotItem.Item.Name} (x{slotItem.ItemCount})"
+                ? $"{slot + 1} - {slotItem.Item.Name} (x{slotItem.ItemAmount})"
                 : $"{slot + 1} - Air (x0)";
+
+            string vSyncString = GraphicsManager.SynchronizeWithVerticalRetrace
+                ? "(VSync, press F2 to disable)"
+                : "(Non-VSync, press F2 to enable)";
 
             Text.Draw($"{GAME_NAME} - v{GAME_VERSION}",
             new Vector2(UI_SPACING, GlyphSize.Y * TEXT_SPACING * 0 + UI_SPACING - GlyphSize.Y / 2 * 0),
             Color.White, SpriteBatch, TextDrawingMode.Right);
-            Text.Draw($"FPS:{FPS} (Fixed timestep)",
+            Text.Draw($"FPS:{Game1.Instance.FPS} {vSyncString}",
             new Vector2(UI_SPACING, GlyphSize.Y * TEXT_SPACING * 1 + UI_SPACING - GlyphSize.Y / 2 * 1),
             Color.White, SpriteBatch, TextDrawingMode.Right);
             Text.Draw($"Position: x{(int)Player.Position.X}, y{(int)Player.Position.Y}",
             new Vector2(UI_SPACING, GlyphSize.Y * TEXT_SPACING * 2 + UI_SPACING - GlyphSize.Y / 2 * 2),
             Color.White, SpriteBatch, TextDrawingMode.Right);
-            Text.Draw($"Gravity: {(int)Player.GravityMod}",
+            Text.Draw($"Gravity: {(int)Player.GravityVelocity}",
             new Vector2(UI_SPACING, GlyphSize.Y * TEXT_SPACING * 3 + UI_SPACING - GlyphSize.Y / 2 * 3),
             Color.White, SpriteBatch, TextDrawingMode.Right);
             Text.Draw($"Hotbar slot: {hotbarSlotString}",

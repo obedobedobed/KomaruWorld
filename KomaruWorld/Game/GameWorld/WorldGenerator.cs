@@ -72,7 +72,7 @@ public static class WorldGenerator
                 Vector2 targetPosition = new Vector2(xPos, yPos);
                 Tile targetTile = tree[y][x] switch
                 {
-                    '@' => TilesBank.Leaf(targetPosition),
+                    '@' => TilesBank.Leaves(targetPosition),
                     '#' => TilesBank.Log(targetPosition),
                     _ => null,
                 };
