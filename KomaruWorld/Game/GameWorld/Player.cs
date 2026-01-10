@@ -23,10 +23,12 @@ public class Player : GameObject
     private float jumpTime = ORIGINAL_JUMP_TIME;
 
     // Inventory
-    public Point cursorPosition { get; private set; } = Point.Zero;
+    public Point cursorWorldPosition { get; private set; } = Point.Zero;
     public int HotbarSlot { get; private set; } = 0;
     public Inventory Inventory { get; private set; }
     public bool InInventory { get; private set; }
+    public Item ItemInCursor { get; private set; }
+    public int ItemInCursorAmount { get; private set; }
 
     // Game
     private float deltaTime = 0f;
@@ -121,7 +123,7 @@ public class Player : GameObject
 
         // Mouse Input
 
-        cursorPosition = new Point
+        cursorWorldPosition = new Point
         (
             (int)((mouse.X + GameScene.Instance.Camera.Position.X) / TileSize.X),
             (int)((mouse.Y + GameScene.Instance.Camera.Position.Y) / TileSize.Y)
@@ -146,8 +148,8 @@ public class Player : GameObject
 
             Vector2 targetPosition = new Vector2
             (
-                cursorPosition.X * TileSize.X,
-                cursorPosition.Y * TileSize.Y
+                cursorWorldPosition.X * TileSize.X,
+                cursorWorldPosition.Y * TileSize.Y
             );
 
             if (item != null)
@@ -179,7 +181,77 @@ public class Player : GameObject
                 }
         }
 
+        if (mouse.RightButton == ButtonState.Pressed && lastMouse.RightButton != ButtonState.Pressed && InInventory)
+        {
+            var cursorRectangle = new Rectangle(mouse.X, mouse.Y, 1, 1);
+
+            foreach (var slot in Inventory.HotbarSlots)
+                if (slot.Rectangle.Intersects(cursorRectangle))
+                {
+                    TakeItemFromSlot(slot);
+                    break;
+                }
+
+            foreach (var slot in Inventory.Slots)
+                if (slot.Rectangle.Intersects(cursorRectangle))
+                {
+                    TakeItemFromSlot(slot);
+                    break;
+                }
+        }
+
+        if (mouse.LeftButton == ButtonState.Pressed && lastMouse.LeftButton != ButtonState.Pressed && InInventory)
+        {
+            var cursorRectangle = new Rectangle(mouse.X, mouse.Y, 1, 1);
+
+            foreach (var slot in Inventory.HotbarSlots)
+                if (slot.Rectangle.Intersects(cursorRectangle))
+                {
+                    PutItemToSlot(slot);
+                    break;
+                }
+
+            foreach (var slot in Inventory.Slots)
+                if (slot.Rectangle.Intersects(cursorRectangle))
+                {
+                    PutItemToSlot(slot);
+                    break;
+                }
+        }
+
         lastMouse = mouse;
+    }
+
+    private void TakeItemFromSlot(Slot slot)
+    {
+        if (slot.Item == null)
+            return;
+        else if (ItemInCursor != null)
+        {
+            var slotItem = slot.Item;
+            int slotItemAmount = slot.ItemAmount;
+
+            slot.UpdateItem(ItemInCursor, ItemInCursorAmount);
+
+            ItemInCursor = slotItem;
+            ItemInCursorAmount = slotItemAmount;
+        }
+        else
+        {
+            ItemInCursor = slot.Item;
+            ItemInCursorAmount = slot.ItemAmount;
+            slot.UpdateItem(null, 0);
+        }
+    }
+
+    private void PutItemToSlot(Slot slot)
+    {
+        if (ItemInCursor != null)
+        {
+            slot.UpdateItem(ItemInCursor, ItemInCursorAmount);
+            ItemInCursor = null;
+            ItemInCursorAmount = 0;
+        }
     }
 
     private void Move()

@@ -71,6 +71,8 @@ public class GameScene(ContentManager content, SpriteBatch spriteBatch, Graphics
     public override void Draw()
     {
         var view = Camera.GetViewMatrix();
+        int screenWidth = GraphicsManager.PreferredBackBufferWidth;
+        int screenHeight = GraphicsManager.PreferredBackBufferHeight;
 
         // Game world (applying transform matrix)
         SpriteBatch.Begin(samplerState: SamplerState.PointClamp, transformMatrix: view);
@@ -91,9 +93,22 @@ public class GameScene(ContentManager content, SpriteBatch spriteBatch, Graphics
             SpriteBatch.Draw(pixel, new Rectangle(0, 0, GraphicsManager.PreferredBackBufferWidth,
             GraphicsManager.PreferredBackBufferHeight), new Color(0, 0, 0, 150));
             Player.Inventory.DrawInventory(SpriteBatch); 
+            Text.Draw("Inventory", new Vector2(screenWidth / 2, UI_SPACING), Color.White, SpriteBatch, TextDrawingMode.Center);
         }
 
         Player.Inventory.DrawHotbar(SpriteBatch);
+
+        var mouse = Mouse.GetState();
+        var itemInCursor = Player.ItemInCursor;
+        int itemInCursorAmount = Player.ItemInCursorAmount;
+        if (itemInCursor != null)
+        {
+            string itemAmountString = itemInCursorAmount > 1 ? itemInCursorAmount.ToString() : string.Empty;
+
+            SpriteBatch.Draw(itemInCursor.Texture, new Rectangle(mouse.Position + CursorSize, ItemSize.ToPoint()), Color.White);
+            Text.Draw(itemAmountString, (mouse.Position + CursorSize + ItemSize.ToPoint()).ToVector2(),
+            Color.White, SpriteBatch, TextDrawingMode.Center);
+        }
 
         if (debugMenuOpened)
         {
@@ -122,11 +137,11 @@ public class GameScene(ContentManager content, SpriteBatch spriteBatch, Graphics
             Text.Draw($"Hotbar slot: {hotbarSlotString}",
             new Vector2(UI_SPACING, GlyphSize.Y * TEXT_SPACING * 4 + UI_SPACING - GlyphSize.Y / 2 * 4),
             Color.White, SpriteBatch, TextDrawingMode.Right);
-            Text.Draw($"Cursor: x{Player.cursorPosition.X}, y{Player.cursorPosition.Y}",
+            Text.Draw($"Cursor: x{Player.cursorWorldPosition.X}, y{Player.cursorWorldPosition.Y}",
             new Vector2(UI_SPACING, GlyphSize.Y * TEXT_SPACING * 5 + UI_SPACING - GlyphSize.Y / 2 * 5),
             Color.White, SpriteBatch, TextDrawingMode.Right);
 
-            int screenHeight = GraphicsManager.PreferredBackBufferHeight;
+            
 
             long usedMemory = GC.GetTotalMemory(false) / 1024;
             long totalMemory = GC.GetGCMemoryInfo().TotalAvailableMemoryBytes / 1024 / 1024;
