@@ -7,6 +7,7 @@ namespace KomaruWorld;
 public class Inventory
 {
     public Slot[] HotbarSlots { get; private set; } = new Slot[5];
+    private Vector2 itemNamePos;
     public Slot[] Slots { get; private set; } = new Slot[15];
 
     public Inventory(Atlas slotAtlas, Vector2 hotbarSlotsPos, Vector2 slotsPos, int slotsLines)
@@ -23,6 +24,9 @@ public class Inventory
 
                 xAdder += SlotSize.X + UI_SPACING;
             }
+
+            itemNamePos.X = 0;
+            itemNamePos.Y = HotbarSlots[0].Position.Y - GlyphSize.Y - UI_SPACING;
         }
 
         {
@@ -52,6 +56,13 @@ public class Inventory
     {
         foreach (var slot in HotbarSlots)
             slot.Draw(spriteBatch);
+
+        var player = GameScene.Instance.Player;
+        string slotItemName = HotbarSlots[player.HotbarSlot].Item?.Name;
+        itemNamePos.X = HotbarSlots[player.HotbarSlot].Position.X + SlotSize.X / 2;
+        if (slotItemName == null)
+            return;
+        Text.Draw(slotItemName, itemNamePos, Color.White, spriteBatch, TextDrawingMode.Center);
     }
 
     public void DrawInventory(SpriteBatch spriteBatch)

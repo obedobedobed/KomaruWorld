@@ -51,8 +51,8 @@ public class Slot : GameObject
         {
             spriteBatch.Draw(Item.Texture, itemRectangle, Color.White);
             if (ItemCount > 1)
-                Text.Write(ItemCount.ToString(), itemCountPosition, frame == defaultFrame ? Color.White : Color.Black,
-                spriteBatch, reverse: true);
+                Text.Draw(ItemCount.ToString(), itemCountPosition, frame == defaultFrame ? Color.White : Color.Black,
+                spriteBatch, TextDrawingMode.Left);
         }
     }
 }

@@ -112,42 +112,42 @@ public class GameScene(ContentManager content, SpriteBatch spriteBatch, Graphics
                 ? $"{slot + 1} - {slotItem.Item.Name} (x{slotItem.ItemCount})"
                 : $"{slot + 1} - Air (x0)";
 
-            Text.Write($"{GAME_NAME} - v{GAME_VERSION}",
+            Text.Draw($"{GAME_NAME} - v{GAME_VERSION}",
             new Vector2(UI_SPACING, GlyphSize.Y * TEXT_SPACING * 0 + UI_SPACING - GlyphSize.Y / 2 * 0),
-            Color.White, SpriteBatch);
-            Text.Write($"FPS:{FPS} (Fixed timestep)",
+            Color.White, SpriteBatch, TextDrawingMode.Right);
+            Text.Draw($"FPS:{FPS} (Fixed timestep)",
             new Vector2(UI_SPACING, GlyphSize.Y * TEXT_SPACING * 1 + UI_SPACING - GlyphSize.Y / 2 * 1),
-            Color.White, SpriteBatch);
-            Text.Write($"Position: x{(int)Player.Position.X}, y{(int)Player.Position.Y}",
+            Color.White, SpriteBatch, TextDrawingMode.Right);
+            Text.Draw($"Position: x{(int)Player.Position.X}, y{(int)Player.Position.Y}",
             new Vector2(UI_SPACING, GlyphSize.Y * TEXT_SPACING * 2 + UI_SPACING - GlyphSize.Y / 2 * 2),
-            Color.White, SpriteBatch);
-            Text.Write($"Gravity: {(int)Player.GravityMod}",
+            Color.White, SpriteBatch, TextDrawingMode.Right);
+            Text.Draw($"Gravity: {(int)Player.GravityMod}",
             new Vector2(UI_SPACING, GlyphSize.Y * TEXT_SPACING * 3 + UI_SPACING - GlyphSize.Y / 2 * 3),
-            Color.White, SpriteBatch);
-            Text.Write($"Hotbar slot: {hotbarSlotString}",
+            Color.White, SpriteBatch, TextDrawingMode.Right);
+            Text.Draw($"Hotbar slot: {hotbarSlotString}",
             new Vector2(UI_SPACING, GlyphSize.Y * TEXT_SPACING * 4 + UI_SPACING - GlyphSize.Y / 2 * 4),
-            Color.White, SpriteBatch);
-            Text.Write($"Cursor: x{Player.cursorPosition.X}, y{Player.cursorPosition.Y}",
+            Color.White, SpriteBatch, TextDrawingMode.Right);
+            Text.Draw($"Cursor: x{Player.cursorPosition.X}, y{Player.cursorPosition.Y}",
             new Vector2(UI_SPACING, GlyphSize.Y * TEXT_SPACING * 5 + UI_SPACING - GlyphSize.Y / 2 * 5),
-            Color.White, SpriteBatch);
+            Color.White, SpriteBatch, TextDrawingMode.Right);
 
             int screenHeight = GraphicsManager.PreferredBackBufferHeight;
 
             long usedMemory = GC.GetTotalMemory(false) / 1024;
             long totalMemory = GC.GetGCMemoryInfo().TotalAvailableMemoryBytes / 1024 / 1024;
 
-            Text.Write($"OS: {RuntimeInformation.OSDescription}",
+            Text.Draw($"OS: {RuntimeInformation.OSDescription}",
             new Vector2(UI_SPACING, screenHeight - GlyphSize.Y * TEXT_SPACING * 4 + GlyphSize.Y / 2 * 4),
-            Color.White, SpriteBatch);
-            Text.Write($"CPU: {Environment.ProcessorCount} threads CPU",
+            Color.White, SpriteBatch, TextDrawingMode.Right);
+            Text.Draw($"CPU: {Environment.ProcessorCount} threads CPU",
             new Vector2(UI_SPACING, screenHeight - GlyphSize.Y * TEXT_SPACING * 3 + GlyphSize.Y / 2 * 3),
-            Color.White, SpriteBatch);
-            Text.Write($"Memory: {usedMemory}MB/{totalMemory}MB used",
+            Color.White, SpriteBatch, TextDrawingMode.Right);
+            Text.Draw($"Memory: {usedMemory}MB/{totalMemory}MB used",
             new Vector2(UI_SPACING, screenHeight - GlyphSize.Y * TEXT_SPACING * 2 + GlyphSize.Y / 2 * 2),
-            Color.White, SpriteBatch);
-            Text.Write($"GPU: {GraphicsAdapter.DefaultAdapter.Description}",
+            Color.White, SpriteBatch, TextDrawingMode.Right);
+            Text.Draw($"GPU: {GraphicsAdapter.DefaultAdapter.Description}",
             new Vector2(UI_SPACING, screenHeight - GlyphSize.Y * TEXT_SPACING * 1 + GlyphSize.Y / 2 * 1),
-            Color.White, SpriteBatch);
+            Color.White, SpriteBatch, TextDrawingMode.Right);
         }
 
         SpriteBatch.End();

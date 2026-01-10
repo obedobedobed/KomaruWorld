@@ -150,19 +150,15 @@ public static class Text
         Text.glyphSize = glyphSize;
     }
 
-    public static void Write(string text, Vector2 position, Color color, SpriteBatch spriteBatch, bool reverse = false)
+    public static void Draw(string text, Vector2 position, Color color, SpriteBatch spriteBatch, TextDrawingMode drawingMode)
     {
-        int glyphPosition = !reverse ? (int)position.X : (int) position.X - glyphSize.X;
-
-        if (reverse)
+        int glyphPosition = drawingMode switch
         {
-            string reversedText = string.Empty;
-
-            for (int i = text.Length - 1; i >= 0; i--)
-                reversedText += text[i];
-
-            text = reversedText;
-        }
+            TextDrawingMode.Right => (int)position.X,
+            TextDrawingMode.Left => (int)position.X - CalculateStringWidth(text),
+            TextDrawingMode.Center => (int)position.X - CalculateStringWidth(text) / 2,
+            _ => 0
+        };
 
         foreach (char _char in text)
         {
@@ -177,13 +173,31 @@ public static class Text
                 throw new System.Exception($"Cannot find glyph {_char} in dictionary!");
             else
             {
-
                 spriteBatch.Draw(glyphes.Texture, new Rectangle
                 (glyphPosition, (int)position.Y, glyphSize.X, glyphSize.Y),
                 glyphes.Rectangles[glyphId], color);
             }
 
-            glyphPosition += glyphWidth * (reverse ? -1 : 1);
+            glyphPosition += glyphWidth;
         }
+    }
+
+    private static int CalculateStringWidth(string _string)
+    {
+        int width = 0;
+
+        foreach (char _char in _string)
+        {
+            int glyphWidth;
+
+            if (!customWidthGlyphes.TryGetValue(_char, out glyphWidth))
+                glyphWidth = glyphSize.X;
+            else
+                glyphWidth *= TEXT_MOD;
+
+            width += glyphWidth;
+        }
+
+        return width;
     }
 }
