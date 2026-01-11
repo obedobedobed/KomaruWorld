@@ -217,6 +217,12 @@ public class Player : GameObject
                     PutItemToSlot(slot);
                     break;
                 }
+
+            if (Inventory.DeleteSlot.Rectangle.Intersects(cursorRectangle))
+            {
+                ItemInCursor = null;
+                ItemInCursorAmount = 0;
+            }
         }
 
         lastMouse = mouse;
@@ -248,7 +254,36 @@ public class Player : GameObject
     {
         if (ItemInCursor != null)
         {
-            slot.UpdateItem(ItemInCursor, ItemInCursorAmount);
+            var item = slot.Item;
+            var itemAmount = slot.ItemAmount;
+
+            if (item == null)
+            {
+                slot.UpdateItem(ItemInCursor, ItemInCursorAmount);
+                ItemInCursor = null;
+                ItemInCursorAmount = 0;
+            }
+            else if (item.ID == ItemInCursor.ID && itemAmount < item.MaxStack)
+            {
+                int fixedItemMaxStackMinusItemAmount = item.MaxStack - itemAmount;
+                int fixedItemInCursorAmount = ItemInCursorAmount;
+
+                if ((itemAmount + ItemInCursorAmount) >= item.MaxStack)
+                    for (int i = 0; i < fixedItemMaxStackMinusItemAmount; i++)
+                        PutItemToSlotOneTime(slot);
+                else
+                    for (int i = 0; i < fixedItemInCursorAmount; i++)
+                        PutItemToSlotOneTime(slot);
+            }
+        }
+    }
+
+    private void PutItemToSlotOneTime(Slot slot)
+    {
+        slot.CountItem();
+        ItemInCursorAmount--;
+        if (ItemInCursorAmount <= 0)
+        {
             ItemInCursor = null;
             ItemInCursorAmount = 0;
         }

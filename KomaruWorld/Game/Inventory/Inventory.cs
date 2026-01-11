@@ -6,9 +6,10 @@ namespace KomaruWorld;
 
 public class Inventory
 {
-    public Slot[] HotbarSlots { get; private set; } = new Slot[5];
     private Vector2 itemNamePos;
+    public Slot[] HotbarSlots { get; private set; } = new Slot[5];
     public Slot[] Slots { get; private set; } = new Slot[15];
+    public DeleteSlot DeleteSlot { get; private set; }
 
     public Inventory(Atlas slotAtlas, Vector2 hotbarSlotsPos, Vector2 slotsPos, int slotsLines)
     {
@@ -34,15 +35,16 @@ public class Inventory
             for (int i = 0; i < slotsLines; i++)
             {
                 float xAdder = 0f;
-                for (int j = 0; j < Slots.Length / slotsLines; j++)
+                for (int j = 0; j < Slots.Length / slotsLines + (i == slotsLines - 1 ? 1 : 0); j++)
                 {
+                    var pos = new Vector2(slotsPos.X + xAdder, slotsPos.Y + yAdder);
                     int iteration = i * (Slots.Length / slotsLines) + j;
 
-                    Slots[iteration] = new Slot
-                    (
-                        slotAtlas, new Vector2(slotsPos.X + xAdder, slotsPos.Y + yAdder), SlotSize,
-                        defaultFrame: 0, choosedFrame: 1, ItemSize, slotId: iteration
-                    );
+                    if (j != Slots.Length / slotsLines)
+                        Slots[iteration] = new Slot(slotAtlas, pos, SlotSize, defaultFrame: 0, choosedFrame: 1, ItemSize,
+                        slotId: iteration);
+                    else
+                        DeleteSlot = new DeleteSlot(slotAtlas, pos, SlotSize);
 
                     xAdder += SlotSize.X + UI_SPACING;
                 }
@@ -102,5 +104,7 @@ public class Inventory
     {
         foreach (var slot in Slots)
             slot.Draw(spriteBatch);
+
+        DeleteSlot.Draw(spriteBatch);
     }
 }
