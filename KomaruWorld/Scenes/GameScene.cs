@@ -99,6 +99,53 @@ public class GameScene(ContentManager content, SpriteBatch spriteBatch, Graphics
         Player.Inventory.DrawHotbar(SpriteBatch);
 
         var mouse = Mouse.GetState();
+        var cursorRectangle = new Rectangle(mouse.X, mouse.Y, 1, 1);
+
+        foreach (var slot in Player.Inventory.Slots)
+        {
+            if (slot.Rectangle.Intersects(cursorRectangle) && slot.Item != null)
+            {
+                var descriptionPos = new Vector2(slot.Position.X + SlotSize.X, slot.Position.Y);
+                Text.Draw(slot.Item.Name + $" (x{slot.ItemAmount})", new Vector2(descriptionPos.X, descriptionPos.Y
+                + (GlyphSize.X + TEXT_SPACING) * 0), Color.White, SpriteBatch, TextDrawingMode.Right);
+
+                if (slot.Item is PlaceableItem)
+                    Text.Draw("Placeable", new Vector2(descriptionPos.X, descriptionPos.Y
+                    + (GlyphSize.X + TEXT_SPACING) * 1), Color.White, SpriteBatch, TextDrawingMode.Right);
+                else if (slot.Item.IsTool)
+                {
+                    string toWritePower = "[Unknown parameter]";
+
+                    if (slot.Item is SwordItem sword)
+                        toWritePower = $"Damage: {sword.Damage}";
+                    else if (slot.Item is PickaxeItem pickaxe)
+                        toWritePower = $"Pickaxe power: {pickaxe.Damage}";
+                    else if (slot.Item is AxeItem axe)
+                        toWritePower = $"Axe power: {axe.Damage}";
+
+                    Text.Draw(toWritePower, new Vector2(descriptionPos.X, descriptionPos.Y
+                        + (GlyphSize.X + TEXT_SPACING) * 1), Color.White, SpriteBatch, TextDrawingMode.Right);
+                    Text.Draw("Tool", new Vector2(descriptionPos.X, descriptionPos.Y
+                    + (GlyphSize.X + TEXT_SPACING) * 2), Color.White, SpriteBatch, TextDrawingMode.Right);
+                }
+                else if (slot.Item is ArmorElementItem armor)
+                {
+                    string armorElement = armor.Element switch
+                    {
+                        ArmorElement.Helmet => "Helmet",
+                        ArmorElement.Chestplate => "Chestplate",
+                        ArmorElement.Leggins => "Leggins",
+                        _ => "[Unknown parameter]"
+                    };
+
+                    Text.Draw(armorElement, new Vector2(descriptionPos.X, descriptionPos.Y
+                    + (GlyphSize.X + TEXT_SPACING) * 1), Color.White, SpriteBatch, TextDrawingMode.Right);
+                    Text.Draw($"Armor: {armor.Armor}", new Vector2(descriptionPos.X, descriptionPos.Y
+                    + (GlyphSize.X + TEXT_SPACING) * 2), Color.White, SpriteBatch, TextDrawingMode.Right);
+                }
+            }
+        }
+
         var itemInCursor = Player.ItemInCursor;
         int itemInCursorAmount = Player.ItemInCursorAmount;
         if (itemInCursor != null)

@@ -52,7 +52,7 @@ public static class ItemsBank
     public static Item Axe { get { return new AxeItem("Axe", AxeTexture, id: 8, damage: 3); } }
     public static Item Pickaxe { get { return new PickaxeItem("Pickaxe", PickaxeTexture, id: 9, damage: 1); } }
     public static Item Sword { get { return new SwordItem("Sword", SwordTexture, id: 9, damage: 5); } }
-    public static Item IronHelmet { get { return new ArmorElementItem("Iron helmet", SwordTexture, id: 10, armor: 5, element: ArmorElement.Helmet); } }
-    public static Item IronChestplate { get { return new ArmorElementItem("Iron chestplate", SwordTexture, id: 11, armor: 5, element: ArmorElement.Chestplate); } }
-    public static Item IronLeggins { get { return new ArmorElementItem("Iron leggins", SwordTexture, id: 11, armor: 5, element: ArmorElement.Leggins); } }
+    public static Item IronHelmet { get { return new ArmorElementItem("Iron helmet", IronHelmetTexture, id: 10, armor: 2, element: ArmorElement.Helmet); } }
+    public static Item IronChestplate { get { return new ArmorElementItem("Iron chestplate", IronChestplateTexture, id: 11, armor: 3, element: ArmorElement.Chestplate); } }
+    public static Item IronLeggins { get { return new ArmorElementItem("Iron leggins", IronLegginsTexture, id: 11, armor: 2, element: ArmorElement.Leggins); } }
 }
