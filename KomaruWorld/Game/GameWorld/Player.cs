@@ -198,61 +198,61 @@ public class Player : GameObject
                 }
         }
 
-        if (mouse.RightButton == ButtonState.Pressed && lastMouse.RightButton != ButtonState.Pressed && InInventory)
-        {
-            var cursorRectangle = new Rectangle(mouse.X, mouse.Y, 1, 1);
-
-            foreach (var slot in Inventory.HotbarSlots)
-                if (slot.Rectangle.Intersects(cursorRectangle))
-                {
-                    TakeItemFromSlot(slot);
-                    break;
-                }
-
-            foreach (var slot in Inventory.Slots)
-                if (slot.Rectangle.Intersects(cursorRectangle))
-                {
-                    TakeItemFromSlot(slot);
-                    break;
-                }
-
-            foreach (var slot in Inventory.ArmorSlots)
-                if (slot.Rectangle.Intersects(cursorRectangle))
-                {
-                    TakeItemFromSlot(slot);
-                    break;
-                }
-        }
-
         if (mouse.LeftButton == ButtonState.Pressed && lastMouse.LeftButton != ButtonState.Pressed && InInventory)
         {
             var cursorRectangle = new Rectangle(mouse.X, mouse.Y, 1, 1);
 
-            foreach (var slot in Inventory.HotbarSlots)
+            if (ItemInCursor == null)
+            {
+                foreach (var slot in Inventory.HotbarSlots)
                 if (slot.Rectangle.Intersects(cursorRectangle))
                 {
-                    PutItemToSlot(slot);
+                    TakeItemFromSlot(slot);
                     break;
                 }
 
             foreach (var slot in Inventory.Slots)
                 if (slot.Rectangle.Intersects(cursorRectangle))
                 {
-                    PutItemToSlot(slot);
+                    TakeItemFromSlot(slot);
                     break;
                 }
 
             foreach (var slot in Inventory.ArmorSlots)
                 if (slot.Rectangle.Intersects(cursorRectangle))
                 {
-                    PutItemToSlot(slot);
+                    TakeItemFromSlot(slot);
                     break;
                 }
-
-            if (Inventory.DeleteSlot.Rectangle.Intersects(cursorRectangle))
+            }
+            else
             {
-                ItemInCursor = null;
-                ItemInCursorAmount = 0;
+                foreach (var slot in Inventory.HotbarSlots)
+                    if (slot.Rectangle.Intersects(cursorRectangle))
+                    {
+                        PutItemToSlot(slot);
+                        break;
+                    }
+
+                foreach (var slot in Inventory.Slots)
+                    if (slot.Rectangle.Intersects(cursorRectangle))
+                    {
+                        PutItemToSlot(slot);
+                        break;
+                    }
+
+                foreach (var slot in Inventory.ArmorSlots)
+                    if (slot.Rectangle.Intersects(cursorRectangle))
+                    {
+                        PutItemToSlot(slot);
+                        break;
+                    }
+
+                if (Inventory.DeleteSlot.Rectangle.Intersects(cursorRectangle))
+                {
+                    ItemInCursor = null;
+                    ItemInCursorAmount = 0;
+                }
             }
         }
 
@@ -263,16 +263,6 @@ public class Player : GameObject
     {
         if (slot.Item == null)
             return;
-        else if (ItemInCursor != null)
-        {
-            var slotItem = slot.Item;
-            int slotItemAmount = slot.ItemAmount;
-
-            slot.UpdateItem(ItemInCursor, ItemInCursorAmount);
-
-            ItemInCursor = slotItem;
-            ItemInCursorAmount = slotItemAmount;
-        }
         else
         {
             ItemInCursor = slot.Item;
@@ -330,6 +320,16 @@ public class Player : GameObject
                     for (int i = 0; i < fixedItemInCursorAmount; i++)
                         PutItemToSlotOneTime(slot);
             }
+            else
+            {
+                var slotItem = slot.Item;
+                int slotItemAmount = slot.ItemAmount;
+
+                slot.UpdateItem(ItemInCursor, ItemInCursorAmount);
+
+                ItemInCursor = slotItem;
+                ItemInCursorAmount = slotItemAmount;
+            }
         }
     }
 
@@ -343,6 +343,15 @@ public class Player : GameObject
             {
                 slot.UpdateItem(armorElement);
                 ItemInCursor = null;
+                ItemInCursorAmount = 0;
+            }
+            else
+            {
+                var slotItem = slot.Item;
+
+                slot.UpdateItem(ItemInCursor as ArmorElementItem);
+
+                ItemInCursor = slotItem;
                 ItemInCursorAmount = 0;
             }
         }
