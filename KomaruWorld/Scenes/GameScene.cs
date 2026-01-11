@@ -19,12 +19,17 @@ public class GameScene(ContentManager content, SpriteBatch spriteBatch, Graphics
     private KeyboardState lastKeyboard;
     private Texture2D pixel;
 
+    private SpriteButton craftInventorySwitchButton;
+
     // World
     private int worldWidth = 60;
     private int worldHeight = 40;
 
     // Debug
     private bool debugMenuOpened = false;
+
+    // Inventory
+    private InventoryMenu inventoryMenu;
 
     public override void Load()
     {
@@ -38,11 +43,18 @@ public class GameScene(ContentManager content, SpriteBatch spriteBatch, Graphics
         Player = new Player(playerAtlas, new Vector2(worldWidth * TileSize.X / 2, 100), PlayerSize,
         defaultFrame: 1, slotAtlas: slotAtlas);
 
+        var craftInventorySwitchAtlas = new Atlas
+        (texture: Content.Load<Texture2D>("Sprites/UI/CraftInventorySwitchAtlas"), SlotSize / SIZE_MOD);
+        craftInventorySwitchButton = new SpriteButton(craftInventorySwitchAtlas, new Vector2 (UI_SPACING, UI_SPACING),
+        SlotSize, 0, 1, action: CraftSwitchCall);
+
         Camera.Position = Player.Position;
     }
+    
 
     public override void Update(GameTime gameTime)
     {
+        craftInventorySwitchButton.Update(gameTime);
         World.Update(gameTime);
         Player.Update(gameTime);
 
@@ -93,8 +105,23 @@ public class GameScene(ContentManager content, SpriteBatch spriteBatch, Graphics
         {
             SpriteBatch.Draw(pixel, new Rectangle(0, 0, GraphicsManager.PreferredBackBufferWidth,
             GraphicsManager.PreferredBackBufferHeight), new Color(0, 0, 0, 150));
-            Player.Inventory.DrawInventory(SpriteBatch); 
-            Text.Draw("Inventory", new Vector2(screenWidth / 2, UI_SPACING), Color.White, SpriteBatch, TextDrawingMode.Center);
+            string title = string.Empty;
+            if (inventoryMenu == InventoryMenu.Inventory)
+            {
+                title = "Inventory";
+                Player.Inventory.DrawInventory(SpriteBatch); 
+            }
+            else if (inventoryMenu == InventoryMenu.Craft)
+            {
+                title = "Craft";
+            }
+            Text.Draw(title, new Vector2(screenWidth / 2, UI_SPACING), Color.White,
+            SpriteBatch, TextDrawingMode.Center);
+            craftInventorySwitchButton.Draw(SpriteBatch);
+        }
+        else if (inventoryMenu == InventoryMenu.Craft)
+        {
+            CraftSwitch();
         }
 
         Player.Inventory.DrawHotbar(SpriteBatch);
@@ -103,7 +130,7 @@ public class GameScene(ContentManager content, SpriteBatch spriteBatch, Graphics
         var cursorRectangle = new Rectangle(mouse.X, mouse.Y, 1, 1);
         bool drawHotbarItemName = true;
 
-        if (Player.InInventory)
+        if (Player.InInventory && inventoryMenu == InventoryMenu.Inventory)
         {
             foreach (var slot in Player.Inventory.Slots)
                 if (slot.Rectangle.Intersects(cursorRectangle) && slot.Item != null)
@@ -152,53 +179,8 @@ public class GameScene(ContentManager content, SpriteBatch spriteBatch, Graphics
         }
 
         if (debugMenuOpened)
-        {
-            int slot = Player.HotbarSlot;
-            var slotItem = Player.Inventory?.HotbarSlots[slot];
-            string hotbarSlotString =  (slotItem?.Item != null)
-                ? $"{slot + 1} - {slotItem.Item.Name} (x{slotItem.ItemAmount})"
-                : $"{slot + 1} - Air (x0)";
-
-            string vSyncString = GraphicsManager.SynchronizeWithVerticalRetrace
-                ? "(VSync, press F2 to disable)"
-                : "(Non-VSync, press F2 to enable)";
-
-            Text.Draw($"{GAME_NAME} - v{GAME_VERSION}",
-            new Vector2(UI_SPACING, GlyphSize.Y * TEXT_SPACING * 0 + UI_SPACING - GlyphSize.Y / 2 * 0),
-            Color.White, SpriteBatch, TextDrawingMode.Right);
-            Text.Draw($"FPS:{Game1.Instance.FPS} {vSyncString}",
-            new Vector2(UI_SPACING, GlyphSize.Y * TEXT_SPACING * 1 + UI_SPACING - GlyphSize.Y / 2 * 1),
-            Color.White, SpriteBatch, TextDrawingMode.Right);
-            Text.Draw($"Position: x{(int)Player.Position.X}, y{(int)Player.Position.Y}",
-            new Vector2(UI_SPACING, GlyphSize.Y * TEXT_SPACING * 2 + UI_SPACING - GlyphSize.Y / 2 * 2),
-            Color.White, SpriteBatch, TextDrawingMode.Right);
-            Text.Draw($"Gravity: {(int)Player.GravityVelocity}",
-            new Vector2(UI_SPACING, GlyphSize.Y * TEXT_SPACING * 3 + UI_SPACING - GlyphSize.Y / 2 * 3),
-            Color.White, SpriteBatch, TextDrawingMode.Right);
-            Text.Draw($"Hotbar slot: {hotbarSlotString}",
-            new Vector2(UI_SPACING, GlyphSize.Y * TEXT_SPACING * 4 + UI_SPACING - GlyphSize.Y / 2 * 4),
-            Color.White, SpriteBatch, TextDrawingMode.Right);
-            Text.Draw($"Cursor: x{Player.cursorWorldPosition.X}, y{Player.cursorWorldPosition.Y}",
-            new Vector2(UI_SPACING, GlyphSize.Y * TEXT_SPACING * 5 + UI_SPACING - GlyphSize.Y / 2 * 5),
-            Color.White, SpriteBatch, TextDrawingMode.Right);
-
-            long usedMemory = GC.GetTotalMemory(false) / 1024;
-            long totalMemory = GC.GetGCMemoryInfo().TotalAvailableMemoryBytes / 1024 / 1024;
-
-            Text.Draw($"OS: {RuntimeInformation.OSDescription}",
-            new Vector2(UI_SPACING, screenHeight - GlyphSize.Y * TEXT_SPACING * 4 + GlyphSize.Y / 2 * 4),
-            Color.White, SpriteBatch, TextDrawingMode.Right);
-            Text.Draw($"CPU: {Environment.ProcessorCount} threads CPU",
-            new Vector2(UI_SPACING, screenHeight - GlyphSize.Y * TEXT_SPACING * 3 + GlyphSize.Y / 2 * 3),
-            Color.White, SpriteBatch, TextDrawingMode.Right);
-            Text.Draw($"Memory: {usedMemory}MB/{totalMemory}MB used",
-            new Vector2(UI_SPACING, screenHeight - GlyphSize.Y * TEXT_SPACING * 2 + GlyphSize.Y / 2 * 2),
-            Color.White, SpriteBatch, TextDrawingMode.Right);
-            Text.Draw($"GPU: {GraphicsAdapter.DefaultAdapter.Description}",
-            new Vector2(UI_SPACING, screenHeight - GlyphSize.Y * TEXT_SPACING * 1 + GlyphSize.Y / 2 * 1),
-            Color.White, SpriteBatch, TextDrawingMode.Right);
-        }
-
+            DrawDebugMenu();
+            
         SpriteBatch.End();
     }
 
@@ -273,5 +255,65 @@ public class GameScene(ContentManager content, SpriteBatch spriteBatch, Graphics
             Text.Draw(description[i], descriptionPos, Color.White, SpriteBatch, TextDrawingMode.Right);
             descriptionPos.Y += GlyphSize.Y + TEXT_SPACING;
         }
+    }
+
+    private void DrawDebugMenu()
+    {
+        int screenHeight = GraphicsManager.PreferredBackBufferHeight;
+
+        int slot = Player.HotbarSlot;
+        var slotItem = Player.Inventory?.HotbarSlots[slot];
+        string hotbarSlotString =  (slotItem?.Item != null)
+            ? $"{slot + 1} - {slotItem.Item.Name} (x{slotItem.ItemAmount})"
+            : $"{slot + 1} - Air (x0)";
+
+        string vSyncString = GraphicsManager.SynchronizeWithVerticalRetrace
+            ? "(VSync, press F2 to disable)"
+            : "(Non-VSync, press F2 to enable)";
+
+        Text.Draw($"{GAME_NAME} - v{GAME_VERSION}",
+        new Vector2(UI_SPACING, GlyphSize.Y * TEXT_SPACING * 0 + UI_SPACING - GlyphSize.Y / 2 * 0),
+        Color.White, SpriteBatch, TextDrawingMode.Right);
+        Text.Draw($"FPS:{Game1.Instance.FPS} {vSyncString}",
+        new Vector2(UI_SPACING, GlyphSize.Y * TEXT_SPACING * 1 + UI_SPACING - GlyphSize.Y / 2 * 1),
+        Color.White, SpriteBatch, TextDrawingMode.Right);
+        Text.Draw($"Position: x{(int)Player.Position.X}, y{(int)Player.Position.Y}",
+        new Vector2(UI_SPACING, GlyphSize.Y * TEXT_SPACING * 2 + UI_SPACING - GlyphSize.Y / 2 * 2),
+        Color.White, SpriteBatch, TextDrawingMode.Right);
+        Text.Draw($"Gravity: {(int)Player.GravityVelocity}",
+        new Vector2(UI_SPACING, GlyphSize.Y * TEXT_SPACING * 3 + UI_SPACING - GlyphSize.Y / 2 * 3),
+        Color.White, SpriteBatch, TextDrawingMode.Right);
+        Text.Draw($"Hotbar slot: {hotbarSlotString}",
+        new Vector2(UI_SPACING, GlyphSize.Y * TEXT_SPACING * 4 + UI_SPACING - GlyphSize.Y / 2 * 4),
+        Color.White, SpriteBatch, TextDrawingMode.Right);
+        Text.Draw($"Cursor: x{Player.cursorWorldPosition.X}, y{Player.cursorWorldPosition.Y}",
+        new Vector2(UI_SPACING, GlyphSize.Y * TEXT_SPACING * 5 + UI_SPACING - GlyphSize.Y / 2 * 5),
+        Color.White, SpriteBatch, TextDrawingMode.Right);
+
+        long usedMemory = GC.GetTotalMemory(false) / 1024;
+        long totalMemory = GC.GetGCMemoryInfo().TotalAvailableMemoryBytes / 1024 / 1024;
+
+        Text.Draw($"OS: {RuntimeInformation.OSDescription}",
+        new Vector2(UI_SPACING, screenHeight - GlyphSize.Y * TEXT_SPACING * 4 + GlyphSize.Y / 2 * 4),
+        Color.White, SpriteBatch, TextDrawingMode.Right);
+        Text.Draw($"CPU: {Environment.ProcessorCount} threads CPU",
+        new Vector2(UI_SPACING, screenHeight - GlyphSize.Y * TEXT_SPACING * 3 + GlyphSize.Y / 2 * 3),
+        Color.White, SpriteBatch, TextDrawingMode.Right);
+        Text.Draw($"Memory: {usedMemory}MB/{totalMemory}MB used",
+        new Vector2(UI_SPACING, screenHeight - GlyphSize.Y * TEXT_SPACING * 2 + GlyphSize.Y / 2 * 2),
+        Color.White, SpriteBatch, TextDrawingMode.Right);
+        Text.Draw($"GPU: {GraphicsAdapter.DefaultAdapter.Description}",
+        new Vector2(UI_SPACING, screenHeight - GlyphSize.Y * TEXT_SPACING * 1 + GlyphSize.Y / 2 * 1),
+        Color.White, SpriteBatch, TextDrawingMode.Right);
+    }
+    public static void CraftSwitchCall() => Instance.CraftSwitch();
+    private void CraftSwitch()
+    {
+        inventoryMenu = inventoryMenu switch
+        {
+            InventoryMenu.Inventory => InventoryMenu.Craft,
+            _ => InventoryMenu.Inventory
+        };
+        craftInventorySwitchButton.frameAdder = inventoryMenu == InventoryMenu.Inventory ? 0 : 2;
     }
 }
