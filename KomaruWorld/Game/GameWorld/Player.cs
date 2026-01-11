@@ -32,8 +32,20 @@ public class Player : GameObject
 
     // Game
     private float deltaTime = 0f;
+
+    // Hitbox
+    private int hitboxXSpacing = 2 * SIZE_MOD;
     private Rectangle hitbox
-    { get { return new Rectangle((int)Position.X + 2, (int)Position.Y, (int)Size.X - 4, (int)Size.Y); } }
+    {
+        get
+        {
+            return new Rectangle
+            (
+                (int)Position.X + hitboxXSpacing, (int)Position.Y,
+                (int)Size.X - hitboxXSpacing * 2, (int)Size.Y
+            );
+        }
+    }
 
     // Input
     private MouseState lastMouse;
@@ -309,7 +321,9 @@ public class Player : GameObject
             if (nextHitbox.Intersects(tile.Hitbox))
             {
                 isGrounded = true;
-                Position = new Vector2(moveMod > 0 ? tile.Hitbox.Left - Rectangle.Width : tile.Hitbox.Right, Position.Y);
+                Position = new Vector2(moveMod > 0
+                    ? tile.Hitbox.Left - Rectangle.Width + hitboxXSpacing
+                    : tile.Hitbox.Right - hitboxXSpacing, Position.Y);
                 velocity = 0f;
                 break;
             }
@@ -366,6 +380,7 @@ public class Player : GameObject
                 isGrounded = true;
                 GravityVelocity = DEFAULT_GRAVITY;
                 Position = new Vector2(Position.X, tile.Rectangle.Bottom);
+                jumpTime = 0f;
                 velocity = 0f;
                 break;
             }
