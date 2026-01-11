@@ -12,7 +12,7 @@ Survival game with Komaru the cat
 # TODO List (15% completed)
 1. Tiles and items system [\*] - 90% completed
 2. Inventory [\*] - 70% completed
-3. Armor [X]
+3. Armor [\*] - 10% completed
 4. Mobs and AI [X]
 5. Combat system [X]
 6. NPCs and dialogues [X]
