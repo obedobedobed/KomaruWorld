@@ -101,17 +101,47 @@ public class GameScene(ContentManager content, SpriteBatch spriteBatch, Graphics
         var mouse = Mouse.GetState();
         var cursorRectangle = new Rectangle(mouse.X, mouse.Y, 1, 1);
 
-        foreach (var slot in Player.Inventory.Slots)
+        if (Player.InInventory)
         {
-            if (slot.Rectangle.Intersects(cursorRectangle) && slot.Item != null)
+            bool hotbarSlot = false;
+            Slot slot = null;
+            ArmorSlot aSlot = null;
+
+            foreach (var _slot in Player.Inventory.Slots)
+                if (_slot.Rectangle.Intersects(cursorRectangle) && _slot.Item != null)
+                {
+                    slot = _slot;
+                    break;
+                }
+
+            // if (slot == null)
+            //     foreach (var _slot in Player.Inventory.HotbarSlots)
+            //     if (_slot.Rectangle.Intersects(cursorRectangle) && _slot.Item != null)
+            //     {
+            //         slot = _slot;
+            //         hotbarSlot = true;
+            //         break;
+            //     }
+
+            if (slot == null)
+                foreach (var _slot in Player.Inventory.ArmorSlots)
+                if (_slot.Rectangle.Intersects(cursorRectangle) && _slot.Item != null)
+                {
+                    aSlot = _slot;
+                    break;
+                }
+
+            if (slot != null)
             {
                 var descriptionPos = new Vector2(slot.Position.X + SlotSize.X, slot.Position.Y);
+                int textSpacingMod = hotbarSlot ? -1 : 1;
+                
                 Text.Draw(slot.Item.Name + $" (x{slot.ItemAmount})", new Vector2(descriptionPos.X, descriptionPos.Y
-                + (GlyphSize.X + TEXT_SPACING) * 0), Color.White, SpriteBatch, TextDrawingMode.Right);
+                + (GlyphSize.X + TEXT_SPACING) * 0 * textSpacingMod), Color.White, SpriteBatch, TextDrawingMode.Right);
 
                 if (slot.Item is PlaceableItem)
                     Text.Draw("Placeable", new Vector2(descriptionPos.X, descriptionPos.Y
-                    + (GlyphSize.X + TEXT_SPACING) * 1), Color.White, SpriteBatch, TextDrawingMode.Right);
+                    + (GlyphSize.X + TEXT_SPACING) * 1 * textSpacingMod), Color.White, SpriteBatch, TextDrawingMode.Right);
                 else if (slot.Item.IsTool)
                 {
                     string toWritePower = "[Unknown parameter]";
@@ -124,9 +154,9 @@ public class GameScene(ContentManager content, SpriteBatch spriteBatch, Graphics
                         toWritePower = $"Axe power: {axe.Damage}";
 
                     Text.Draw(toWritePower, new Vector2(descriptionPos.X, descriptionPos.Y
-                        + (GlyphSize.X + TEXT_SPACING) * 1), Color.White, SpriteBatch, TextDrawingMode.Right);
+                        + (GlyphSize.X + TEXT_SPACING) * 1 * textSpacingMod), Color.White, SpriteBatch, TextDrawingMode.Right);
                     Text.Draw("Tool", new Vector2(descriptionPos.X, descriptionPos.Y
-                    + (GlyphSize.X + TEXT_SPACING) * 2), Color.White, SpriteBatch, TextDrawingMode.Right);
+                    + (GlyphSize.X + TEXT_SPACING) * 2 * textSpacingMod), Color.White, SpriteBatch, TextDrawingMode.Right);
                 }
                 else if (slot.Item is ArmorElementItem armor)
                 {
@@ -143,6 +173,26 @@ public class GameScene(ContentManager content, SpriteBatch spriteBatch, Graphics
                     Text.Draw($"Armor: {armor.Armor}", new Vector2(descriptionPos.X, descriptionPos.Y
                     + (GlyphSize.X + TEXT_SPACING) * 2), Color.White, SpriteBatch, TextDrawingMode.Right);
                 }
+            }
+            else if (aSlot != null)
+            {
+                var descriptionPos = new Vector2(aSlot.Position.X + SlotSize.X, aSlot.Position.Y);
+
+                Text.Draw(aSlot.Item.Name + $" (x1)", new Vector2(descriptionPos.X, descriptionPos.Y
+                + (GlyphSize.X + TEXT_SPACING) * 0), Color.White, SpriteBatch, TextDrawingMode.Right);
+
+                string armorElement = aSlot.Item.Element switch
+                {
+                    ArmorElement.Helmet => "Helmet",
+                    ArmorElement.Chestplate => "Chestplate",
+                    ArmorElement.Leggins => "Leggins",
+                    _ => "[Unknown parameter]"
+                };
+
+                Text.Draw(armorElement, new Vector2(descriptionPos.X, descriptionPos.Y
+                + (GlyphSize.X + TEXT_SPACING) * 1), Color.White, SpriteBatch, TextDrawingMode.Right);
+                Text.Draw($"Armor: {aSlot.Item.Armor}", new Vector2(descriptionPos.X, descriptionPos.Y
+                + (GlyphSize.X + TEXT_SPACING) * 2), Color.White, SpriteBatch, TextDrawingMode.Right);
             }
         }
 

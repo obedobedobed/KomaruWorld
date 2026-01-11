@@ -215,6 +215,13 @@ public class Player : GameObject
                     TakeItemFromSlot(slot);
                     break;
                 }
+
+            foreach (var slot in Inventory.ArmorSlots)
+                if (slot.Rectangle.Intersects(cursorRectangle))
+                {
+                    TakeItemFromSlot(slot);
+                    break;
+                }
         }
 
         if (mouse.LeftButton == ButtonState.Pressed && lastMouse.LeftButton != ButtonState.Pressed && InInventory)
@@ -229,6 +236,13 @@ public class Player : GameObject
                 }
 
             foreach (var slot in Inventory.Slots)
+                if (slot.Rectangle.Intersects(cursorRectangle))
+                {
+                    PutItemToSlot(slot);
+                    break;
+                }
+
+            foreach (var slot in Inventory.ArmorSlots)
                 if (slot.Rectangle.Intersects(cursorRectangle))
                 {
                     PutItemToSlot(slot);
@@ -267,6 +281,30 @@ public class Player : GameObject
         }
     }
 
+    private void TakeItemFromSlot(ArmorSlot slot)
+    {
+        if (slot.Item == null)
+            return;
+        else if (ItemInCursor != null && ItemInCursor is ArmorElementItem armorElement)
+        {
+            var slotItem = slot.Item;
+
+            if (armorElement.Element == slot.TargetElement)
+            {
+                slot.UpdateItem(armorElement);
+
+                ItemInCursor = slotItem;
+                ItemInCursorAmount = 1;
+            }
+        }
+        else if (ItemInCursor == null || ItemInCursor is ArmorElementItem)
+        {
+            ItemInCursor = slot.Item;
+            ItemInCursorAmount = 1;
+            slot.UpdateItem(null);
+        }
+    }
+
     private void PutItemToSlot(Slot slot)
     {
         if (ItemInCursor != null)
@@ -291,6 +329,21 @@ public class Player : GameObject
                 else
                     for (int i = 0; i < fixedItemInCursorAmount; i++)
                         PutItemToSlotOneTime(slot);
+            }
+        }
+    }
+
+    private void PutItemToSlot(ArmorSlot slot)
+    {
+        if (ItemInCursor != null && ItemInCursor is ArmorElementItem armorElement)
+        {
+            var item = slot.Item;
+
+            if (item == null && armorElement.Element == slot.TargetElement)
+            {
+                slot.UpdateItem(armorElement);
+                ItemInCursor = null;
+                ItemInCursorAmount = 0;
             }
         }
     }
@@ -454,5 +507,15 @@ public class Player : GameObject
             atlas.Texture, Rectangle, atlas.Rectangles[frame],
             Color.White, 0f, Vector2.Zero, flip, 0f
         );
+
+        foreach (var slot in Inventory.ArmorSlots)
+        {
+            if (slot.Item != null)
+                spriteBatch.Draw
+                (
+                    slot.Item.ArmorAtlas.Texture, Rectangle, slot.Item.ArmorAtlas.Rectangles[frame],
+                    Color.White, 0f, Vector2.Zero, flip, 0f
+                );
+        }
     }
 }

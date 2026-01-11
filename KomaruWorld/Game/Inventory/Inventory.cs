@@ -9,6 +9,7 @@ public class Inventory
     private Vector2 itemNamePos;
     public Slot[] HotbarSlots { get; private set; } = new Slot[5];
     public Slot[] Slots { get; private set; } = new Slot[15];
+    public ArmorSlot[] ArmorSlots { get; private set; } = new ArmorSlot[3];
     public DeleteSlot DeleteSlot { get; private set; }
 
     public Inventory(Atlas slotAtlas, Vector2 hotbarSlotsPos, Vector2 slotsPos, int slotsLines)
@@ -52,6 +53,27 @@ public class Inventory
                 yAdder += SlotSize.Y + UI_SPACING;
             }
         }
+
+        {
+            float yAdder = 0f;
+            for (int i = 0; i < ArmorSlots.Length; i++)
+            {
+                ArmorElement element = i switch
+                {
+                    0 => ArmorElement.Helmet,  
+                    1 => ArmorElement.Chestplate,  
+                    _ => ArmorElement.Leggins,  
+                };
+
+                var pos = new Vector2(slotsPos.X - (SlotSize.X - UI_SPACING) * 2, slotsPos.Y + yAdder);
+                ArmorSlots[i] = new ArmorSlot(slotAtlas, pos, SlotSize, frame: 3 + i, ItemSize, element);
+                yAdder += SlotSize.X + UI_SPACING;
+            }
+
+        }
+
+        itemNamePos.X = 0;
+        itemNamePos.Y = HotbarSlots[0].Position.Y - GlyphSize.Y - UI_SPACING;
     }
 
     public void DrawHotbar(SpriteBatch spriteBatch)
@@ -104,6 +126,21 @@ public class Inventory
     {
         foreach (var slot in Slots)
             slot.Draw(spriteBatch);
+
+        foreach (var slot in ArmorSlots)
+            slot.Draw(spriteBatch);
+
+        var armorTextPos = new Vector2
+        (
+            ArmorSlots[0].Position.X + SlotSize.X / 2,
+            ArmorSlots[ArmorSlots.Length - 1].Position.Y + SlotSize.Y + UI_SPACING
+        );
+
+        int armor = 0;
+        foreach (var armorSlot in ArmorSlots)
+            armor += armorSlot.Item?.Armor ?? 0;
+
+        Text.Draw($"Armor: {armor}", armorTextPos, Color.White, spriteBatch, TextDrawingMode.Center);
 
         DeleteSlot.Draw(spriteBatch);
     }

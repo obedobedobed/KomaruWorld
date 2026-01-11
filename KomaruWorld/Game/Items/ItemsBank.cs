@@ -1,6 +1,6 @@
-using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
+using static KomaruWorld.GameParameters;
 
 namespace KomaruWorld;
 
@@ -19,8 +19,11 @@ public static class ItemsBank
     public static Texture2D PickaxeTexture { get; private set; }
     public static Texture2D SwordTexture { get; private set; }
     public static Texture2D IronHelmetTexture { get; private set; }
+    private static Atlas IronHelmetAtlas;
     public static Texture2D IronChestplateTexture { get; private set; }
+    private static Atlas IronChestplateAtlas;
     public static Texture2D IronLegginsTexture { get; private set; }
+    private static Atlas IronLegginsAtlas;
 
     public static void LoadTextures(ContentManager Content)
     {
@@ -36,8 +39,11 @@ public static class ItemsBank
         PickaxeTexture = Content.Load<Texture2D>("Sprites/Items/Tools/Pickaxe");
         SwordTexture = Content.Load<Texture2D>("Sprites/Items/Tools/Sword");
         IronHelmetTexture = Content.Load<Texture2D>("Sprites/Items/Armor/IronHelmetItem");
+        IronHelmetAtlas = new Atlas(Content.Load<Texture2D>("Sprites/Items/Armor/IronHelmet"), PlayerSize / SIZE_MOD);
         IronChestplateTexture = Content.Load<Texture2D>("Sprites/Items/Armor/IronChestplateItem");
+        IronChestplateAtlas = new Atlas(Content.Load<Texture2D>("Sprites/Items/Armor/IronChestplate"), PlayerSize / SIZE_MOD);
         IronLegginsTexture = Content.Load<Texture2D>("Sprites/Items/Armor/IronLegginsItem");
+        IronLegginsAtlas = new Atlas(Content.Load<Texture2D>("Sprites/Items/Armor/IronLeggins"), PlayerSize / SIZE_MOD);
     }
 
     // Items
@@ -52,7 +58,7 @@ public static class ItemsBank
     public static Item Axe { get { return new AxeItem("Axe", AxeTexture, id: 8, damage: 3); } }
     public static Item Pickaxe { get { return new PickaxeItem("Pickaxe", PickaxeTexture, id: 9, damage: 1); } }
     public static Item Sword { get { return new SwordItem("Sword", SwordTexture, id: 9, damage: 5); } }
-    public static Item IronHelmet { get { return new ArmorElementItem("Iron helmet", IronHelmetTexture, id: 10, armor: 2, element: ArmorElement.Helmet); } }
-    public static Item IronChestplate { get { return new ArmorElementItem("Iron chestplate", IronChestplateTexture, id: 11, armor: 3, element: ArmorElement.Chestplate); } }
-    public static Item IronLeggins { get { return new ArmorElementItem("Iron leggins", IronLegginsTexture, id: 11, armor: 2, element: ArmorElement.Leggins); } }
+    public static Item IronHelmet { get { return new ArmorElementItem("Iron helmet", IronHelmetTexture, id: 10, armor: 2, element: ArmorElement.Helmet, IronHelmetAtlas); } }
+    public static Item IronChestplate { get { return new ArmorElementItem("Iron chestplate", IronChestplateTexture, id: 11, armor: 3, element: ArmorElement.Chestplate, IronChestplateAtlas); } }
+    public static Item IronLeggins { get { return new ArmorElementItem("Iron leggins", IronLegginsTexture, id: 11, armor: 2, element: ArmorElement.Leggins, IronLegginsAtlas); } }
 }
