@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
@@ -100,100 +101,43 @@ public class GameScene(ContentManager content, SpriteBatch spriteBatch, Graphics
 
         var mouse = Mouse.GetState();
         var cursorRectangle = new Rectangle(mouse.X, mouse.Y, 1, 1);
+        bool drawHotbarItemName = true;
 
         if (Player.InInventory)
         {
-            bool hotbarSlot = false;
-            Slot slot = null;
-            ArmorSlot aSlot = null;
-
-            foreach (var _slot in Player.Inventory.Slots)
-                if (_slot.Rectangle.Intersects(cursorRectangle) && _slot.Item != null)
+            foreach (var slot in Player.Inventory.Slots)
+                if (slot.Rectangle.Intersects(cursorRectangle) && slot.Item != null)
                 {
-                    slot = _slot;
+                    DrawItemDescription(slot);
                     break;
                 }
 
-            // if (slot == null)
-            //     foreach (var _slot in Player.Inventory.HotbarSlots)
-            //     if (_slot.Rectangle.Intersects(cursorRectangle) && _slot.Item != null)
-            //     {
-            //         slot = _slot;
-            //         hotbarSlot = true;
-            //         break;
-            //     }
-
-            if (slot == null)
-                foreach (var _slot in Player.Inventory.ArmorSlots)
-                if (_slot.Rectangle.Intersects(cursorRectangle) && _slot.Item != null)
+            foreach (var slot in Player.Inventory.HotbarSlots)
+                if (slot.Rectangle.Intersects(cursorRectangle) && slot.Item != null)
                 {
-                    aSlot = _slot;
+                    DrawItemDescription(slot, hotbarSlot: true);
+                    drawHotbarItemName = false;
                     break;
                 }
 
-            if (slot != null)
-            {
-                var descriptionPos = new Vector2(slot.Position.X + SlotSize.X, slot.Position.Y);
-                int textSpacingMod = hotbarSlot ? -1 : 1;
-                
-                Text.Draw(slot.Item.Name + $" (x{slot.ItemAmount})", new Vector2(descriptionPos.X, descriptionPos.Y
-                + (GlyphSize.X + TEXT_SPACING) * 0 * textSpacingMod), Color.White, SpriteBatch, TextDrawingMode.Right);
-
-                if (slot.Item is PlaceableItem)
-                    Text.Draw("Placeable", new Vector2(descriptionPos.X, descriptionPos.Y
-                    + (GlyphSize.X + TEXT_SPACING) * 1 * textSpacingMod), Color.White, SpriteBatch, TextDrawingMode.Right);
-                else if (slot.Item.IsTool)
+            foreach (var slot in Player.Inventory.ArmorSlots)
+                if (slot.Rectangle.Intersects(cursorRectangle) && slot.Item != null)
                 {
-                    string toWritePower = "[Unknown parameter]";
-
-                    if (slot.Item is SwordItem sword)
-                        toWritePower = $"Damage: {sword.Damage}";
-                    else if (slot.Item is PickaxeItem pickaxe)
-                        toWritePower = $"Pickaxe power: {pickaxe.Damage}";
-                    else if (slot.Item is AxeItem axe)
-                        toWritePower = $"Axe power: {axe.Damage}";
-
-                    Text.Draw(toWritePower, new Vector2(descriptionPos.X, descriptionPos.Y
-                        + (GlyphSize.X + TEXT_SPACING) * 1 * textSpacingMod), Color.White, SpriteBatch, TextDrawingMode.Right);
-                    Text.Draw("Tool", new Vector2(descriptionPos.X, descriptionPos.Y
-                    + (GlyphSize.X + TEXT_SPACING) * 2 * textSpacingMod), Color.White, SpriteBatch, TextDrawingMode.Right);
+                    DrawItemDescription(slot);
+                    break;
                 }
-                else if (slot.Item is ArmorElementItem armor)
-                {
-                    string armorElement = armor.Element switch
-                    {
-                        ArmorElement.Helmet => "Helmet",
-                        ArmorElement.Chestplate => "Chestplate",
-                        ArmorElement.Leggins => "Leggins",
-                        _ => "[Unknown parameter]"
-                    };
+        }
 
-                    Text.Draw(armorElement, new Vector2(descriptionPos.X, descriptionPos.Y
-                    + (GlyphSize.X + TEXT_SPACING) * 1), Color.White, SpriteBatch, TextDrawingMode.Right);
-                    Text.Draw($"Armor: {armor.Armor}", new Vector2(descriptionPos.X, descriptionPos.Y
-                    + (GlyphSize.X + TEXT_SPACING) * 2), Color.White, SpriteBatch, TextDrawingMode.Right);
-                }
-            }
-            else if (aSlot != null)
-            {
-                var descriptionPos = new Vector2(aSlot.Position.X + SlotSize.X, aSlot.Position.Y);
-
-                Text.Draw(aSlot.Item.Name + $" (x1)", new Vector2(descriptionPos.X, descriptionPos.Y
-                + (GlyphSize.X + TEXT_SPACING) * 0), Color.White, SpriteBatch, TextDrawingMode.Right);
-
-                string armorElement = aSlot.Item.Element switch
-                {
-                    ArmorElement.Helmet => "Helmet",
-                    ArmorElement.Chestplate => "Chestplate",
-                    ArmorElement.Leggins => "Leggins",
-                    _ => "[Unknown parameter]"
-                };
-
-                Text.Draw(armorElement, new Vector2(descriptionPos.X, descriptionPos.Y
-                + (GlyphSize.X + TEXT_SPACING) * 1), Color.White, SpriteBatch, TextDrawingMode.Right);
-                Text.Draw($"Armor: {aSlot.Item.Armor}", new Vector2(descriptionPos.X, descriptionPos.Y
-                + (GlyphSize.X + TEXT_SPACING) * 2), Color.White, SpriteBatch, TextDrawingMode.Right);
-            }
+        if (drawHotbarItemName)
+        {
+            string slotItemName = Player.Inventory.HotbarSlots[Player.HotbarSlot].Item?.Name;
+            var itemNamePos = new Vector2
+            (
+                Player.Inventory.HotbarSlots[Player.HotbarSlot].Position.X + SlotSize.X / 2,
+                Player.Inventory.HotbarSlots[0].Position.Y - GlyphSize.Y - UI_SPACING
+            );
+            if (slotItemName != null)
+                Text.Draw(slotItemName, itemNamePos, Color.White, SpriteBatch, TextDrawingMode.Center);
         }
 
         var itemInCursor = Player.ItemInCursor;
@@ -238,8 +182,6 @@ public class GameScene(ContentManager content, SpriteBatch spriteBatch, Graphics
             new Vector2(UI_SPACING, GlyphSize.Y * TEXT_SPACING * 5 + UI_SPACING - GlyphSize.Y / 2 * 5),
             Color.White, SpriteBatch, TextDrawingMode.Right);
 
-            
-
             long usedMemory = GC.GetTotalMemory(false) / 1024;
             long totalMemory = GC.GetGCMemoryInfo().TotalAvailableMemoryBytes / 1024 / 1024;
 
@@ -258,5 +200,78 @@ public class GameScene(ContentManager content, SpriteBatch spriteBatch, Graphics
         }
 
         SpriteBatch.End();
+    }
+
+    private void DrawItemDescription(Slot slot, bool hotbarSlot = false)
+    {
+        var descriptionPos = hotbarSlot 
+            ? new Vector2(slot.Position.X, slot.Position.Y)
+            : new Vector2(slot.Position.X, slot.Position.Y + SlotSize.Y);
+        List<string> description = new List<string>() { slot.Item.Name + $" (x{slot.ItemAmount})" };
+
+        if (slot.Item is PlaceableItem)
+            description.Add("Placeable");
+        else if (slot.Item.IsTool)
+        {
+            string power = "[Unknown parameter]";
+
+            if (slot.Item is SwordItem sword)
+                power = $"Damage: {sword.Damage}";
+            else if (slot.Item is PickaxeItem pickaxe)
+                power = $"Pickaxe power: {pickaxe.Damage}";
+            else if (slot.Item is AxeItem axe)
+                power = $"Axe power: {axe.Damage}";
+
+            description.Add(power);
+            description.Add("Tool");
+        }
+        else if (slot.Item is ArmorElementItem armor)
+        {
+            string armorElement = armor.Element switch
+            {
+                ArmorElement.Helmet => "Helmet",
+                ArmorElement.Chestplate => "Chestplate",
+                ArmorElement.Leggins => "Leggins",
+                _ => "[Unknown parameter]"
+            };
+
+            description.Add(armorElement);
+            description.Add($"Armor: {armor.Armor}");
+        }
+
+        if (hotbarSlot)
+        {
+            descriptionPos.Y += (GlyphSize.Y + TEXT_SPACING) * -1;
+            description.Reverse();
+        }
+
+        for (int i = 0; i < description.Count; i++)
+        {
+            Text.Draw(description[i], descriptionPos, Color.White, SpriteBatch, TextDrawingMode.Right);
+            descriptionPos.Y += (GlyphSize.Y + TEXT_SPACING) * (hotbarSlot ? -1 : 1);
+        }
+    }
+
+    private void DrawItemDescription(ArmorSlot slot)
+    {
+        var descriptionPos = new Vector2(slot.Position.X + SlotSize.X + UI_SPACING, slot.Position.Y);
+        List<string> description = new List<string>() { slot.Item.Name + $" (x1)" };
+
+        string armorElement = slot.Item.Element switch
+        {
+            ArmorElement.Helmet => "Helmet",
+            ArmorElement.Chestplate => "Chestplate",
+            ArmorElement.Leggins => "Leggins",
+            _ => "[Unknown parameter]"
+        };
+
+        description.Add(armorElement);
+        description.Add($"Armor: {slot.Item.Armor}");
+
+        for (int i = 0; i < description.Count; i++)
+        {
+            Text.Draw(description[i], descriptionPos, Color.White, SpriteBatch, TextDrawingMode.Right);
+            descriptionPos.Y += GlyphSize.Y + TEXT_SPACING;
+        }
     }
 }

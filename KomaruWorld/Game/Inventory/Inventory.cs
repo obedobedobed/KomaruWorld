@@ -6,7 +6,6 @@ namespace KomaruWorld;
 
 public class Inventory
 {
-    private Vector2 itemNamePos;
     public Slot[] HotbarSlots { get; private set; } = new Slot[5];
     public Slot[] Slots { get; private set; } = new Slot[15];
     public ArmorSlot[] ArmorSlots { get; private set; } = new ArmorSlot[3];
@@ -26,9 +25,6 @@ public class Inventory
 
                 xAdder += SlotSize.X + UI_SPACING;
             }
-
-            itemNamePos.X = 0;
-            itemNamePos.Y = HotbarSlots[0].Position.Y - GlyphSize.Y - UI_SPACING;
         }
 
         {
@@ -69,24 +65,13 @@ public class Inventory
                 ArmorSlots[i] = new ArmorSlot(slotAtlas, pos, SlotSize, frame: 3 + i, ItemSize, element);
                 yAdder += SlotSize.X + UI_SPACING;
             }
-
         }
-
-        itemNamePos.X = 0;
-        itemNamePos.Y = HotbarSlots[0].Position.Y - GlyphSize.Y - UI_SPACING;
     }
 
     public void DrawHotbar(SpriteBatch spriteBatch)
     {
         foreach (var slot in HotbarSlots)
             slot.Draw(spriteBatch);
-
-        var player = GameScene.Instance.Player;
-        string slotItemName = HotbarSlots[player.HotbarSlot].Item?.Name;
-        itemNamePos.X = HotbarSlots[player.HotbarSlot].Position.X + SlotSize.X / 2;
-        if (slotItemName == null)
-            return;
-        Text.Draw(slotItemName, itemNamePos, Color.White, spriteBatch, TextDrawingMode.Center);
     }
 
     public bool CollectItem(Item item)
