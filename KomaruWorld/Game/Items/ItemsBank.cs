@@ -18,6 +18,9 @@ public static class ItemsBank
     public static Texture2D AxeTexture { get; private set; }
     public static Texture2D PickaxeTexture { get; private set; }
     public static Texture2D SwordTexture { get; private set; }
+    public static Texture2D IronHelmetTexture { get; private set; }
+    public static Texture2D IronChestplateTexture { get; private set; }
+    public static Texture2D IronLegginsTexture { get; private set; }
 
     public static void LoadTextures(ContentManager Content)
     {
@@ -32,6 +35,9 @@ public static class ItemsBank
         AxeTexture = Content.Load<Texture2D>("Sprites/Items/Tools/Axe");
         PickaxeTexture = Content.Load<Texture2D>("Sprites/Items/Tools/Pickaxe");
         SwordTexture = Content.Load<Texture2D>("Sprites/Items/Tools/Sword");
+        IronHelmetTexture = Content.Load<Texture2D>("Sprites/Items/Armor/IronHelmetItem");
+        IronChestplateTexture = Content.Load<Texture2D>("Sprites/Items/Armor/IronChestplateItem");
+        IronLegginsTexture = Content.Load<Texture2D>("Sprites/Items/Armor/IronLegginsItem");
     }
 
     // Items
@@ -46,4 +52,7 @@ public static class ItemsBank
     public static Item Axe { get { return new AxeItem("Axe", AxeTexture, id: 8, damage: 3); } }
     public static Item Pickaxe { get { return new PickaxeItem("Pickaxe", PickaxeTexture, id: 9, damage: 1); } }
     public static Item Sword { get { return new SwordItem("Sword", SwordTexture, id: 9, damage: 5); } }
+    public static Item IronHelmet { get { return new ArmorElementItem("Iron helmet", SwordTexture, id: 10, armor: 5, element: ArmorElement.Helmet); } }
+    public static Item IronChestplate { get { return new ArmorElementItem("Iron chestplate", SwordTexture, id: 11, armor: 5, element: ArmorElement.Chestplate); } }
+    public static Item IronLeggins { get { return new ArmorElementItem("Iron leggins", SwordTexture, id: 11, armor: 5, element: ArmorElement.Leggins); } }
 }
