@@ -73,6 +73,30 @@
 /processorParam:TextureFormat=Color
 /build:Sprites/Items/Armor/IronChestplate.png
 
+#begin Sprites/Items/Armor/IronChestplate.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Sprites/Items/Armor/IronChestplate.png
+
+#begin Sprites/Items/Armor/IronChestplateItem.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Sprites/Items/Armor/IronChestplateItem.png
+
 #begin Sprites/Items/Armor/IronHelmet.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -85,6 +109,30 @@
 /processorParam:TextureFormat=Color
 /build:Sprites/Items/Armor/IronHelmet.png
 
+#begin Sprites/Items/Armor/IronHelmet.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Sprites/Items/Armor/IronHelmet.png
+
+#begin Sprites/Items/Armor/IronHelmetItem.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Sprites/Items/Armor/IronHelmetItem.png
+
 #begin Sprites/Items/Armor/IronLeggins.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -96,6 +144,30 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:Sprites/Items/Armor/IronLeggins.png
+
+#begin Sprites/Items/Armor/IronLeggins.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Sprites/Items/Armor/IronLeggins.png
+
+#begin Sprites/Items/Armor/IronLegginstem.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Sprites/Items/Armor/IronLegginstem.png
 
 #begin Sprites/Items/Leaf.png
 /importer:TextureImporter
