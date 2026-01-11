@@ -48,9 +48,12 @@ public class GameScene(ContentManager content, SpriteBatch spriteBatch, Graphics
         craftInventorySwitchButton = new SpriteButton(craftInventorySwitchAtlas, new Vector2 (UI_SPACING, UI_SPACING),
         SlotSize, 0, 1, action: CraftSwitchCall);
 
+        CraftsBanks.CreateCraftSlots(slotAtlas, Vector2.Zero, 3, 5, Test);
+
         Camera.Position = Player.Position;
     }
     
+    public static void Test(CraftData craftData) => System.Console.WriteLine("test123");
 
     public override void Update(GameTime gameTime)
     {
@@ -114,6 +117,7 @@ public class GameScene(ContentManager content, SpriteBatch spriteBatch, Graphics
             else if (inventoryMenu == InventoryMenu.Craft)
             {
                 title = "Craft";
+
             }
             Text.Draw(title, new Vector2(screenWidth / 2, UI_SPACING), Color.White,
             SpriteBatch, TextDrawingMode.Center);

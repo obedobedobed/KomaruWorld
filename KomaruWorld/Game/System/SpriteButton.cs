@@ -6,7 +6,7 @@ namespace KomaruWorld;
 public class SpriteButton : GameObject
 {
     public delegate void Action();
-    public Action _Action { get; private set; }
+    private Action action;
 
     private int defaultFrame;
     private int choosedFrame;
@@ -14,14 +14,14 @@ public class SpriteButton : GameObject
 
     private bool pressed = false;
 
-    private MouseState lastMouse;
+    private static MouseState lastMouse;
 
     public SpriteButton(Atlas atlas, Vector2 position, Vector2 size, int defaultFrame, int choosedFrame, Action action)
     : base(atlas, position, size, defaultFrame)
     {
         this.defaultFrame = defaultFrame;
         this.choosedFrame = choosedFrame;
-        _Action = action;
+        this.action = action;
     }
 
     public override void Update(GameTime gameTime)
@@ -41,7 +41,7 @@ public class SpriteButton : GameObject
         }
 
         if (pressed && mouse.LeftButton == ButtonState.Pressed && lastMouse.LeftButton == ButtonState.Released)
-            _Action();
+            action();
 
         lastMouse = mouse;
     }
