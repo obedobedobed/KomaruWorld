@@ -9,7 +9,7 @@ public class CraftSlot : GameObject
 {
     public delegate void OpenCraftMenu(CraftData craftData);
     private OpenCraftMenu openCraftMenu;
-    private static MouseState lastMouse;
+    private MouseState lastMouse;
     public CraftData CraftData;
 
     private int defaultFrame = 0;

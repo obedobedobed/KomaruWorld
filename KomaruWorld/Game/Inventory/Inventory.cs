@@ -107,22 +107,22 @@ public class Inventory
         return false;
     }
 
-    public Slot SearchItem(Item item, int amount)
+    public Slot SearchItem(int id, int amount)
     {
         foreach (var slot in HotbarSlots)
-            if (CheckSlot(slot, item, amount))
+            if (CheckSlot(slot, id, amount))
                 return slot;
 
         foreach (var slot in Slots)
-            if (CheckSlot(slot, item, amount))
+            if (CheckSlot(slot, id, amount))
                 return slot;
 
         return null;
     }
 
-    private bool CheckSlot(Slot slot, Item item, int amount)
+    private bool CheckSlot(Slot slot, int id, int amount)
     {
-        return slot.Item?.ID == item?.ID && slot.ItemAmount >= amount; 
+        return slot.Item?.ID == id && slot.ItemAmount >= amount; 
     }
 
     public void DrawInventory(SpriteBatch spriteBatch)

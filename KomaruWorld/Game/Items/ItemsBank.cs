@@ -51,14 +51,14 @@ public static class ItemsBank
     public static Item Dirt { get { return new PlaceableItem("Dirt", 99, DirtTexture, id: 1, Tiles.Dirt); } }
     public static Item Stone { get { return new PlaceableItem("Stone", 99, StoneTexture, id: 2, Tiles.Stone); } }
     public static Item Log { get { return new PlaceableItem("Log", 99, LogTexture, id: 3, Tiles.Log); } }
-    public static Item Leaves { get { return new PlaceableItem("Leaf", 99, LeavesTexture, id: 4, Tiles.Leaves); } }
+    public static Item Leaves { get { return new PlaceableItem("Leaves", 99, LeavesTexture, id: 4, Tiles.Leaves); } }
     public static Item Planks { get { return new PlaceableItem("Planks", 99, PlanksTexture, id: 5, Tiles.Planks); } }
     public static Item Stick { get { return new Item("Stick", 99, StickTexture, id: 6); } }
     public static Item Leaf { get { return new Item("Leaf", 99, LeafTexture, id: 7); } }
     public static Item Axe { get { return new AxeItem("Iron axe", AxeTexture, id: 8, damage: 3); } }
     public static Item Pickaxe { get { return new PickaxeItem("Iron pickaxe", PickaxeTexture, id: 9, damage: 1); } }
-    public static Item Sword { get { return new SwordItem("Iron sword", SwordTexture, id: 9, damage: 5); } }
-    public static Item IronHelmet { get { return new ArmorElementItem("Iron helmet", IronHelmetTexture, id: 10, armor: 2, element: ArmorElement.Helmet, IronHelmetAtlas); } }
-    public static Item IronChestplate { get { return new ArmorElementItem("Iron chestplate", IronChestplateTexture, id: 11, armor: 3, element: ArmorElement.Chestplate, IronChestplateAtlas); } }
-    public static Item IronLeggins { get { return new ArmorElementItem("Iron leggins", IronLegginsTexture, id: 11, armor: 2, element: ArmorElement.Leggins, IronLegginsAtlas); } }
+    public static Item Sword { get { return new SwordItem("Iron sword", SwordTexture, id: 10, damage: 5); } }
+    public static Item IronHelmet { get { return new ArmorElementItem("Iron helmet", IronHelmetTexture, id: 11, armor: 2, element: ArmorElement.Helmet, IronHelmetAtlas); } }
+    public static Item IronChestplate { get { return new ArmorElementItem("Iron chestplate", IronChestplateTexture, id: 12, armor: 3, element: ArmorElement.Chestplate, IronChestplateAtlas); } }
+    public static Item IronLeggins { get { return new ArmorElementItem("Iron leggins", IronLegginsTexture, id: 13, armor: 2, element: ArmorElement.Leggins, IronLegginsAtlas); } }
 }

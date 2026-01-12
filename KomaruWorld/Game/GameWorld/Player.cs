@@ -512,10 +512,10 @@ public class Player : GameObject
         var slotsWithMaterials = new List<Slot>();
         var materialsAmounts = new List<int>();
 
-        foreach (Item material in craftData.Materials.Keys)
+        foreach (int materialId in craftData.Materials.Keys)
         {
-            int materialAmount = craftData.Materials.GetValueOrDefault(material);
-            var slotWithMaterial = Inventory.SearchItem(material, materialAmount);
+            int materialAmount = craftData.Materials.GetValueOrDefault(materialId);
+            var slotWithMaterial = Inventory.SearchItem(materialId, materialAmount);
             if (slotWithMaterial != null)
             {
                 slotsWithMaterials.Add(slotWithMaterial);
@@ -524,6 +524,9 @@ public class Player : GameObject
             else
                 return;
         }
+
+        if (slotsWithMaterials.Count < craftData.Materials.Count)
+            return;
 
         for (int i = 0; i < slotsWithMaterials.Count; i++)
         {
