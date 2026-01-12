@@ -83,11 +83,6 @@ public class Player : GameObject
         Inventory.HotbarSlots[0].UpdateItem(ItemsBank.Sword);
         Inventory.HotbarSlots[1].UpdateItem(ItemsBank.Pickaxe);
         Inventory.HotbarSlots[2].UpdateItem(ItemsBank.Axe);
-
-        // Test
-        Inventory.Slots[0].UpdateItem(ItemsBank.IronHelmet);
-        Inventory.Slots[1].UpdateItem(ItemsBank.IronChestplate);
-        Inventory.Slots[2].UpdateItem(ItemsBank.IronLeggins);
     }
 
     public override void Update(GameTime gameTime)

@@ -9,10 +9,13 @@ public static class CraftsBank
 {
     public static CraftData Log { get; private set; } = new CraftData(ItemsBank.Log, itemAmount: 1, [ItemsBank.Planks], [4]);
     public static CraftData Leaves { get; private set; } = new CraftData(ItemsBank.Leaves, itemAmount: 1, [ItemsBank.Leaf], [4]);
+    public static CraftData IronHelmet { get; private set; } = new CraftData(ItemsBank.IronHelmet, itemAmount: 1, [ItemsBank.Stone], [20]);
+    public static CraftData IronChestplate { get; private set; } = new CraftData(ItemsBank.IronChestplate, itemAmount: 1, [ItemsBank.Stone], [30]);
+    public static CraftData IronLeggins { get; private set; } = new CraftData(ItemsBank.IronLeggins, itemAmount: 1, [ItemsBank.Stone], [25]);
 
     public static CraftData[] Crafts =
     [
-        Log, Leaves
+        Log, Leaves, IronHelmet, IronChestplate, IronLeggins
     ];
 
     public static List<CraftSlot> CraftSlots = new List<CraftSlot>();

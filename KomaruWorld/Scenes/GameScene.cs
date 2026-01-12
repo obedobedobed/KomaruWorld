@@ -43,9 +43,9 @@ public class GameScene(ContentManager content, SpriteBatch spriteBatch, Graphics
         Player = new Player(playerAtlas, new Vector2(worldWidth * TileSize.X / 2, 100), PlayerSize,
         defaultFrame: 1, slotAtlas: slotAtlas);
 
-        var craftInventorySwitchAtlas = new Atlas
-        (texture: Content.Load<Texture2D>("Sprites/UI/CraftInventorySwitchAtlas"), SlotSize / SIZE_MOD);
-        inventoryMenuButton = new SpriteButton(craftInventorySwitchAtlas, new Vector2 (UI_SPACING, UI_SPACING),
+        var inventoryMenuAtlas = new Atlas
+        (texture: Content.Load<Texture2D>("Sprites/UI/InventoryMenuAtlas"), SlotSize / SIZE_MOD);
+        inventoryMenuButton = new SpriteButton(inventoryMenuAtlas, new Vector2 (UI_SPACING, UI_SPACING),
         SlotSize, 0, 1, action: CraftSwitchCall);
 
         CraftsBank.CreateCraftSlots(slotAtlas, InventorySlotsPos, Craft);

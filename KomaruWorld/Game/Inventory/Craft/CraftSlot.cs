@@ -29,6 +29,8 @@ public class CraftSlot : GameObject
         }
     }
 
+    private Vector2 itemAmountPosition => new Vector2(Position.X + Size.X, Position.Y + Size.Y - GlyphSize.Y);
+
     public CraftSlot(Atlas atlas, Vector2 position, Vector2 size, CraftData craftData, OpenCraftMenu openCraftMenu)
     : base(atlas, position, size, 0)
     {
@@ -62,5 +64,6 @@ public class CraftSlot : GameObject
     {
         base.Draw(spriteBatch);
         spriteBatch.Draw(CraftData.Item.Texture, itemRectangle, Color.White);
+        Text.Draw($"x{CraftData.ItemAmount}", itemAmountPosition, Color.White, spriteBatch, TextDrawingMode.Left);
     }
 }
