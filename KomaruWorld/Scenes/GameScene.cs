@@ -19,7 +19,7 @@ public class GameScene(ContentManager content, SpriteBatch spriteBatch, Graphics
     private KeyboardState lastKeyboard;
     private Texture2D pixel;
 
-    private SpriteButton craftInventorySwitchButton;
+    private SpriteButton inventoryMenuButton;
 
     // World
     private int worldWidth = 60;
@@ -29,7 +29,7 @@ public class GameScene(ContentManager content, SpriteBatch spriteBatch, Graphics
     private bool debugMenuOpened = false;
 
     // Inventory
-    private InventoryMenu inventoryMenu;
+    public InventoryMenu InventoryMenu;
 
     public override void Load()
     {
@@ -45,21 +45,24 @@ public class GameScene(ContentManager content, SpriteBatch spriteBatch, Graphics
 
         var craftInventorySwitchAtlas = new Atlas
         (texture: Content.Load<Texture2D>("Sprites/UI/CraftInventorySwitchAtlas"), SlotSize / SIZE_MOD);
-        craftInventorySwitchButton = new SpriteButton(craftInventorySwitchAtlas, new Vector2 (UI_SPACING, UI_SPACING),
+        inventoryMenuButton = new SpriteButton(craftInventorySwitchAtlas, new Vector2 (UI_SPACING, UI_SPACING),
         SlotSize, 0, 1, action: CraftSwitchCall);
 
-        CraftsBanks.CreateCraftSlots(slotAtlas, InventorySlotsPos, Test);
+        CraftsBank.CreateCraftSlots(slotAtlas, InventorySlotsPos, Craft);
 
         Camera.Position = Player.Position;
     }
     
-    public static void Test(CraftData craftData) => System.Console.WriteLine("test123");
+    public static void Craft(CraftData craftData) => Instance.Player.Craft(craftData);
 
     public override void Update(GameTime gameTime)
     {
-        craftInventorySwitchButton.Update(gameTime);
+        inventoryMenuButton.Update(gameTime);
         World.Update(gameTime);
         Player.Update(gameTime);
+
+        if (InventoryMenu == InventoryMenu.Craft)
+            CraftsBank.UpdateCraftSlots();
 
         var playerPosCentered = Player.Position - new Vector2
         (GraphicsManager.PreferredBackBufferWidth / 2, GraphicsManager.PreferredBackBufferHeight / 2) +
@@ -109,21 +112,21 @@ public class GameScene(ContentManager content, SpriteBatch spriteBatch, Graphics
             SpriteBatch.Draw(pixel, new Rectangle(0, 0, GraphicsManager.PreferredBackBufferWidth,
             GraphicsManager.PreferredBackBufferHeight), new Color(0, 0, 0, 150));
             string title = string.Empty;
-            if (inventoryMenu == InventoryMenu.Inventory)
+            if (InventoryMenu == InventoryMenu.Inventory)
             {
                 title = "Inventory";
                 Player.Inventory.DrawInventory(SpriteBatch); 
             }
-            else if (inventoryMenu == InventoryMenu.Craft)
+            else if (InventoryMenu == InventoryMenu.Craft)
             {
                 title = "Craft";
-                CraftsBanks.DrawCraftSlots(SpriteBatch);
+                CraftsBank.DrawCraftSlots(SpriteBatch);
             }
             Text.Draw(title, new Vector2(screenWidth / 2, UI_SPACING), Color.White,
             SpriteBatch, TextDrawingMode.Center);
-            craftInventorySwitchButton.Draw(SpriteBatch);
+            inventoryMenuButton.Draw(SpriteBatch);
         }
-        else if (inventoryMenu == InventoryMenu.Craft)
+        else if (InventoryMenu == InventoryMenu.Craft)
         {
             CraftSwitch();
         }
@@ -134,7 +137,7 @@ public class GameScene(ContentManager content, SpriteBatch spriteBatch, Graphics
         var cursorRectangle = new Rectangle(mouse.X, mouse.Y, 1, 1);
         bool drawHotbarItemName = true;
 
-        if (Player.InInventory && inventoryMenu == InventoryMenu.Inventory)
+        if (Player.InInventory && InventoryMenu == InventoryMenu.Inventory)
         {
             foreach (var slot in Player.Inventory.Slots)
                 if (slot.Rectangle.Intersects(cursorRectangle) && slot.Item != null)
@@ -313,11 +316,11 @@ public class GameScene(ContentManager content, SpriteBatch spriteBatch, Graphics
     public static void CraftSwitchCall() => Instance.CraftSwitch();
     private void CraftSwitch()
     {
-        inventoryMenu = inventoryMenu switch
+        InventoryMenu = InventoryMenu switch
         {
             InventoryMenu.Inventory => InventoryMenu.Craft,
             _ => InventoryMenu.Inventory
         };
-        craftInventorySwitchButton.frameAdder = inventoryMenu == InventoryMenu.Inventory ? 0 : 2;
+        inventoryMenuButton.frameAdder = InventoryMenu == InventoryMenu.Inventory ? 0 : 2;
     }
 }

@@ -32,6 +32,7 @@ public class Player : GameObject
 
     // Game
     private float deltaTime = 0f;
+    private InventoryMenu inventoryMenu;
 
     // Hitbox
     private int hitboxXSpacing = 2 * SIZE_MOD;
@@ -93,8 +94,11 @@ public class Player : GameObject
     {
         deltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
 
-        foreach (var item in Inventory.HotbarSlots)
-            item.UpdateFrame();
+        inventoryMenu = GameScene.Instance.InventoryMenu;
+
+        if (inventoryMenu == InventoryMenu.Inventory)
+            foreach (var item in Inventory.HotbarSlots)
+                item.UpdateFrame();
 
         GetInput();
         Move();
@@ -191,7 +195,8 @@ public class Player : GameObject
                 }
         }
 
-        if (mouse.LeftButton == ButtonState.Pressed && lastMouse.LeftButton != ButtonState.Pressed && InInventory)
+        if (mouse.LeftButton == ButtonState.Pressed && lastMouse.LeftButton != ButtonState.Pressed && InInventory &&
+            inventoryMenu == InventoryMenu.Inventory)
         {
             var cursorRectangle = new Rectangle(mouse.X, mouse.Y, 1, 1);
 
@@ -500,6 +505,34 @@ public class Player : GameObject
 
         foreach (var item in itemsToRemove)
             World.RemoveItem(item);
+    }
+
+    public void Craft(CraftData craftData)
+    {
+        var slotsWithMaterials = new List<Slot>();
+        var materialsAmounts = new List<int>();
+
+        foreach (Item material in craftData.Materials.Keys)
+        {
+            int materialAmount = craftData.Materials.GetValueOrDefault(material);
+            var slotWithMaterial = Inventory.SearchItem(material, materialAmount);
+            if (slotWithMaterial != null)
+            {
+                slotsWithMaterials.Add(slotWithMaterial);
+                materialsAmounts.Add(materialAmount);
+            }
+            else
+                return;
+        }
+
+        for (int i = 0; i < slotsWithMaterials.Count; i++)
+        {
+            var slot = slotsWithMaterials[i];
+            slotsWithMaterials[i].UpdateItem(slot.ItemAmount - materialsAmounts[i]);
+        }
+
+        for (int i = 0; i < craftData.ItemAmount; i++)
+            World.AddItem(new DroppedItem(craftData.Item, Position));
     }
 
     public override void Draw(SpriteBatch spriteBatch)

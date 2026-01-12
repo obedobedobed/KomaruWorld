@@ -107,6 +107,24 @@ public class Inventory
         return false;
     }
 
+    public Slot SearchItem(Item item, int amount)
+    {
+        foreach (var slot in HotbarSlots)
+            if (CheckSlot(slot, item, amount))
+                return slot;
+
+        foreach (var slot in Slots)
+            if (CheckSlot(slot, item, amount))
+                return slot;
+
+        return null;
+    }
+
+    private bool CheckSlot(Slot slot, Item item, int amount)
+    {
+        return slot.Item?.ID == item?.ID && slot.ItemAmount >= amount; 
+    }
+
     public void DrawInventory(SpriteBatch spriteBatch)
     {
         foreach (var slot in Slots)

@@ -5,7 +5,7 @@ using static KomaruWorld.GameParameters;
 
 namespace KomaruWorld;
 
-public static class CraftsBanks
+public static class CraftsBank
 {
     public static CraftData Log { get; private set; } = new CraftData(ItemsBank.Log, itemAmount: 1, [ItemsBank.Planks], [4]);
     public static CraftData Leaves { get; private set; } = new CraftData(ItemsBank.Leaves, itemAmount: 1, [ItemsBank.Leaf, ItemsBank.Stick], [4, 1]);
@@ -42,6 +42,12 @@ public static class CraftsBanks
             if (stopGenerating)
                 break;
         }
+    }
+
+    public static void UpdateCraftSlots()
+    {
+        foreach (var slot in CraftSlots)
+            slot.Update(new GameTime());
     }
 
     public static void DrawCraftSlots(SpriteBatch spriteBatch)

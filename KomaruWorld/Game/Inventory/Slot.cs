@@ -40,10 +40,21 @@ public class Slot : GameObject
         Item = item;
         ItemAmount = 1;
     }
-    public void UpdateItem(Item item, int count)
+
+    public void UpdateItem(int amount)
+    {
+        ItemAmount = amount;
+        if (ItemAmount <= 0)
+        {
+            Item = null;
+            ItemAmount = 0;
+        }
+    }
+
+    public void UpdateItem(Item item, int amount)
     {
         Item = item;
-        ItemAmount = count;
+        ItemAmount = amount;
     }
     public void CountItem(bool countBack = false) => ItemAmount += countBack ? -1 : 1;
     public override void Draw(SpriteBatch spriteBatch)
