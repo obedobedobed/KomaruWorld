@@ -1,5 +1,7 @@
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using static KomaruWorld.GameParameters;
 
 namespace KomaruWorld;
 
@@ -13,6 +15,19 @@ public class CraftSlot : GameObject
     private int defaultFrame = 0;
     private int choosedFrame = 1;
     private bool pressed = false;
+
+    private Rectangle itemRectangle
+    {
+        get
+        {
+            return new Rectangle
+            (
+                (int)(Position.X + Size.X / 2 - ItemSize.X / 2),
+                (int)(Position.Y + Size.Y / 2 - ItemSize.Y / 2),
+                (int)ItemSize.X, (int)ItemSize.Y
+            );
+        }
+    }
 
     public CraftSlot(Atlas atlas, Vector2 position, Vector2 size, CraftData craftData, OpenCraftMenu openCraftMenu)
     : base(atlas, position, size, 0)
@@ -41,5 +56,11 @@ public class CraftSlot : GameObject
             openCraftMenu(CraftData);
 
         lastMouse = mouse;
+    }
+
+    public override void Draw(SpriteBatch spriteBatch)
+    {
+        base.Draw(spriteBatch);
+        spriteBatch.Draw(CraftData.Item.Texture, itemRectangle, Color.White);
     }
 }

@@ -41,6 +41,7 @@ public class Game1 : Game
 
         // TODO: use this.Content to load your game content here
 
+        Setup();
         TilesBank.LoadTextures(Content);
         ItemsBank.LoadTextures(Content);
         Text.Setup(new Atlas(Content.Load<Texture2D>("Sprites/Font"), GlyphSize.ToVector2() / TEXT_MOD), GlyphSize);

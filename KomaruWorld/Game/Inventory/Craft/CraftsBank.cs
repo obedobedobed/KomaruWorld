@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using static KomaruWorld.GameParameters;
 
 namespace KomaruWorld;
@@ -16,18 +17,19 @@ public static class CraftsBanks
 
     public static List<CraftSlot> CraftSlots = new List<CraftSlot>();
 
-    public static void CreateCraftSlots(Atlas atlas, Vector2 position, int lines, int slotsInLine, CraftSlot.OpenCraftMenu openCraftMenu)
+    public static void CreateCraftSlots(Atlas atlas, Vector2 position, CraftSlot.OpenCraftMenu openCraftMenu)
     {
         bool stopGenerating = false;
 
         float yAdder = 0;
-        for (int l = 0; l < lines; l++)
+        for (int l = 0; l < INV_SLOTS_LINES; l++)
         {
             float xAdder = 0;
-            for (int s = 0; s < slotsInLine; s++)
+            for (int s = 0; s < INV_SLOTS_IN_LINE; s++)
             {
-                int iteration = l * slotsInLine + s;
-                CraftSlots.Add(new CraftSlot(atlas, position, SlotSize, Crafts[iteration], openCraftMenu));
+                int iteration = l * INV_SLOTS_IN_LINE + s;
+                CraftSlots.Add(new CraftSlot(atlas, new Vector2(position.X + xAdder, position.Y + yAdder), SlotSize,
+                Crafts[iteration], openCraftMenu));
                 xAdder += SlotSize.X + UI_SPACING;
 
                 if (iteration + 1 == Crafts.Length)
@@ -40,5 +42,11 @@ public static class CraftsBanks
             if (stopGenerating)
                 break;
         }
+    }
+
+    public static void DrawCraftSlots(SpriteBatch spriteBatch)
+    {
+        foreach (var slot in CraftSlots)
+            slot.Draw(spriteBatch);
     }
 }

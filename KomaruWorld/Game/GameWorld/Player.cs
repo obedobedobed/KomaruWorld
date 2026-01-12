@@ -70,20 +70,13 @@ public class Player : GameObject
     public Player(Atlas atlas, Vector2 position, Vector2 size, int defaultFrame, Atlas slotAtlas)
     : base(atlas, position, size, defaultFrame)
     {
-        int slotsInHotbar = 5;
-        int slotsInLine = 5;
-        int slotsLines = 3;
-
-        float lineXHotbar = (Game1.Instance.Graphics.PreferredBackBufferWidth - SlotSize.X * slotsInHotbar -
-        UI_SPACING * (slotsInHotbar - 1)) / 2;
-        float lineXInventory = (Game1.Instance.Graphics.PreferredBackBufferWidth - SlotSize.X * slotsInLine -
-        UI_SPACING * (slotsInLine - 1)) / 2;
+        float lineXHotbar = (Game1.Instance.Graphics.PreferredBackBufferWidth - SlotSize.X * INV_SLOTS_IN_LINE -
+        UI_SPACING * (INV_SLOTS_IN_LINE - 1)) / 2;
 
         Inventory = new Inventory
         (
             slotAtlas, hotbarSlotsPos: new Vector2(lineXHotbar, Game1.Instance.Graphics.PreferredBackBufferHeight - SlotSize.Y
-            - UI_SPACING), slotsPos: new Vector2(lineXInventory, Game1.Instance.Graphics.PreferredBackBufferHeight / 2 -
-            SlotSize.Y * slotsLines / 2 - SlotSize.Y * 1), slotsLines
+            - UI_SPACING), slotsPos: InventorySlotsPos, INV_SLOTS_LINES
         );
 
         Inventory.HotbarSlots[0].UpdateItem(ItemsBank.Sword);

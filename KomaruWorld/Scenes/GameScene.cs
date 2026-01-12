@@ -48,7 +48,7 @@ public class GameScene(ContentManager content, SpriteBatch spriteBatch, Graphics
         craftInventorySwitchButton = new SpriteButton(craftInventorySwitchAtlas, new Vector2 (UI_SPACING, UI_SPACING),
         SlotSize, 0, 1, action: CraftSwitchCall);
 
-        CraftsBanks.CreateCraftSlots(slotAtlas, Vector2.Zero, 3, 5, Test);
+        CraftsBanks.CreateCraftSlots(slotAtlas, InventorySlotsPos, Test);
 
         Camera.Position = Player.Position;
     }
@@ -117,7 +117,7 @@ public class GameScene(ContentManager content, SpriteBatch spriteBatch, Graphics
             else if (inventoryMenu == InventoryMenu.Craft)
             {
                 title = "Craft";
-
+                CraftsBanks.DrawCraftSlots(SpriteBatch);
             }
             Text.Draw(title, new Vector2(screenWidth / 2, UI_SPACING), Color.White,
             SpriteBatch, TextDrawingMode.Center);

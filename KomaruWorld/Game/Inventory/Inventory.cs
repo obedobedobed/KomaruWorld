@@ -20,7 +20,7 @@ public class Inventory
                 HotbarSlots[i] = new Slot
                 (
                     slotAtlas, new Vector2(hotbarSlotsPos.X + xAdder, hotbarSlotsPos.Y), SlotSize,
-                    defaultFrame: 0, choosedFrame: 1, ItemSize, slotId: i
+                    defaultFrame: 0, choosedFrame: 1, slotId: i
                 );
 
                 xAdder += SlotSize.X + UI_SPACING;
@@ -38,8 +38,8 @@ public class Inventory
                     int iteration = i * (Slots.Length / slotsLines) + j;
 
                     if (j != Slots.Length / slotsLines)
-                        Slots[iteration] = new Slot(slotAtlas, pos, SlotSize, defaultFrame: 0, choosedFrame: 1, ItemSize,
-                        slotId: iteration);
+                        Slots[iteration] = new Slot(slotAtlas, pos, SlotSize, defaultFrame: 0,
+                        choosedFrame: 1, slotId: iteration);
                     else
                         DeleteSlot = new DeleteSlot(slotAtlas, pos, SlotSize);
 
@@ -62,7 +62,7 @@ public class Inventory
                 };
 
                 var pos = new Vector2(slotsPos.X - (SlotSize.X - UI_SPACING) * 2, slotsPos.Y + yAdder);
-                ArmorSlots[i] = new ArmorSlot(slotAtlas, pos, SlotSize, frame: 3 + i, ItemSize, element);
+                ArmorSlots[i] = new ArmorSlot(slotAtlas, pos, SlotSize, frame: 3 + i, element);
                 yAdder += SlotSize.X + UI_SPACING;
             }
         }

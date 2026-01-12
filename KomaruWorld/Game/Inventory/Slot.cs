@@ -12,27 +12,25 @@ public class Slot : GameObject
     private int slotId;
     private int defaultFrame;
     private int choosedFrame;
-    private Vector2 itemSize;
     private Rectangle itemRectangle
     {
         get
         {
             return new Rectangle
             (
-                (int)(Position.X + Size.X / 2 - itemSize.X / 2),
-                (int)(Position.Y + Size.Y / 2 - itemSize.Y / 2),
-                (int)itemSize.X, (int)itemSize.Y
+                (int)(Position.X + Size.X / 2 - ItemSize.X / 2),
+                (int)(Position.Y + Size.Y / 2 - ItemSize.Y / 2),
+                (int)ItemSize.X, (int)ItemSize.Y
             );
         }
     }
     private Vector2 itemCountPosition { get { return new Vector2(Position.X + Size.X, Position.Y + Size.Y - GlyphSize.Y); } }
 
-    public Slot(Atlas atlas, Vector2 position, Vector2 size, int defaultFrame, int choosedFrame, Vector2 itemSize, int slotId) :
+    public Slot(Atlas atlas, Vector2 position, Vector2 size, int defaultFrame, int choosedFrame, int slotId) :
     base(atlas, position, size, defaultFrame)
     {
         this.defaultFrame = defaultFrame;
         this.choosedFrame = choosedFrame;
-        this.itemSize = itemSize;
         this.slotId = slotId;
     }
 
