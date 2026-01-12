@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using static KomaruWorld.GameParameters;
@@ -74,40 +75,50 @@ public class Inventory
             slot.Draw(spriteBatch);
     }
 
-    public bool CollectItem(Item item)
+    public bool TryCollectItem(Item item)
     {
+        var sameItemSlots = SearchItemSlots(item.ID);
+
+        foreach (var slot in sameItemSlots)
+            if (ItemCollecting_CheckSlot(slot, item))
+                return true;
+
         foreach (var slot in HotbarSlots)
-        {
-            if (slot.Item?.ID == item.ID && slot.ItemAmount < slot.Item?.MaxStack)
-            {
-                slot.CountItem();
+            if (ItemCollecting_CheckSlot(slot, item))
                 return true;
-            }
-            else if (slot.Item == null)
-            {
-                slot.UpdateItem(item);
-                return true;
-            }
-        }
 
         foreach (var slot in Slots)
+            if (ItemCollecting_CheckSlot(slot, item))
+                return true;
+
+        return false;
+    }
+
+    private void CollectItem(Item item, Slot slot, bool count = false)
+    {
+        if (count)
+            slot.CountItem();
+        else
+            slot.UpdateItem(item);
+    }
+
+    private bool ItemCollecting_CheckSlot(Slot slot, Item item)
+    {
+        if (slot.Item?.ID == item.ID && slot.ItemAmount < slot.Item?.MaxStack)
         {
-            if (slot.Item?.ID == item.ID && slot.ItemAmount < slot.Item?.MaxStack)
-            {
-                slot.CountItem();
-                return true;
-            }
-            else if (slot.Item == null)
-            {
-                slot.UpdateItem(item);
-                return true;
-            }
+            CollectItem(item, slot, true);
+            return true;
+        }
+        else if (slot.Item == null)
+        {
+            CollectItem(item, slot, false);
+            return true;
         }
 
         return false;
     }
 
-    public Slot SearchItem(int id, int amount)
+    public Slot SearchItemSlot(int id, int amount)
     {
         foreach (var slot in HotbarSlots)
             if (CheckSlot(slot, id, amount))
@@ -120,9 +131,29 @@ public class Inventory
         return null;
     }
 
+    public Slot[] SearchItemSlots(int id)
+    {
+        var founded = new List<Slot>();
+
+        foreach (var slot in HotbarSlots)
+            if (CheckSlot(slot, id))
+                founded.Add(slot);
+
+        foreach (var slot in Slots)
+            if (CheckSlot(slot, id))
+                founded.Add(slot);
+
+        return founded.ToArray();
+    }
+
     private bool CheckSlot(Slot slot, int id, int amount)
     {
         return slot.Item?.ID == id && slot.ItemAmount >= amount; 
+    }
+
+    private bool CheckSlot(Slot slot, int id)
+    {
+        return slot.Item?.ID == id;
     }
 
     public void DrawInventory(SpriteBatch spriteBatch)

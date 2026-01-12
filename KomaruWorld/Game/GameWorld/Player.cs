@@ -498,7 +498,7 @@ public class Player : GameObject
         foreach (var item in World.Items)
             if (hitbox.Intersects(item.Rectangle))
             {
-                bool collected = Inventory.CollectItem(item.Item);
+                bool collected = Inventory.TryCollectItem(item.Item);
                 if (collected)
                     itemsToRemove.Add(item);
             }
@@ -515,7 +515,7 @@ public class Player : GameObject
         foreach (int materialId in craftData.Materials.Keys)
         {
             int materialAmount = craftData.Materials.GetValueOrDefault(materialId);
-            var slotWithMaterial = Inventory.SearchItem(materialId, materialAmount);
+            var slotWithMaterial = Inventory.SearchItemSlot(materialId, materialAmount);
             if (slotWithMaterial != null)
             {
                 slotsWithMaterials.Add(slotWithMaterial);
