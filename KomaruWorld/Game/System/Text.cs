@@ -150,7 +150,8 @@ public static class Text
         Text.glyphSize = glyphSize;
     }
 
-    public static void Draw(string text, Vector2 position, Color color, SpriteBatch spriteBatch, TextDrawingMode drawingMode)
+    public static void Draw(string text, Vector2 position, Color color, SpriteBatch spriteBatch, TextDrawingMode drawingMode,
+    bool outline = false)
     {
         int glyphPosition = drawingMode switch
         {
@@ -182,7 +183,7 @@ public static class Text
         }
     }
 
-    private static int CalculateStringWidth(string _string)
+    public static int CalculateStringWidth(string _string)
     {
         int width = 0;
 

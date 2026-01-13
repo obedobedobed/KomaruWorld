@@ -20,6 +20,7 @@ public class GameScene(ContentManager content, SpriteBatch spriteBatch, Graphics
     private Texture2D pixel;
 
     private SpriteButton inventoryMenuButton;
+    private CraftMenu craftMenu;
 
     // World
     private int worldWidth = 60;
@@ -29,7 +30,8 @@ public class GameScene(ContentManager content, SpriteBatch spriteBatch, Graphics
     private bool debugMenuOpened = false;
 
     // Inventory
-    public InventoryMenu InventoryMenu;
+    public InventoryMenu InventoryMenu { get; private set;  }
+    public bool Crafting { get; private set; }
 
     public override void Load()
     {
@@ -48,18 +50,23 @@ public class GameScene(ContentManager content, SpriteBatch spriteBatch, Graphics
         inventoryMenuButton = new SpriteButton(inventoryMenuAtlas, new Vector2 (UI_SPACING, UI_SPACING),
         SlotSize, 0, 1, action: CraftSwitchCall);
 
-        CraftsBank.CreateCraftSlots(slotAtlas, InventorySlotsPos, Craft);
+        CraftsBank.CreateCraftSlots(slotAtlas, InventorySlotsPos, OpenCraftMenuCall);
+
+        var craftMenuSprite = Content.Load<Texture2D>("Sprites/UI/CraftMenu");
+        craftMenu = new CraftMenu(craftMenuSprite, new Vector2
+        (GraphicsManager.PreferredBackBufferWidth / 2 - CraftMenuSize.X / 2,
+        GraphicsManager.PreferredBackBufferHeight / 2 - CraftMenuSize.Y / 2), CraftMenuSize, CallPlayerCraft);
 
         Camera.Position = Player.Position;
     }
     
-    public static void Craft(CraftData craftData) => Instance.Player.Craft(craftData);
 
     public override void Update(GameTime gameTime)
     {
         inventoryMenuButton.Update(gameTime);
         World.Update(gameTime);
         Player.Update(gameTime);
+        craftMenu.Update(gameTime);
 
         if (InventoryMenu == InventoryMenu.Craft)
             CraftsBank.UpdateCraftSlots();
@@ -121,6 +128,12 @@ public class GameScene(ContentManager content, SpriteBatch spriteBatch, Graphics
             {
                 title = "Craft";
                 CraftsBank.DrawCraftSlots(SpriteBatch);
+                if (Crafting)
+                {
+                    SpriteBatch.Draw(pixel, new Rectangle(0, 0, GraphicsManager.PreferredBackBufferWidth,
+                    GraphicsManager.PreferredBackBufferHeight), new Color(0, 0, 0, 150));
+                    craftMenu.Draw(SpriteBatch);
+                }
             }
             Text.Draw(title, new Vector2(screenWidth / 2, UI_SPACING), Color.White,
             SpriteBatch, TextDrawingMode.Center);
@@ -129,6 +142,7 @@ public class GameScene(ContentManager content, SpriteBatch spriteBatch, Graphics
         else if (InventoryMenu == InventoryMenu.Craft)
         {
             CraftSwitch();
+            Crafting = false;
         }
 
         Player.Inventory.DrawHotbar(SpriteBatch);
@@ -313,6 +327,7 @@ public class GameScene(ContentManager content, SpriteBatch spriteBatch, Graphics
         new Vector2(UI_SPACING, screenHeight - GlyphSize.Y * TEXT_SPACING * 1 + GlyphSize.Y / 2 * 1),
         Color.White, SpriteBatch, TextDrawingMode.Right);
     }
+
     public static void CraftSwitchCall() => Instance.CraftSwitch();
     private void CraftSwitch()
     {
@@ -323,4 +338,13 @@ public class GameScene(ContentManager content, SpriteBatch spriteBatch, Graphics
         };
         inventoryMenuButton.frameAdder = InventoryMenu == InventoryMenu.Inventory ? 0 : 2;
     }
+
+    public static void OpenCraftMenuCall(CraftData craftData) => Instance.OpenCraftMenu(craftData);
+    public void OpenCraftMenu(CraftData craftData)
+    {
+        craftMenu.SetCraftData(craftData);
+        Crafting = true;
+    }
+
+    public static void CallPlayerCraft() => Instance.Player.Craft(Instance.craftMenu.CraftData);
 }

@@ -5,7 +5,7 @@ namespace KomaruWorld;
 public static class GameParameters
 {
     public const string GAME_NAME = "Komaru World";
-    public const string GAME_VERSION = "0.0.2";
+    public const string GAME_VERSION = "0.0.2 (Beta)";
     public const int SIZE_MOD = 4;
     public const int TEXT_MOD = 2;
     public const int TEXT_SPACING = 1 * TEXT_MOD;
@@ -17,6 +17,8 @@ public static class GameParameters
     public static readonly Vector2 DroppedItemSize = new Vector2(6, 6) * SIZE_MOD;
     public static readonly Vector2 ItemSize = new Vector2(10, 10) * SIZE_MOD;
     public static readonly Vector2 TileSize = new Vector2(8, 8) * SIZE_MOD;
+    public static readonly Vector2 CraftMenuSize = new Vector2(72, 48) * SIZE_MOD;
+    public static readonly Vector2 CraftMenuItemSlotPos = new Vector2(28, 4) * SIZE_MOD;
     public static readonly Point GlyphSize = new Point(8 * TEXT_MOD, 8 * TEXT_MOD);
     public static readonly Point CursorSize = new Point(6 * SIZE_MOD, 6 * SIZE_MOD);
     public static Vector2 InventorySlotsPos { get; private set; }
