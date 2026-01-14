@@ -225,9 +225,9 @@ public class GameScene(ContentManager content, SpriteBatch spriteBatch, Graphics
             if (slot.Item is SwordItem sword)
                 power = $"Damage: {sword.Damage}";
             else if (slot.Item is PickaxeItem pickaxe)
-                power = $"Pickaxe power: {pickaxe.Damage}";
+                power = $"Speed: {pickaxe.Speed}";
             else if (slot.Item is AxeItem axe)
-                power = $"Axe power: {axe.Damage}";
+                power = $"Speed: {axe.Speed}";
 
             description.Add(power);
             description.Add("Tool");
@@ -298,38 +298,38 @@ public class GameScene(ContentManager content, SpriteBatch spriteBatch, Graphics
 
         Text.Draw($"{GAME_NAME} - v{GAME_VERSION}",
         new Vector2(UI_SPACING, GlyphSize.Y * TEXT_SPACING * 0 + UI_SPACING - GlyphSize.Y / 2 * 0),
-        Color.White, SpriteBatch, TextDrawingMode.Right);
+        Color.White, SpriteBatch, TextDrawingMode.Right, outline: true, outlineColor: Color.Black);
         Text.Draw($"FPS:{Game1.Instance.FPS} {vSyncString}",
         new Vector2(UI_SPACING, GlyphSize.Y * TEXT_SPACING * 1 + UI_SPACING - GlyphSize.Y / 2 * 1),
-        Color.White, SpriteBatch, TextDrawingMode.Right);
+        Color.White, SpriteBatch, TextDrawingMode.Right, outline: true, outlineColor: Color.Black);
         Text.Draw($"Position: x{(int)Player.Position.X}, y{(int)Player.Position.Y}",
         new Vector2(UI_SPACING, GlyphSize.Y * TEXT_SPACING * 2 + UI_SPACING - GlyphSize.Y / 2 * 2),
-        Color.White, SpriteBatch, TextDrawingMode.Right);
+        Color.White, SpriteBatch, TextDrawingMode.Right, outline: true, outlineColor: Color.Black);
         Text.Draw($"Gravity: {(int)Player.GravityVelocity}",
         new Vector2(UI_SPACING, GlyphSize.Y * TEXT_SPACING * 3 + UI_SPACING - GlyphSize.Y / 2 * 3),
-        Color.White, SpriteBatch, TextDrawingMode.Right);
+        Color.White, SpriteBatch, TextDrawingMode.Right, outline: true, outlineColor: Color.Black);
         Text.Draw($"Hotbar slot: {hotbarSlotString}",
         new Vector2(UI_SPACING, GlyphSize.Y * TEXT_SPACING * 4 + UI_SPACING - GlyphSize.Y / 2 * 4),
-        Color.White, SpriteBatch, TextDrawingMode.Right);
+        Color.White, SpriteBatch, TextDrawingMode.Right, outline: true, outlineColor: Color.Black);
         Text.Draw($"Cursor: x{Player.cursorWorldPosition.X}, y{Player.cursorWorldPosition.Y}",
         new Vector2(UI_SPACING, GlyphSize.Y * TEXT_SPACING * 5 + UI_SPACING - GlyphSize.Y / 2 * 5),
-        Color.White, SpriteBatch, TextDrawingMode.Right);
+        Color.White, SpriteBatch, TextDrawingMode.Right, outline: true, outlineColor: Color.Black);
 
         long usedMemory = GC.GetTotalMemory(false) / 1024;
         long totalMemory = GC.GetGCMemoryInfo().TotalAvailableMemoryBytes / 1024 / 1024;
 
         Text.Draw($"OS: {RuntimeInformation.OSDescription}",
         new Vector2(UI_SPACING, screenHeight - GlyphSize.Y * TEXT_SPACING * 4 + GlyphSize.Y / 2 * 4),
-        Color.White, SpriteBatch, TextDrawingMode.Right);
+        Color.White, SpriteBatch, TextDrawingMode.Right, outline: true, outlineColor: Color.Black);
         Text.Draw($"CPU: {Environment.ProcessorCount} threads CPU",
         new Vector2(UI_SPACING, screenHeight - GlyphSize.Y * TEXT_SPACING * 3 + GlyphSize.Y / 2 * 3),
-        Color.White, SpriteBatch, TextDrawingMode.Right);
+        Color.White, SpriteBatch, TextDrawingMode.Right, outline: true, outlineColor: Color.Black);
         Text.Draw($"Memory: {usedMemory}MB/{totalMemory}MB used",
         new Vector2(UI_SPACING, screenHeight - GlyphSize.Y * TEXT_SPACING * 2 + GlyphSize.Y / 2 * 2),
-        Color.White, SpriteBatch, TextDrawingMode.Right);
+        Color.White, SpriteBatch, TextDrawingMode.Right, outline: true, outlineColor: Color.Black);
         Text.Draw($"GPU: {GraphicsAdapter.DefaultAdapter.Description}",
         new Vector2(UI_SPACING, screenHeight - GlyphSize.Y * TEXT_SPACING * 1 + GlyphSize.Y / 2 * 1),
-        Color.White, SpriteBatch, TextDrawingMode.Right);
+        Color.White, SpriteBatch, TextDrawingMode.Right, outline: true, outlineColor: Color.Black);
     }
 
     public static void CraftSwitchCall() => Instance.CraftSwitch();
@@ -353,9 +353,11 @@ public class GameScene(ContentManager content, SpriteBatch spriteBatch, Graphics
     public static void CloseCraftMenuCall() => Instance.CloseCraftMenu();
     private void CloseCraftMenu()
     {
-        System.Console.WriteLine("Closed craft menu");
         Crafting = false;
     }
 
-    public static void CallPlayerCraft() => Instance.Player.Craft(Instance.craftMenu.CraftData);
+    public static void CallPlayerCraft()
+    {
+        Instance.Player.Craft(Instance.craftMenu.CraftData);
+    }
 }

@@ -5,13 +5,14 @@ namespace KomaruWorld;
 public static class GameParameters
 {
     public const string GAME_NAME = "Komaru World";
-    public const string GAME_VERSION = "0.0.2 (Beta)";
+    public const string GAME_VERSION = "0.0.3 (Beta)";
     public const int SIZE_MOD = 4;
     public const int TEXT_MOD = 2;
     public const int TEXT_SPACING = 1 * TEXT_MOD;
     public const int UI_SPACING = 1 * SIZE_MOD;
     public const int INV_SLOTS_IN_LINE = 5;
     public const int INV_SLOTS_LINES = 3;
+    public const int OUT_PIXELS = 1 * TEXT_MOD;
     public static readonly Vector2 PlayerSize = new Vector2(16, 16) * SIZE_MOD;
     public static readonly Vector2 SlotSize = new Vector2(16, 16) * SIZE_MOD;
     public static readonly Vector2 DroppedItemSize = new Vector2(6, 6) * SIZE_MOD;

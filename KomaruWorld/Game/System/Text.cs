@@ -151,7 +151,7 @@ public static class Text
     }
 
     public static void Draw(string text, Vector2 position, Color color, SpriteBatch spriteBatch, TextDrawingMode drawingMode,
-    bool outline = false)
+    bool outline = false, Color outlineColor = new Color())
     {
         int glyphPosition = drawingMode switch
         {
@@ -174,8 +174,26 @@ public static class Text
                 throw new System.Exception($"Cannot find glyph {_char} in dictionary!");
             else
             {
-                spriteBatch.Draw(glyphes.Texture, new Rectangle
-                (glyphPosition, (int)position.Y, glyphSize.X, glyphSize.Y),
+                var glyphRectangle = new Rectangle
+                (glyphPosition, (int)position.Y, glyphSize.X, glyphSize.Y);
+
+                if (outline)
+                {
+                    Point[] offsets =
+                    [
+                        new (-OUT_PIXELS, -OUT_PIXELS), new (0, -OUT_PIXELS), new (OUT_PIXELS, -OUT_PIXELS),
+                        new (-OUT_PIXELS, 0), new (0, 0), new (OUT_PIXELS, 0),
+                        new (-OUT_PIXELS, OUT_PIXELS), new (OUT_PIXELS, OUT_PIXELS), new (OUT_PIXELS, OUT_PIXELS),
+                    ];
+
+                    foreach (var point in offsets)
+                        spriteBatch.Draw(glyphes.Texture, new Rectangle
+                        (glyphRectangle.X + point.X, glyphRectangle.Y + point.Y,
+                        glyphRectangle.Width, glyphRectangle.Height),
+                        glyphes.Rectangles[glyphId], outlineColor);
+                }
+
+                spriteBatch.Draw(glyphes.Texture, glyphRectangle,
                 glyphes.Rectangles[glyphId], color);
             }
 
