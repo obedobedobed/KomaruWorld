@@ -18,13 +18,25 @@ public class TextButton : GameObject
 
     private bool pressed = false;
 
+    private Rectangle centeredRectangle
+    {
+        get
+        {
+            return new Rectangle
+            (
+                (int)(Position.X - Size.X / 2), (int)Position.Y,
+                (int)Size.X, (int)Size.Y
+            );
+        }
+    }
+
     private static MouseState lastMouse;
 
     public TextButton(string text, Vector2 position, Color defaultColor, Color choosedColor, Action action)
     : base(null, position, Vector2.Zero)
     {
         color = defaultColor;
-        Size = new Vector2(GlyphSize.X, Text.CalculateStringWidth(text));
+        Size = new Vector2(Text.CalculateStringWidth(text), GlyphSize.Y);
         this.text = text;
         this.defaultColor = defaultColor;
         this.choosedColor = choosedColor;
@@ -36,7 +48,7 @@ public class TextButton : GameObject
         var mouse = Mouse.GetState();
         var cursorRectangle = new Rectangle(mouse.X, mouse.Y, 1, 1);
 
-        if (cursorRectangle.Intersects(Rectangle))
+        if (cursorRectangle.Intersects(centeredRectangle))
         {
             pressed = true;
             color = choosedColor;

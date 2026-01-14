@@ -507,10 +507,10 @@ public class Player : GameObject
         var slotsWithMaterials = new List<Slot>();
         var materialsAmounts = new List<int>();
 
-        foreach (int materialId in craftData.Materials.Keys)
+        foreach (var material in craftData.Materials.Keys)
         {
-            int materialAmount = craftData.Materials.GetValueOrDefault(materialId);
-            var slotWithMaterial = Inventory.SearchItemSlot(materialId, materialAmount);
+            int materialAmount = craftData.Materials.GetValueOrDefault(material);
+            var slotWithMaterial = Inventory.SearchItemSlot(material, materialAmount);
             if (slotWithMaterial != null)
             {
                 slotsWithMaterials.Add(slotWithMaterial);

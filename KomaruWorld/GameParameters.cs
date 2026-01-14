@@ -17,7 +17,7 @@ public static class GameParameters
     public static readonly Vector2 DroppedItemSize = new Vector2(6, 6) * SIZE_MOD;
     public static readonly Vector2 ItemSize = new Vector2(10, 10) * SIZE_MOD;
     public static readonly Vector2 TileSize = new Vector2(8, 8) * SIZE_MOD;
-    public static readonly Vector2 CraftMenuSize = new Vector2(72, 48) * SIZE_MOD;
+    public static readonly Vector2 CraftMenuSize = new Vector2(72, 64) * SIZE_MOD;
     public static readonly Vector2 CraftMenuItemSlotPos = new Vector2(28, 4) * SIZE_MOD;
     public static readonly Point GlyphSize = new Point(8 * TEXT_MOD, 8 * TEXT_MOD);
     public static readonly Point CursorSize = new Point(6 * SIZE_MOD, 6 * SIZE_MOD);

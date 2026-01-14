@@ -118,14 +118,14 @@ public class Inventory
         return false;
     }
 
-    public Slot SearchItemSlot(int id, int amount)
+    public Slot SearchItemSlot(Item item, int amount)
     {
         foreach (var slot in HotbarSlots)
-            if (CheckSlot(slot, id, amount))
+            if (CheckSlot(slot, item, amount))
                 return slot;
 
         foreach (var slot in Slots)
-            if (CheckSlot(slot, id, amount))
+            if (CheckSlot(slot, item, amount))
                 return slot;
 
         return null;
@@ -146,9 +146,9 @@ public class Inventory
         return founded.ToArray();
     }
 
-    private bool CheckSlot(Slot slot, int id, int amount)
+    private bool CheckSlot(Slot slot, Item item, int amount)
     {
-        return slot.Item?.ID == id && slot.ItemAmount >= amount; 
+        return slot.Item == item && slot.ItemAmount >= amount; 
     }
 
     private bool CheckSlot(Slot slot, int id)
