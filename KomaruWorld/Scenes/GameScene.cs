@@ -53,9 +53,11 @@ public class GameScene(ContentManager content, SpriteBatch spriteBatch, Graphics
         CraftsBank.CreateCraftSlots(slotAtlas, InventorySlotsPos, OpenCraftMenuCall);
 
         var craftMenuSprite = Content.Load<Texture2D>("Sprites/UI/CraftMenu");
+        var closeButtonAtlas = new Atlas(Content.Load<Texture2D>("Sprites/UI/CloseButtonAtlas"), SlotSize / SIZE_MOD);
         craftMenu = new CraftMenu(craftMenuSprite, new Vector2
         (GraphicsManager.PreferredBackBufferWidth / 2 - CraftMenuSize.X / 2,
-        GraphicsManager.PreferredBackBufferHeight / 2 - CraftMenuSize.Y / 2), CraftMenuSize, CallPlayerCraft);
+        GraphicsManager.PreferredBackBufferHeight / 2 - CraftMenuSize.Y / 2),
+        CraftMenuSize, CallPlayerCraft, closeButtonAtlas);
 
         Camera.Position = Player.Position;
     }
@@ -66,7 +68,9 @@ public class GameScene(ContentManager content, SpriteBatch spriteBatch, Graphics
         inventoryMenuButton.Update(gameTime);
         World.Update(gameTime);
         Player.Update(gameTime);
-        craftMenu.Update(gameTime);
+
+        if (Crafting)
+            craftMenu.Update(gameTime);
 
         if (InventoryMenu == InventoryMenu.Craft)
             CraftsBank.UpdateCraftSlots();
@@ -344,6 +348,13 @@ public class GameScene(ContentManager content, SpriteBatch spriteBatch, Graphics
     {
         craftMenu.SetCraftData(craftData);
         Crafting = true;
+    }
+
+    public static void CloseCraftMenuCall() => Instance.CloseCraftMenu();
+    private void CloseCraftMenu()
+    {
+        System.Console.WriteLine("Closed craft menu");
+        Crafting = false;
     }
 
     public static void CallPlayerCraft() => Instance.Player.Craft(Instance.craftMenu.CraftData);

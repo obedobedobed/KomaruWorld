@@ -8,6 +8,7 @@ namespace KomaruWorld;
 public class CraftMenu : GameObject
 {
     private TextButton craftButton;
+    private SpriteButton closeButton;
     public CraftData CraftData { get; private set; }
     private CraftMenuMaterial[] materials;
 
@@ -48,7 +49,8 @@ public class CraftMenu : GameObject
         }
     }
 
-    public CraftMenu(Texture2D texture, Vector2 position, Vector2 size, TextButton.Action craft) : base(texture, position, size)
+    public CraftMenu(Texture2D texture, Vector2 position, Vector2 size, TextButton.Action craft, Atlas closeButtonAtlas)
+    : base(texture, position, size)
     {
         var craftButtonPos = new Vector2
         (
@@ -56,6 +58,13 @@ public class CraftMenu : GameObject
             position.Y + CraftMenuSize.Y - GlyphSize.Y - UI_SPACING * 4
         );
         craftButton = new TextButton("Craft", craftButtonPos, Color.White, Color.Yellow, craft);
+
+        var closeButtonPos = new Vector2
+        (
+            position.X - SlotSize.X - UI_SPACING,
+            position.Y
+        );
+        closeButton = new SpriteButton(closeButtonAtlas, closeButtonPos, SlotSize, 0, 1, Close);
     }
 
     public void SetCraftData(CraftData craftData)
@@ -83,12 +92,14 @@ public class CraftMenu : GameObject
     public override void Update(GameTime gameTime)
     {
         craftButton.Update(gameTime);
+        closeButton.Update(gameTime);
     }
 
     public override void Draw(SpriteBatch spriteBatch)
     {
         base.Draw(spriteBatch);
         craftButton.Draw(spriteBatch);
+        closeButton.Draw(spriteBatch);
         spriteBatch.Draw(CraftData.Item.Texture, itemRectangle, Color.White);
         Text.Draw($"{CraftData.Item.Name} (x{CraftData.ItemAmount})", itemNamePos, Color.White,
         spriteBatch, TextDrawingMode.Center);
@@ -97,4 +108,6 @@ public class CraftMenu : GameObject
         foreach (var material in materials)
             material.Draw(spriteBatch);
     }
+
+    public static void Close() => GameScene.CloseCraftMenuCall();
 }

@@ -49,8 +49,12 @@ public static class CraftsBank
 
     public static void UpdateCraftSlots()
     {
-        foreach (var slot in CraftSlots)
-            slot.Update(new GameTime());
+        if (!GameScene.Instance.Crafting)
+            foreach (var slot in CraftSlots)
+                slot.Update(new GameTime());
+        else
+            foreach (var slot in CraftSlots)
+                slot.SetDefaultFrame();
     }
 
     public static void DrawCraftSlots(SpriteBatch spriteBatch)

@@ -59,6 +59,8 @@ public class CraftSlot : GameObject
 
         lastMouse = mouse;
     }
+    
+    public void SetDefaultFrame() => frame = defaultFrame;
 
     public override void Draw(SpriteBatch spriteBatch)
     {

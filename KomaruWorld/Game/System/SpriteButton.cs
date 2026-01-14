@@ -14,7 +14,7 @@ public class SpriteButton : GameObject
 
     private bool pressed = false;
 
-    private static MouseState lastMouse;
+    private MouseState lastMouse;
 
     public SpriteButton(Atlas atlas, Vector2 position, Vector2 size, int defaultFrame, int choosedFrame, Action action)
     : base(atlas, position, size, defaultFrame)
