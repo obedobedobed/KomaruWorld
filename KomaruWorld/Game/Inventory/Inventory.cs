@@ -77,7 +77,7 @@ public class Inventory
 
     public bool TryCollectItem(Item item)
     {
-        var sameItemSlots = SearchItemSlots(item.ID);
+        var sameItemSlots = SearchItemSlots(item);
 
         foreach (var slot in sameItemSlots)
             if (ItemCollecting_CheckSlot(slot, item))
@@ -131,16 +131,16 @@ public class Inventory
         return null;
     }
 
-    public Slot[] SearchItemSlots(int id)
+    public Slot[] SearchItemSlots(Item item)
     {
         var founded = new List<Slot>();
 
         foreach (var slot in HotbarSlots)
-            if (CheckSlot(slot, id))
+            if (CheckSlot(slot, item))
                 founded.Add(slot);
 
         foreach (var slot in Slots)
-            if (CheckSlot(slot, id))
+            if (CheckSlot(slot, item))
                 founded.Add(slot);
 
         return founded.ToArray();
@@ -148,12 +148,12 @@ public class Inventory
 
     private bool CheckSlot(Slot slot, Item item, int amount)
     {
-        return slot.Item == item && slot.ItemAmount >= amount; 
+        return slot.Item?.ID == item.ID && slot.ItemAmount >= amount; 
     }
 
-    private bool CheckSlot(Slot slot, int id)
+    private bool CheckSlot(Slot slot, Item item)
     {
-        return slot.Item?.ID == id;
+        return slot.Item?.ID == item.ID;
     }
 
     public void DrawInventory(SpriteBatch spriteBatch)

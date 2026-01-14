@@ -30,7 +30,7 @@ public class TextButton : GameObject
         }
     }
 
-    private static MouseState lastMouse;
+    private MouseState lastMouse;
 
     public TextButton(string text, Vector2 position, Color defaultColor, Color choosedColor, Action action)
     : base(null, position, Vector2.Zero)
