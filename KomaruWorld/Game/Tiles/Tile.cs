@@ -12,21 +12,28 @@ public class Tile : GameObject
     public Tiles TileType { get; private set; }
     public DropData DropData { get; private set; }
     public ToolToDestroy ToolToDestroy { get; private set; }
-    private int health;
+    private readonly float takeDamageTime;
+    private float timeToTakeDamage;
+    private int health = 4;
+    private int destroyingFrame;
+    private float deltaTime;
 
-    public Tile(Texture2D texture, Vector2 position, Vector2 size, bool canCollide, int health, Tiles tileType,
-    ToolToDestroy toolToDestroy, DropData drop) : base(texture, position, size)
+    public Tile(Texture2D texture, Vector2 position, Vector2 size, bool canCollide, Tiles tileType,
+    ToolToDestroy toolToDestroy, float destroyTime, DropData drop) : base(texture, position, size)
     {
         CanCollide = canCollide;
         TileWorldID = ++totalTiles;
         TileType = tileType;
         DropData = drop;
         ToolToDestroy = toolToDestroy;
-        this.health = health;
+        takeDamageTime = destroyTime / health;
+        destroyingFrame = health;
     }
 
     public override void Update(GameTime gameTime)
     {
+        deltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
+
         if (health <= 0)
         {
             Drop();
@@ -34,7 +41,15 @@ public class Tile : GameObject
         }
     }
 
-    public void TakeDamage(int damage) => health -= damage;
+    public void TakeDamage(float speed)
+    {
+        if ((timeToTakeDamage -= deltaTime * speed) <= 0)
+        {
+            health -= 1;
+            timeToTakeDamage = takeDamageTime;
+            destroyingFrame = health;
+        }
+    }
 
     public void Drop()
     {
@@ -43,5 +58,12 @@ public class Tile : GameObject
         foreach (var dropItem in drop)
             for (int i = 0; i < dropItem.Amount; i++)
                 World.AddItem(new DroppedItem(dropItem.Item, Position));
+    }
+
+    public override void Draw(SpriteBatch spriteBatch)
+    {
+        base.Draw(spriteBatch);
+        spriteBatch.Draw(ItemsBank.DestroyingAtlas.Texture,
+        Rectangle, ItemsBank.DestroyingAtlas.Rectangles[destroyingFrame], Color.White);
     }
 }

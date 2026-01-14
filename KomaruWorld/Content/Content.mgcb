@@ -265,6 +265,18 @@
 /processorParam:TextureFormat=Color
 /build:Sprites/Tiles/StoneTile.png
 
+#begin Sprites/Tiles/TileDestroyingAtlas.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Sprites/Tiles/TileDestroyingAtlas.png
+
 #begin Sprites/UI/CloseButtonAtlas.png
 /importer:TextureImporter
 /processor:TextureProcessor

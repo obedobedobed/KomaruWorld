@@ -179,14 +179,14 @@ public class Player : GameObject
 
                     if (tool != null && itemInSlot != null)
                         if (tool == ToolToDestroy.Pickaxe && itemInSlot is PickaxeItem pickaxe)
-                            _tile.TakeDamage(pickaxe.Damage);
+                            _tile.TakeDamage(pickaxe.Speed);
                         else if (tool == ToolToDestroy.Axe && itemInSlot is AxeItem axe)
-                            _tile.TakeDamage(axe.Damage);
+                            _tile.TakeDamage(axe.Speed);
                         else if (tool == ToolToDestroy.Both)
                             if (itemInSlot is AxeItem _axe)
-                                _tile.TakeDamage(_axe.Damage);
+                                _tile.TakeDamage(_axe.Speed);
                             else if (itemInSlot is PickaxeItem _pickaxe)
-                                _tile.TakeDamage(_pickaxe.Damage);
+                                _tile.TakeDamage(_pickaxe.Speed);
                 }
         }
 

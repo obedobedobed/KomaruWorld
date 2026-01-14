@@ -6,6 +6,8 @@ namespace KomaruWorld;
 
 public static class ItemsBank
 {
+    public static Atlas DestroyingAtlas { get; private set; }
+
     // Textures
     public static Texture2D GrassTexture { get; private set; }
     public static Texture2D DirtTexture { get; private set; }
@@ -27,6 +29,8 @@ public static class ItemsBank
 
     public static void LoadTextures(ContentManager Content)
     {
+        DestroyingAtlas = new Atlas(Content.Load<Texture2D>("Sprites/Tiles/TileDestroyingAtlas"), TileSize / SIZE_MOD);
+
         GrassTexture = Content.Load<Texture2D>("Sprites/Tiles/GrassTile");
         DirtTexture = Content.Load<Texture2D>("Sprites/Tiles/DirtTile");
         StoneTexture = Content.Load<Texture2D>("Sprites/Tiles/StoneTile");
@@ -55,8 +59,8 @@ public static class ItemsBank
     public static Item Planks { get { return new PlaceableItem("Planks", 99, PlanksTexture, id: 5, Tiles.Planks); } }
     public static Item Stick { get { return new Item("Stick", 99, StickTexture, id: 6); } }
     public static Item Leaf { get { return new Item("Leaf", 99, LeafTexture, id: 7); } }
-    public static Item Axe { get { return new AxeItem("Iron axe", AxeTexture, id: 8, damage: 3); } }
-    public static Item Pickaxe { get { return new PickaxeItem("Iron pickaxe", PickaxeTexture, id: 9, damage: 1); } }
+    public static Item Axe { get { return new AxeItem("Iron axe", AxeTexture, id: 8, speed: 1f); } }
+    public static Item Pickaxe { get { return new PickaxeItem("Iron pickaxe", PickaxeTexture, id: 9, speed: 1f); } }
     public static Item Sword { get { return new SwordItem("Iron sword", SwordTexture, id: 10, damage: 5); } }
     public static Item IronHelmet { get { return new ArmorElementItem("Iron helmet", IronHelmetTexture, id: 11, armor: 2, element: ArmorElement.Helmet, IronHelmetAtlas); } }
     public static Item IronChestplate { get { return new ArmorElementItem("Iron chestplate", IronChestplateTexture, id: 12, armor: 3, element: ArmorElement.Chestplate, IronChestplateAtlas); } }
