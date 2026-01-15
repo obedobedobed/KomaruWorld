@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using static KomaruWorld.GameParameters;
@@ -48,6 +49,9 @@ public class Player : GameObject
         }
     }
 
+    // Sounds
+    private SoundEffectInstance Place;
+
     // Input
     private MouseState lastMouse;
 
@@ -83,6 +87,11 @@ public class Player : GameObject
         Inventory.HotbarSlots[0].UpdateItem(ItemsBank.Sword);
         Inventory.HotbarSlots[1].UpdateItem(ItemsBank.Pickaxe);
         Inventory.HotbarSlots[2].UpdateItem(ItemsBank.Axe);
+    }
+
+    public void SetupSFX(SoundEffect place)
+    {
+        Place = place.CreateInstance();
     }
 
     public override void Update(GameTime gameTime)
@@ -166,7 +175,10 @@ public class Player : GameObject
                 {
                     bool canAddTile = World.AddTile(TilesBank.FindTile(tile.ItemTile, targetPosition));
                     if (canAddTile)
+                    {
                         Inventory.HotbarSlots[HotbarSlot].CountItem(countBack: true);
+                        Place.Play();
+                    }
 
                     if (Inventory.HotbarSlots[HotbarSlot].ItemAmount <= 0)
                         Inventory.HotbarSlots[HotbarSlot].UpdateItem(null);

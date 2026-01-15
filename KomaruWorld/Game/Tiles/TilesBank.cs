@@ -1,4 +1,5 @@
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using static KomaruWorld.GameParameters;
@@ -15,8 +16,12 @@ public static class TilesBank
     public static Texture2D LeavesTexture { get; private set; }
     public static Texture2D PlanksTexture { get; private set; }
 
-    public static void LoadTextures(ContentManager Content)
+    public static void LoadContent(ContentManager Content)
     {
+        var damageSound = Content.Load<SoundEffect>("Audio/SFX/TileDamage");
+        var destroySound = Content.Load<SoundEffect>("Audio/SFX/TileDestroy");
+        Tile.SetupSFX(damageSound, destroySound);
+
         GrassTexture = Content.Load<Texture2D>("Sprites/Tiles/GrassTile");
         DirtTexture = Content.Load<Texture2D>("Sprites/Tiles/DirtTile");
         StoneTexture = Content.Load<Texture2D>("Sprites/Tiles/StoneTile");

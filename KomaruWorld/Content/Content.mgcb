@@ -13,6 +13,24 @@
 
 #---------------------------------- Content ---------------------------------#
 
+#begin Audio/SFX/TileDamage.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Audio/SFX/TileDamage.wav
+
+#begin Audio/SFX/TileDestroy.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Audio/SFX/TileDestroy.wav
+
+#begin Audio/SFX/TilePlace.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Audio/SFX/TilePlace.wav
+
 #begin Sprites/Cursor.png
 /importer:TextureImporter
 /processor:TextureProcessor

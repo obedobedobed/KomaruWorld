@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -42,8 +43,10 @@ public class GameScene(ContentManager content, SpriteBatch spriteBatch, Graphics
 
         var playerAtlas = new Atlas(texture: Content.Load<Texture2D>("Sprites/KomaruAtlas"), spriteSize: PlayerSize / SIZE_MOD);
         var slotAtlas = new Atlas(texture: Content.Load<Texture2D>("Sprites/UI/SlotAtlas"), spriteSize: SlotSize / SIZE_MOD);
+        var placeSfx = Content.Load<SoundEffect>("Audio/SFX/TilePlace");
         Player = new Player(playerAtlas, new Vector2(worldWidth * TileSize.X / 2, 100), PlayerSize,
         defaultFrame: 1, slotAtlas: slotAtlas);
+        Player.SetupSFX(placeSfx);
 
         var inventoryMenuAtlas = new Atlas
         (texture: Content.Load<Texture2D>("Sprites/UI/InventoryMenuAtlas"), SlotSize / SIZE_MOD);
@@ -67,6 +70,7 @@ public class GameScene(ContentManager content, SpriteBatch spriteBatch, Graphics
     {
         inventoryMenuButton.Update(gameTime);
         World.Update(gameTime);
+        Tile.StaticUpdate(gameTime);
         Player.Update(gameTime);
 
         if (Crafting)

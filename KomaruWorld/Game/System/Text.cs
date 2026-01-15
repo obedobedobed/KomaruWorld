@@ -183,7 +183,7 @@ public static class Text
                     [
                         new (-OUT_PIXELS, -OUT_PIXELS), new (0, -OUT_PIXELS), new (OUT_PIXELS, -OUT_PIXELS),
                         new (-OUT_PIXELS, 0), new (0, 0), new (OUT_PIXELS, 0),
-                        new (-OUT_PIXELS, OUT_PIXELS), new (OUT_PIXELS, OUT_PIXELS), new (OUT_PIXELS, OUT_PIXELS),
+                        new (-OUT_PIXELS, OUT_PIXELS), new (0, OUT_PIXELS), new (OUT_PIXELS, OUT_PIXELS),
                     ];
 
                     foreach (var point in offsets)
