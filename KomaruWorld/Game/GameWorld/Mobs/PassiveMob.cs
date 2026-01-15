@@ -25,8 +25,6 @@ public class PassiveMob : Mob
     {
         if ((moveTime -= DeltaTime) > 0)
         {
-            Direction = (Direction)Random.Shared.Next(0, 2);
-
             int moveMod = Direction switch
             {
                 Direction.Right => 1,  
@@ -35,22 +33,27 @@ public class PassiveMob : Mob
             };
 
             float velocity = speed * DeltaTime * moveMod;
-            var nextHitbox = new Rectangle((int)(Hitbox.X + velocity), Hitbox.Y, Hitbox.Width, Hitbox.Height);
+            var nextHitbox = new Rectangle((int)(HitboxPosApplied.X + velocity), HitboxPosApplied.Y,
+            HitboxPosApplied.Width, HitboxPosApplied.Height);
+
+            bool applyVelocity = true;
 
             foreach (var tile in World.Tiles)
             {
-                if (nextHitbox.Intersects(tile.Hitbox))
+                if (nextHitbox.IntersectsNonInclusive(tile.Hitbox))
                 {
                     Direction = Direction switch
                     {
                         Direction.Right => Direction.Left,
                         _ => Direction.Right
                     };
+                    applyVelocity = false;
                     break;
                 }
             }
 
-            Position += new Vector2(velocity, 0f);
+            if (applyVelocity)
+                Position += new Vector2(velocity, 0f);
         }
         else
         {
@@ -60,9 +63,10 @@ public class PassiveMob : Mob
                 moveBreakEstimated = moveBreak;
                 moveTime = Random.Shared.Next
                 (
-                    (int)moveTimeRange.MinimalValue * 100,
-                    (int)moveTimeRange.MaximalValue * 100
+                    (int)(moveTimeRange.MinimalValue * 100),
+                    (int)(moveTimeRange.MaximalValue * 100)
                 ) / 100;
+                Direction = (Direction)Random.Shared.Next(0, 2);
             }
         }
     }
@@ -92,6 +96,8 @@ public class PassiveMob : Mob
                     FRAME_RUN_0 => FRAME_RUN_1,
                     _ => FRAME_RUN_0  
                 };
+
+            timeToFrame = FRAME_TIME;
         }
     }
 }
