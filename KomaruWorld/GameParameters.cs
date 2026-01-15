@@ -13,7 +13,7 @@ public static class GameParameters
     public const int INV_SLOTS_IN_LINE = 5;
     public const int INV_SLOTS_LINES = 3;
     public const int OUT_PIXELS = 1 * TEXT_MOD;
-    public static readonly Vector2 PlayerSize = new Vector2(16, 16) * SIZE_MOD;
+    public static readonly Vector2 EntitySize = new Vector2(16, 16) * SIZE_MOD;
     public static readonly Vector2 SlotSize = new Vector2(16, 16) * SIZE_MOD;
     public static readonly Vector2 DroppedItemSize = new Vector2(6, 6) * SIZE_MOD;
     public static readonly Vector2 ItemSize = new Vector2(10, 10) * SIZE_MOD;

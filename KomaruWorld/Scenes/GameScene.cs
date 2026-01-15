@@ -41,10 +41,10 @@ public class GameScene(ContentManager content, SpriteBatch spriteBatch, Graphics
 
         WorldGenerator.Generate(worldWidth, worldHeight);
 
-        var playerAtlas = new Atlas(texture: Content.Load<Texture2D>("Sprites/KomaruAtlas"), spriteSize: PlayerSize / SIZE_MOD);
+        var playerAtlas = new Atlas(texture: Content.Load<Texture2D>("Sprites/KomaruAtlas"), spriteSize: EntitySize / SIZE_MOD);
         var slotAtlas = new Atlas(texture: Content.Load<Texture2D>("Sprites/UI/SlotAtlas"), spriteSize: SlotSize / SIZE_MOD);
         var placeSfx = Content.Load<SoundEffect>("Audio/SFX/TilePlace");
-        Player = new Player(playerAtlas, new Vector2(worldWidth * TileSize.X / 2, 100), PlayerSize,
+        Player = new Player(playerAtlas, new Vector2(worldWidth * TileSize.X / 2, 100), EntitySize,
         defaultFrame: 1, slotAtlas: slotAtlas);
         Player.SetupSFX(placeSfx);
 
@@ -61,6 +61,8 @@ public class GameScene(ContentManager content, SpriteBatch spriteBatch, Graphics
         (GraphicsManager.PreferredBackBufferWidth / 2 - CraftMenuSize.X / 2,
         GraphicsManager.PreferredBackBufferHeight / 2 - CraftMenuSize.Y / 2),
         CraftMenuSize, CallPlayerCraft, closeButtonAtlas);
+
+        World.AddMob(MobsBank.Chicken(new Vector2(worldWidth * TileSize.X / 2, 100)));
 
         Camera.Position = Player.Position;
     }

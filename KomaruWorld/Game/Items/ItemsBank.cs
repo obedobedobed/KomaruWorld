@@ -27,7 +27,7 @@ public static class ItemsBank
     public static Texture2D IronLegginsTexture { get; private set; }
     private static Atlas IronLegginsAtlas;
 
-    public static void LoadTextures(ContentManager Content)
+    public static void LoadContent(ContentManager Content)
     {
         DestroyingAtlas = new Atlas(Content.Load<Texture2D>("Sprites/Tiles/TileDestroyingAtlas"), TileSize / SIZE_MOD);
 
@@ -43,11 +43,11 @@ public static class ItemsBank
         PickaxeTexture = Content.Load<Texture2D>("Sprites/Items/Tools/Pickaxe");
         SwordTexture = Content.Load<Texture2D>("Sprites/Items/Tools/Sword");
         IronHelmetTexture = Content.Load<Texture2D>("Sprites/Items/Armor/IronHelmetItem");
-        IronHelmetAtlas = new Atlas(Content.Load<Texture2D>("Sprites/Items/Armor/IronHelmet"), PlayerSize / SIZE_MOD);
+        IronHelmetAtlas = new Atlas(Content.Load<Texture2D>("Sprites/Items/Armor/IronHelmet"), EntitySize / SIZE_MOD);
         IronChestplateTexture = Content.Load<Texture2D>("Sprites/Items/Armor/IronChestplateItem");
-        IronChestplateAtlas = new Atlas(Content.Load<Texture2D>("Sprites/Items/Armor/IronChestplate"), PlayerSize / SIZE_MOD);
+        IronChestplateAtlas = new Atlas(Content.Load<Texture2D>("Sprites/Items/Armor/IronChestplate"), EntitySize / SIZE_MOD);
         IronLegginsTexture = Content.Load<Texture2D>("Sprites/Items/Armor/IronLegginsItem");
-        IronLegginsAtlas = new Atlas(Content.Load<Texture2D>("Sprites/Items/Armor/IronLeggins"), PlayerSize / SIZE_MOD);
+        IronLegginsAtlas = new Atlas(Content.Load<Texture2D>("Sprites/Items/Armor/IronLeggins"), EntitySize / SIZE_MOD);
     }
 
     // Items
