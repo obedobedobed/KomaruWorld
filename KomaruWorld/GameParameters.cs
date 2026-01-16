@@ -5,7 +5,7 @@ namespace KomaruWorld;
 public static class GameParameters
 {
     public const string GAME_NAME = "Komaru World";
-    public const string GAME_VERSION = "0.0.3 (Beta)";
+    public const string GAME_VERSION = "0.0.4 (Beta)";
     public const int SIZE_MOD = 4;
     public const int TEXT_MOD = 2;
     public const int TEXT_SPACING = 1 * TEXT_MOD;

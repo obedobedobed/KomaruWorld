@@ -19,7 +19,8 @@ public static class WorldGenerator
         new Dictionary<char, Tiles>() { {'@', Tiles.Leaves}, {'#', Tiles.Log} },
         new Point(3, 5)
     );
-    private static int treeSpawnChance = 30;
+    private const int TREE_SPAWN_CHANCE = 30;
+    private const int ORE_SPAWN_CHANCE = 10;
 
     public static void Generate(int width, int height)
     {
@@ -37,7 +38,7 @@ public static class WorldGenerator
 
                 if (y > 18)
                 {
-                    if (Random.Shared.Next(0, 100) <= 20)
+                    if (Random.Shared.Next(0, 100) <= ORE_SPAWN_CHANCE)
                         targetTile = TilesBank.FindTile((Tiles)Random.Shared.Next(7, 11), targetPosition);
                     else  
                         targetTile = TilesBank.Stone(targetPosition);
@@ -49,7 +50,7 @@ public static class WorldGenerator
                 else
                     targetTile = null;
 
-                if (y == 15 && Random.Shared.Next(0, 101) <= treeSpawnChance && canGenerateTrees)
+                if (y == 15 && Random.Shared.Next(0, 101) <= TREE_SPAWN_CHANCE && canGenerateTrees)
                 {
                     tree.Generate(new Vector2(xPos, yPos));
                     generatedTreeTilesAgo = 0;

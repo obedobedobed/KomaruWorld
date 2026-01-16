@@ -9,13 +9,18 @@ public static class CraftsBank
 {
     public static CraftData Log { get; private set; } = new CraftData(ItemsBank.Log, itemAmount: 1, [ItemsBank.Planks], [4]);
     public static CraftData Leaves { get; private set; } = new CraftData(ItemsBank.Leaves, itemAmount: 1, [ItemsBank.Leaf], [4]);
-    public static CraftData IronHelmet { get; private set; } = new CraftData(ItemsBank.IronHelmet, itemAmount: 1, [ItemsBank.Stone], [20]);
-    public static CraftData IronChestplate { get; private set; } = new CraftData(ItemsBank.IronChestplate, itemAmount: 1, [ItemsBank.Stone], [30]);
-    public static CraftData IronLeggins { get; private set; } = new CraftData(ItemsBank.IronLeggins, itemAmount: 1, [ItemsBank.Stone], [25]);
+    public static CraftData IronIngot { get; private set; } = new CraftData(ItemsBank.IronIngot, itemAmount: 1, [ItemsBank.IronOre], [1]);
+    public static CraftData GoldIngot { get; private set; } = new CraftData(ItemsBank.GoldIngot, itemAmount: 1, [ItemsBank.GoldOre], [1]);
+    public static CraftData Emerald { get; private set; } = new CraftData(ItemsBank.Emerald, itemAmount: 1, [ItemsBank.EmeraldOre], [1]);
+    public static CraftData Amethyst { get; private set; } = new CraftData(ItemsBank.Amethyst, itemAmount: 1, [ItemsBank.AmethystOre], [1]);
+    public static CraftData IronHelmet { get; private set; } = new CraftData(ItemsBank.IronHelmet, itemAmount: 1, [ItemsBank.IronIngot], [3]);
+    public static CraftData IronChestplate { get; private set; } = new CraftData(ItemsBank.IronChestplate, itemAmount: 1, [ItemsBank.IronIngot], [8]);
+    public static CraftData IronLeggins { get; private set; } = new CraftData(ItemsBank.IronLeggins, itemAmount: 1, [ItemsBank.IronIngot], [5]);
 
     public static CraftData[] Crafts =
     [
-        Log, Leaves, IronHelmet, IronChestplate, IronLeggins
+        Log, Leaves, IronIngot, GoldIngot, Emerald,
+        Amethyst, IronHelmet, IronChestplate, IronLeggins
     ];
 
     public static List<CraftSlot> CraftSlots = new List<CraftSlot>();
