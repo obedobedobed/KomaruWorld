@@ -16,5 +16,5 @@ public static class MobsBank
     }
 
     // Mobs
-    public static Mob Chicken(Vector2 position) => new PassiveMob(ChickenAtlas, position, EntitySize, 35f * SIZE_MOD, 0, 125f * SIZE_MOD, new Rectangle(2 * SIZE_MOD, 1 * SIZE_MOD, (int)EntitySize.X - 4 * SIZE_MOD, (int)EntitySize.Y - 1 * SIZE_MOD), new RangeF(2, 5));
+    public static Mob Chicken(Vector2 position) => new PassiveMob(ChickenAtlas, position, EntitySize, 35f * SIZE_MOD, 0, 125f * SIZE_MOD, 0.5f, new Rectangle(2 * SIZE_MOD, 1 * SIZE_MOD, (int)EntitySize.X - 4 * SIZE_MOD, (int)EntitySize.Y - 1 * SIZE_MOD), new RangeF(2, 5));
 }

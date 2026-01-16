@@ -18,6 +18,7 @@ public abstract class Mob : GameObject
     // Gravity
     private float GravityVelocity;
     protected bool IsGrounded;
+    protected bool LastIsGrounded;
     protected bool IsJumping;
     private readonly float jumpForce;
     private float jumpMod;
@@ -45,13 +46,14 @@ public abstract class Mob : GameObject
     protected float timeToFrame = FRAME_TIME;
 
     public Mob(Atlas atlas, Vector2 position, Vector2 size, float speed, int defaultFrame,
-    float jumpForce, Rectangle hitbox, RangeF moveTimeRange, float moveBreak) : base(atlas, position, size, defaultFrame)
+    float jumpForce, float jumpTime, Rectangle hitbox, RangeF moveTimeRange, float moveBreak)
+    : base(atlas, position, size, defaultFrame)
     {
         this.speed = speed;
         this.jumpForce = jumpForce;
         jumpMod = jumpForce;
         originalJumpTime = jumpTime;
-        jumpTime = originalJumpTime;
+        this.jumpTime = originalJumpTime;
         Hitbox = hitbox;
         this.moveTimeRange = moveTimeRange;
         this.moveBreak = moveBreak;
@@ -95,9 +97,19 @@ public abstract class Mob : GameObject
             }
         }
 
+
         if (IsGrounded)
+        {
+            LastIsGrounded = IsGrounded;
             return;
+        }
+        else if (!IsGrounded && LastIsGrounded)
+        {
+            System.Console.WriteLine("chicken jockey");
+            IsJumping = true;
+        }
         
+        LastIsGrounded = IsGrounded;
         Position += new Vector2(0f, GravityVelocity);
     }
 
