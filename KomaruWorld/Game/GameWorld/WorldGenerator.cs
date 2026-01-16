@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using static KomaruWorld.GameParameters;
 
@@ -6,14 +7,18 @@ namespace KomaruWorld;
 
 public static class WorldGenerator
 {
-    private static string[] tree =
-    {
-        " @@@ ",
-        "@@@@@",
-        "@@#@@",
-        "  #  ",
-        "  #  "
-    };
+    private static WorldStructure tree = new WorldStructure
+    (
+        [
+            " @@@ ",
+            "@@@@@",
+            "@@#@@",
+            "  #  ",
+            "  #  "
+        ],
+        new Dictionary<char, Tiles>() { {'@', Tiles.Leaves}, {'#', Tiles.Log} },
+        new Point(3, 5)
+    );
     private static int treeSpawnChance = 30;
 
     public static void Generate(int width, int height)
@@ -31,7 +36,12 @@ public static class WorldGenerator
                 Vector2 targetPosition = new Vector2(xPos, yPos);
 
                 if (y > 18)
-                    targetTile = TilesBank.Stone(targetPosition);
+                {
+                    if (Random.Shared.Next(0, 100) <= 20)
+                        targetTile = TilesBank.FindTile((Tiles)Random.Shared.Next(7, 11), targetPosition);
+                    else  
+                        targetTile = TilesBank.Stone(targetPosition);
+                }
                 else if (y > 15)
                     targetTile = TilesBank.Dirt(targetPosition);
                 else if (y == 15)
@@ -39,43 +49,17 @@ public static class WorldGenerator
                 else
                     targetTile = null;
 
-                if (y == 15 - tree.Length && Random.Shared.Next(0, 101) <= treeSpawnChance && canGenerateTrees)
+                if (y == 15 && Random.Shared.Next(0, 101) <= treeSpawnChance && canGenerateTrees)
                 {
-                    GenerateTree(xPos, yPos);
+                    tree.Generate(new Vector2(xPos, yPos));
                     generatedTreeTilesAgo = 0;
                     canGenerateTrees = false;
                 }
 
-                if (generatedTreeTilesAgo > tree[0].Length)
+                if (generatedTreeTilesAgo > tree.Layout[0].Length)
                     canGenerateTrees = true;
 
                 generatedTreeTilesAgo++;
-
-                if (targetTile != null)
-                    World.AddTile(targetTile);
-
-                xPos += TileSize.X;
-            }
-
-            yPos += TileSize.Y;
-        }
-    }
-
-    public static void GenerateTree(float baseX, float baseY)
-    {
-        float yPos = baseY;
-        for (int y = 0; y < tree.Length; y++)
-        {
-            float xPos = baseX;
-            for (int x = 0; x < tree[0].Length; x++)
-            {
-                Vector2 targetPosition = new Vector2(xPos, yPos);
-                Tile targetTile = tree[y][x] switch
-                {
-                    '@' => TilesBank.Leaves(targetPosition),
-                    '#' => TilesBank.Log(targetPosition),
-                    _ => null,
-                };
 
                 if (targetTile != null)
                     World.AddTile(targetTile);

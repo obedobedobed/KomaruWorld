@@ -2,6 +2,7 @@ namespace KomaruWorld;
 
 public enum Tiles
 {
+    None,
     Grass,
     Dirt,
     Stone,
