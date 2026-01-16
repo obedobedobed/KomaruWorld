@@ -159,44 +159,65 @@ public class GameScene(ContentManager content, SpriteBatch spriteBatch, Graphics
 
         var mouse = Mouse.GetState();
         var cursorRectangle = new Rectangle(mouse.X, mouse.Y, 1, 1);
-        bool drawHotbarItemName = true;
+
+        bool drawDescription = false;
+        Slot slotToDescription = null;
+        bool hotbarSlot = false;
+        ArmorSlot armorSlotToDescription = null;
 
         if (Player.InInventory && InventoryMenu == InventoryMenu.Inventory)
         {
             foreach (var slot in Player.Inventory.Slots)
                 if (slot.Rectangle.Intersects(cursorRectangle) && slot.Item != null)
                 {
-                    DrawItemDescription(slot);
+                    drawDescription = true; 
+                    slotToDescription = slot;
                     break;
                 }
 
             foreach (var slot in Player.Inventory.HotbarSlots)
                 if (slot.Rectangle.Intersects(cursorRectangle) && slot.Item != null)
                 {
-                    DrawItemDescription(slot, hotbarSlot: true);
-                    drawHotbarItemName = false;
+                    drawDescription = true;
+                    slotToDescription = slot;
+                    hotbarSlot = true;
                     break;
                 }
 
             foreach (var slot in Player.Inventory.ArmorSlots)
                 if (slot.Rectangle.Intersects(cursorRectangle) && slot.Item != null)
                 {
-                    DrawItemDescription(slot);
+                    drawDescription = true;
+                    armorSlotToDescription = slot;
                     break;
                 }
         }
 
-        if (drawHotbarItemName)
+        if (!Player.InInventory)
         {
-            string slotItemName = Player.Inventory.HotbarSlots[Player.HotbarSlot].Item?.Name;
-            var itemNamePos = new Vector2
+            var cursorWorldRectangle = new Rectangle
             (
-                Player.Inventory.HotbarSlots[Player.HotbarSlot].Position.X + SlotSize.X / 2,
-                Player.Inventory.HotbarSlots[0].Position.Y - GlyphSize.Y - UI_SPACING
+                cursorRectangle.X + (int)Camera.Position.X,  
+                cursorRectangle.Y + (int)Camera.Position.Y,  
+                1, 1  
             );
-            if (slotItemName != null)
-                Text.Draw(slotItemName, itemNamePos, Color.White, SpriteBatch, TextDrawingMode.Center);
+
+            foreach (var mob in World.Mobs)
+                if (mob.Rectangle.Intersects(cursorWorldRectangle))
+                {
+                    DrawMobDescription(mob);
+                    break;
+                }
         }
+
+        string slotItemName = Player.Inventory.HotbarSlots[Player.HotbarSlot].Item?.Name;
+        var itemNamePos = new Vector2
+        (
+            Player.Inventory.HotbarSlots[Player.HotbarSlot].Position.X + SlotSize.X / 2,
+            Player.Inventory.HotbarSlots[0].Position.Y - GlyphSize.Y - UI_SPACING
+        );
+        if (slotItemName != null)
+            Text.Draw(slotItemName, itemNamePos, Color.White, SpriteBatch, TextDrawingMode.Center);
 
         var itemInCursor = Player.ItemInCursor;
         int itemInCursorAmount = Player.ItemInCursorAmount;
@@ -209,6 +230,14 @@ public class GameScene(ContentManager content, SpriteBatch spriteBatch, Graphics
             Color.White, SpriteBatch, TextDrawingMode.Center);
         }
 
+        if (drawDescription)
+        {
+            if (slotToDescription != null)
+                DrawItemDescription(slotToDescription, hotbarSlot);
+            else if (armorSlotToDescription != null)
+                DrawItemDescription(armorSlotToDescription);
+        }
+
         if (debugMenuOpened)
             DrawDebugMenu();
             
@@ -217,9 +246,10 @@ public class GameScene(ContentManager content, SpriteBatch spriteBatch, Graphics
 
     private void DrawItemDescription(Slot slot, bool hotbarSlot = false)
     {
+        var mouse = Mouse.GetState();
         var descriptionPos = hotbarSlot 
-            ? new Vector2(slot.Position.X, slot.Position.Y)
-            : new Vector2(slot.Position.X, slot.Position.Y + SlotSize.Y);
+            ? new Vector2(mouse.X + CursorSize.X, mouse.Y)
+            : new Vector2(mouse.X + CursorSize.X, mouse.Y + CursorSize.Y);
         List<string> description = new List<string>() { slot.Item.Name + $" (x{slot.ItemAmount})" };
 
         if (slot.Item is PlaceableItem)
@@ -260,14 +290,16 @@ public class GameScene(ContentManager content, SpriteBatch spriteBatch, Graphics
 
         for (int i = 0; i < description.Count; i++)
         {
-            Text.Draw(description[i], descriptionPos, Color.White, SpriteBatch, TextDrawingMode.Right);
+            Text.Draw(description[i], descriptionPos, Color.White, SpriteBatch, TextDrawingMode.Right,
+            outline: true, outlineColor: Color.Black);
             descriptionPos.Y += (GlyphSize.Y + TEXT_SPACING) * (hotbarSlot ? -1 : 1);
         }
     }
 
     private void DrawItemDescription(ArmorSlot slot)
     {
-        var descriptionPos = new Vector2(slot.Position.X + SlotSize.X + UI_SPACING, slot.Position.Y);
+        var mouse = Mouse.GetState();
+        var descriptionPos = new Vector2(mouse.X + CursorSize.X, mouse.Y + CursorSize.Y + GlyphSize.Y);
         List<string> description = new List<string>() { slot.Item.Name + $" (x1)" };
 
         string armorElement = slot.Item.Element switch
@@ -283,7 +315,26 @@ public class GameScene(ContentManager content, SpriteBatch spriteBatch, Graphics
 
         for (int i = 0; i < description.Count; i++)
         {
-            Text.Draw(description[i], descriptionPos, Color.White, SpriteBatch, TextDrawingMode.Right);
+            Text.Draw(description[i], descriptionPos, Color.White, SpriteBatch, TextDrawingMode.Right,
+            outline: true, outlineColor: Color.Black);
+            descriptionPos.Y += GlyphSize.Y + TEXT_SPACING;
+        }
+    }
+
+    private void DrawMobDescription(Mob mob)
+    {
+        var mouse = Mouse.GetState();
+        var descriptionPos = new Vector2(mouse.X + CursorSize.X, mouse.Y + CursorSize.Y + GlyphSize.Y);
+        List<string> description = new List<string>()
+        {
+            mob.Name,
+            $"Pos: x{(int)(mob.Position.X / TileSize.X / SIZE_MOD)} y{(int)(mob.Position.Y / TileSize.Y / SIZE_MOD)}"
+        };
+
+        for (int i = 0; i < description.Count; i++)
+        {
+            Text.Draw(description[i], descriptionPos, Color.White, SpriteBatch, TextDrawingMode.Right,
+            outline: true, outlineColor: Color.Black);
             descriptionPos.Y += GlyphSize.Y + TEXT_SPACING;
         }
     }
