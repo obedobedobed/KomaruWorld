@@ -15,6 +15,10 @@ public static class TilesBank
     public static Texture2D LogTexture { get; private set; }
     public static Texture2D LeavesTexture { get; private set; }
     public static Texture2D PlanksTexture { get; private set; }
+    public static Texture2D IronOreTexture { get; private set; }
+    public static Texture2D GoldOreTexture { get; private set; }
+    public static Texture2D EmeraldOreTexture { get; private set; }
+    public static Texture2D AmethystOreTexture { get; private set; }
 
     public static void LoadContent(ContentManager Content)
     {
@@ -28,6 +32,10 @@ public static class TilesBank
         LogTexture = Content.Load<Texture2D>("Sprites/Tiles/LogTile");
         LeavesTexture = Content.Load<Texture2D>("Sprites/Tiles/LeavesTile");
         PlanksTexture = Content.Load<Texture2D>("Sprites/Tiles/PlanksTile");
+        IronOreTexture = Content.Load<Texture2D>("Sprites/Tiles/IronOre");
+        GoldOreTexture = Content.Load<Texture2D>("Sprites/Tiles/GoldOre");
+        EmeraldOreTexture = Content.Load<Texture2D>("Sprites/Tiles/EmeraldOre");
+        AmethystOreTexture = Content.Load<Texture2D>("Sprites/Tiles/AmethystOre");
     }
 
     // Tiles
@@ -37,6 +45,10 @@ public static class TilesBank
     public static Tile Log(Vector2 position) => new Tile(LogTexture, position, TileSize, true, Tiles.Log, toolToDestroy: ToolToDestroy.Axe, destroyTime: 0.7f, new DropData([ItemsBank.Planks], [100], [new Range(4, 4)]));
     public static Tile Leaves(Vector2 position) => new Tile(LeavesTexture, position, TileSize, true, Tiles.Leaves, toolToDestroy: ToolToDestroy.Both, destroyTime: 0.15f, new DropData([ItemsBank.Leaf, ItemsBank.Stick], [100, 30], [new Range(1, 2), new Range(1, 1)]));
     public static Tile Planks(Vector2 position) => new Tile(PlanksTexture, position, TileSize, true, Tiles.Planks, toolToDestroy: ToolToDestroy.Axe, destroyTime: 0.35f, new DropData([ItemsBank.Planks], [100], [new Range(1, 1)]));
+    public static Tile IronOre(Vector2 position) => new Tile(IronOreTexture, position, TileSize, true, Tiles.IronOre, toolToDestroy: ToolToDestroy.Pickaxe, destroyTime: 1f, new DropData([ItemsBank.IronOre], [100], [new Range(1, 1)]));
+    public static Tile GoldOre(Vector2 position) => new Tile(GoldOreTexture, position, TileSize, true, Tiles.GoldOre, toolToDestroy: ToolToDestroy.Pickaxe, destroyTime: 1.2f, new DropData([ItemsBank.GoldOre], [100], [new Range(1, 1)]));
+    public static Tile EmeraldOre(Vector2 position) => new Tile(EmeraldOreTexture, position, TileSize, true, Tiles.EmeraldOre, toolToDestroy: ToolToDestroy.Pickaxe, destroyTime: 1.4f, new DropData([ItemsBank.EmeraldOre], [100], [new Range(1, 1)]));
+    public static Tile AmethystOre(Vector2 position) => new Tile(AmethystOreTexture, position, TileSize, true, Tiles.AmethystOre, toolToDestroy: ToolToDestroy.Pickaxe, destroyTime: 1.6f, new DropData([ItemsBank.AmethystOre], [100], [new Range(1, 1)]));
 
     public static Tile FindTile(Tiles tile, Vector2 position)
     {
@@ -48,6 +60,10 @@ public static class TilesBank
             Tiles.Log => Log(position),
             Tiles.Leaves => Leaves(position),
             Tiles.Planks => Planks(position),
+            Tiles.IronOre => IronOre(position),
+            Tiles.GoldOre => GoldOre(position),
+            Tiles.EmeraldOre => EmeraldOre(position),
+            Tiles.AmethystOre => AmethystOre(position),
             _ => null,
         };
     }

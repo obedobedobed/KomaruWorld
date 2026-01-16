@@ -6,6 +6,9 @@ namespace KomaruWorld;
 
 public abstract class Mob : GameObject
 {
+    // Statistic
+    public string Name { get; private set; }
+
     // Movement
     protected readonly float speed;
     protected Direction Direction = Direction.Null;
@@ -45,10 +48,11 @@ public abstract class Mob : GameObject
     // Animation
     protected float timeToFrame = FRAME_TIME;
 
-    public Mob(Atlas atlas, Vector2 position, Vector2 size, float speed, int defaultFrame,
+    public Mob(Atlas atlas, Vector2 position, Vector2 size, string name, float speed, int defaultFrame,
     float jumpForce, float jumpTime, Rectangle hitbox, RangeF moveTimeRange, float moveBreak)
     : base(atlas, position, size, defaultFrame)
     {
+        Name = name;
         this.speed = speed;
         this.jumpForce = jumpForce;
         jumpMod = jumpForce;
@@ -104,10 +108,7 @@ public abstract class Mob : GameObject
             return;
         }
         else if (!IsGrounded && LastIsGrounded)
-        {
-            System.Console.WriteLine("chicken jockey");
             IsJumping = true;
-        }
         
         LastIsGrounded = IsGrounded;
         Position += new Vector2(0f, GravityVelocity);

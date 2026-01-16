@@ -7,5 +7,9 @@ public enum Tiles
     Stone,
     Log,
     Leaves,
-    Planks
+    Planks,
+    IronOre,
+    GoldOre,
+    EmeraldOre,
+    AmethystOre
 }
