@@ -75,12 +75,12 @@ public class Player : GameObject
     public Player(Atlas atlas, Vector2 position, Vector2 size, int defaultFrame, Atlas slotAtlas)
     : base(atlas, position, size, defaultFrame)
     {
-        float lineXHotbar = (Game1.Instance.Graphics.PreferredBackBufferWidth - SlotSize.X * INV_SLOTS_IN_LINE -
+        float lineXHotbar = (SCREEN_WIDTH - SlotSize.X * INV_SLOTS_IN_LINE -
         UI_SPACING * (INV_SLOTS_IN_LINE - 1)) / 2;
 
         Inventory = new Inventory
         (
-            slotAtlas, hotbarSlotsPos: new Vector2(lineXHotbar, Game1.Instance.Graphics.PreferredBackBufferHeight - SlotSize.Y
+            slotAtlas, hotbarSlotsPos: new Vector2(lineXHotbar, SCREEN_HEIGHT - SlotSize.Y
             - UI_SPACING), slotsPos: InventorySlotsPos, INV_SLOTS_LINES
         );
 
@@ -143,8 +143,8 @@ public class Player : GameObject
 
         cursorWorldPosition = new Point
         (
-            (int)((mouse.X + GameScene.Instance.Camera.Position.X) / TileSize.X),
-            (int)((mouse.Y + GameScene.Instance.Camera.Position.Y) / TileSize.Y)
+            (int)((mouse.X + GameScene.Instance.GameCamera.Position.X) / TileSize.X),
+            (int)((mouse.Y + GameScene.Instance.GameCamera.Position.Y) / TileSize.Y)
         );
 
         if (mouse.ScrollWheelValue < lastMouse.ScrollWheelValue)

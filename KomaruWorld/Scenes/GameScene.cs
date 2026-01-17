@@ -15,7 +15,8 @@ public class GameScene(ContentManager content, SpriteBatch spriteBatch, Graphics
 : Scene(content, spriteBatch, graphicsManager)
 {
     public static GameScene Instance;
-    public OrthographicCamera Camera { get; private set; } = new OrthographicCamera(graphicsManager.GraphicsDevice);
+    public OrthographicCamera GameCamera { get; private set; } = new OrthographicCamera(graphicsManager.GraphicsDevice);
+    public OrthographicCamera InterfaceCamera { get; private set; } = new OrthographicCamera(graphicsManager.GraphicsDevice);
     public Player Player { get; private set; }
     private KeyboardState lastKeyboard;
     private Texture2D pixel;
@@ -58,13 +59,16 @@ public class GameScene(ContentManager content, SpriteBatch spriteBatch, Graphics
         var craftMenuSprite = Content.Load<Texture2D>("Sprites/UI/CraftMenu");
         var closeButtonAtlas = new Atlas(Content.Load<Texture2D>("Sprites/UI/CloseButtonAtlas"), SlotSize / SIZE_MOD);
         craftMenu = new CraftMenu(craftMenuSprite, new Vector2
-        (GraphicsManager.PreferredBackBufferWidth / 2 - CraftMenuSize.X / 2,
-        GraphicsManager.PreferredBackBufferHeight / 2 - CraftMenuSize.Y / 2),
+        (SCREEN_WIDTH / 2 - CraftMenuSize.X / 2,
+        SCREEN_HEIGHT / 2 - CraftMenuSize.Y / 2),
         CraftMenuSize, CallPlayerCraft, closeButtonAtlas);
 
         World.AddMob(MobsBank.Chicken(new Vector2(worldWidth * TileSize.X / 2, 100)));
 
-        Camera.Position = Player.Position;
+        GameCamera.Position = Player.Position;
+        GameCamera.Zoom = 0.8f;
+
+        InterfaceCamera.Zoom = 0.6f;
     }
     
 
@@ -82,9 +86,8 @@ public class GameScene(ContentManager content, SpriteBatch spriteBatch, Graphics
             CraftsBank.UpdateCraftSlots();
 
         var playerPosCentered = Player.Position - new Vector2
-        (GraphicsManager.PreferredBackBufferWidth / 2, GraphicsManager.PreferredBackBufferHeight / 2) +
-        Player.Size / 2;
-        Camera.Position = Vector2.Lerp(Camera.Position, playerPosCentered, 0.1f);
+        (SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2) + Player.Size / 2;
+        GameCamera.Position = Vector2.Lerp(GameCamera.Position, playerPosCentered, 0.1f);
 
         foreach (var _object in Objects)
             _object.Update(gameTime);
@@ -106,12 +109,13 @@ public class GameScene(ContentManager content, SpriteBatch spriteBatch, Graphics
 
     public override void Draw()
     {
-        var view = Camera.GetViewMatrix();
-        int screenWidth = GraphicsManager.PreferredBackBufferWidth;
-        int screenHeight = GraphicsManager.PreferredBackBufferHeight;
+        var gameView = GameCamera.GetViewMatrix();
+        var uiView = InterfaceCamera.GetViewMatrix();
 
-        // Game world (applying transform matrix)
-        SpriteBatch.Begin(samplerState: SamplerState.PointClamp, transformMatrix: view);
+        int screenWidth = SCREEN_WIDTH;
+
+        // Game world (Game camera)
+        SpriteBatch.Begin(samplerState: SamplerState.PointClamp, transformMatrix: gameView);
 
         World.Draw(SpriteBatch);
         Player.Draw(SpriteBatch);
@@ -121,13 +125,13 @@ public class GameScene(ContentManager content, SpriteBatch spriteBatch, Graphics
 
         SpriteBatch.End(); 
 
-        // UI (not applying transform matrix)
+        // UI (Interface camera)
         SpriteBatch.Begin(samplerState: SamplerState.PointClamp);
 
         if (Player.InInventory)
         {
-            SpriteBatch.Draw(pixel, new Rectangle(0, 0, GraphicsManager.PreferredBackBufferWidth,
-            GraphicsManager.PreferredBackBufferHeight), new Color(0, 0, 0, 150));
+            SpriteBatch.Draw(pixel, new Rectangle(0, 0, SCREEN_WIDTH,
+            SCREEN_HEIGHT), new Color(0, 0, 0, 150));
             string title = string.Empty;
             if (InventoryMenu == InventoryMenu.Inventory)
             {
@@ -140,8 +144,8 @@ public class GameScene(ContentManager content, SpriteBatch spriteBatch, Graphics
                 CraftsBank.DrawCraftSlots(SpriteBatch);
                 if (Crafting)
                 {
-                    SpriteBatch.Draw(pixel, new Rectangle(0, 0, GraphicsManager.PreferredBackBufferWidth,
-                    GraphicsManager.PreferredBackBufferHeight), new Color(0, 0, 0, 150));
+                    SpriteBatch.Draw(pixel, new Rectangle(0, 0, SCREEN_WIDTH,
+                    SCREEN_HEIGHT), new Color(0, 0, 0, 150));
                     craftMenu.Draw(SpriteBatch);
                 }
             }
@@ -197,8 +201,8 @@ public class GameScene(ContentManager content, SpriteBatch spriteBatch, Graphics
         {
             var cursorWorldRectangle = new Rectangle
             (
-                cursorRectangle.X + (int)Camera.Position.X,  
-                cursorRectangle.Y + (int)Camera.Position.Y,  
+                cursorRectangle.X + (int)GameCamera.Position.X,  
+                cursorRectangle.Y + (int)GameCamera.Position.Y,  
                 1, 1  
             );
 
@@ -341,7 +345,7 @@ public class GameScene(ContentManager content, SpriteBatch spriteBatch, Graphics
 
     private void DrawDebugMenu()
     {
-        int screenHeight = GraphicsManager.PreferredBackBufferHeight;
+        int screenHeight = SCREEN_HEIGHT;
 
         int slot = Player.HotbarSlot;
         var slotItem = Player.Inventory?.HotbarSlots[slot];

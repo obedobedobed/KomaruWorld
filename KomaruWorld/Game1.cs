@@ -18,19 +18,31 @@ public class Game1 : Game
     private const float FPS_COUNT_TIME = 1f;
     private float fpsCountingTime = FPS_COUNT_TIME;
 
+    // Window resizing
+    private RenderTarget2D renderTarget;
+
     public Game1()
     {
         Graphics = new GraphicsDeviceManager(this);
         Content.RootDirectory = "Content";
         IsMouseVisible = true;
-        Graphics.PreferredBackBufferHeight = 450;
         IsMouseVisible = false;
+        Graphics.IsFullScreen = true;
         Instance = this;
     }
 
     protected override void Initialize()
     {
         // TODO: Add your initialization logic here
+
+        Graphics.PreferredBackBufferWidth = GraphicsDevice.DisplayMode.Width;
+        Graphics.PreferredBackBufferHeight = GraphicsDevice.DisplayMode.Height;
+
+        renderTarget = new RenderTarget2D
+        (
+            GraphicsDevice,
+            SCREEN_WIDTH, SCREEN_HEIGHT
+        );
 
         base.Initialize();
     }
@@ -63,6 +75,7 @@ public class Game1 : Game
 
     protected override void Draw(GameTime gameTime)
     {
+        GraphicsDevice.SetRenderTarget(renderTarget);
         GraphicsDevice.Clear(Color.CornflowerBlue);
 
         // TODO: Add your drawing code here
@@ -73,6 +86,31 @@ public class Game1 : Game
         var cursorRectangle = new Rectangle(mouse.Position, CursorSize);
         spriteBatch.Begin(samplerState: SamplerState.PointClamp);
         spriteBatch.Draw(cursorTexture, cursorRectangle, Color.White);
+        spriteBatch.End();
+
+        GraphicsDevice.SetRenderTarget(null);
+
+        spriteBatch.Begin();
+
+        if (Graphics.IsFullScreen)
+        {
+            spriteBatch.Draw
+            (
+                renderTarget,
+                new Rectangle(0, 0, Graphics.PreferredBackBufferWidth, Graphics.PreferredBackBufferHeight),
+                Color.White
+            );
+        }
+        else
+        {
+            spriteBatch.Draw
+            (
+                renderTarget,
+                new Rectangle(0, 0, Graphics.PreferredBackBufferWidth, Graphics.PreferredBackBufferHeight),
+                Color.White
+            );
+        }
+
         spriteBatch.End();
 
         if ((fpsCountingTime -= (float)gameTime.ElapsedGameTime.TotalSeconds) <= 0)

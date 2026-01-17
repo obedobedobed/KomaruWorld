@@ -4,6 +4,8 @@ namespace KomaruWorld;
 
 public static class GameParameters
 {
+    public const int SCREEN_WIDTH = 800;
+    public const int SCREEN_HEIGHT = 450;
     public const string GAME_NAME = "Komaru World";
     public const string GAME_VERSION = "0.0.4 (Beta)";
     public const int SIZE_MOD = 4;
@@ -21,7 +23,7 @@ public static class GameParameters
     public static readonly Vector2 CraftMenuSize = new Vector2(72, 64) * SIZE_MOD;
     public static readonly Vector2 CraftMenuItemSlotPos = new Vector2(28, 4) * SIZE_MOD;
     public static readonly Point GlyphSize = new Point(8 * TEXT_MOD, 8 * TEXT_MOD);
-    public static readonly Point CursorSize = new Point(6 * SIZE_MOD, 6 * SIZE_MOD);
+    public static readonly Point CursorSize = new Point(12, 12);
     public static Vector2 InventorySlotsPos { get; private set; }
     public const float FRAME_TIME = 0.4f;
 
@@ -29,9 +31,9 @@ public static class GameParameters
     {
         InventorySlotsPos = new Vector2
         (
-            x: (Game1.Instance.Graphics.PreferredBackBufferWidth - SlotSize.X * INV_SLOTS_IN_LINE -
+            x: (SCREEN_WIDTH - SlotSize.X * INV_SLOTS_IN_LINE -
             UI_SPACING * (INV_SLOTS_IN_LINE - 1)) / 2,
-            y: Game1.Instance.Graphics.PreferredBackBufferHeight / 2 -
+            y: SCREEN_HEIGHT / 2 -
             SlotSize.Y * INV_SLOTS_LINES / 2 - SlotSize.Y * 1
         );
     }
