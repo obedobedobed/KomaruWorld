@@ -9,31 +9,40 @@ public static class ItemsBank
     public static Atlas DestroyingAtlas { get; private set; }
 
     // Textures
-    public static Texture2D GrassTexture { get; private set; }
-    public static Texture2D DirtTexture { get; private set; }
-    public static Texture2D StoneTexture { get; private set; }
-    public static Texture2D LogTexture { get; private set; }
-    public static Texture2D LeavesTexture { get; private set; }
-    public static Texture2D PlanksTexture { get; private set; }
-    public static Texture2D StickTexture { get; private set; }
-    public static Texture2D LeafTexture { get; private set; }
-    public static Texture2D AxeTexture { get; private set; }
-    public static Texture2D PickaxeTexture { get; private set; }
-    public static Texture2D SwordTexture { get; private set; }
-    public static Texture2D IronHelmetTexture { get; private set; }
+    private static Texture2D GrassTexture;
+    private static Texture2D DirtTexture;
+    private static Texture2D StoneTexture;
+    private static Texture2D LogTexture;
+    private static Texture2D LeavesTexture;
+    private static Texture2D PlanksTexture;
+    private static Texture2D StickTexture;
+    private static Texture2D LeafTexture;
+    private static Texture2D AxeTexture;
+    private static Texture2D PickaxeTexture;
+    private static Texture2D SwordTexture;
+    private static Texture2D IronHelmetTexture;
     private static Atlas IronHelmetAtlas;
-    public static Texture2D IronChestplateTexture { get; private set; }
+    private static Texture2D IronChestplateTexture;
     private static Atlas IronChestplateAtlas;
-    public static Texture2D IronLegginsTexture { get; private set; }
+    private static Texture2D IronLegginsTexture;
     private static Atlas IronLegginsAtlas;
-    public static Texture2D IronIngotTexture { get; private set; }
-    public static Texture2D GoldIngotTexture { get; private set; }
-    public static Texture2D EmeraldTexture { get; private set; }
-    public static Texture2D AmethystTexture { get; private set; }
-    public static Texture2D IronOreTexture { get; private set; }
-    public static Texture2D GoldOreTexture { get; private set; }
-    public static Texture2D EmeraldOreTexture { get; private set; }
-    public static Texture2D AmethystOreTexture { get; private set; }
+    private static Texture2D IronIngotTexture;
+    private static Texture2D GoldIngotTexture;
+    private static Texture2D EmeraldTexture;
+    private static Texture2D AmethystTexture;
+    private static Texture2D IronOreTexture;
+    private static Texture2D GoldOreTexture;
+    private static Texture2D EmeraldOreTexture;
+    private static Texture2D AmethystOreTexture;
+    private static Texture2D GoldAxeTexture;
+    private static Texture2D GoldPickaxeTexture;
+    private static Texture2D GoldSwordTexture;
+    private static Texture2D EmeraldAxeTexture;
+    private static Texture2D EmeraldPickaxeTexture;
+    private static Texture2D EmeraldSwordTexture;
+    private static Texture2D AmethystAxeTexture;
+    private static Texture2D AmethystPickaxeTexture;
+    private static Texture2D AmethystSwordTexture;
 
     public static void LoadContent(ContentManager Content)
     {
@@ -64,6 +73,15 @@ public static class ItemsBank
         GoldOreTexture = Content.Load<Texture2D>("Sprites/Tiles/GoldOre");
         EmeraldOreTexture = Content.Load<Texture2D>("Sprites/Tiles/EmeraldOre");
         AmethystOreTexture = Content.Load<Texture2D>("Sprites/Tiles/AmethystOre");
+        GoldAxeTexture = Content.Load<Texture2D>("Sprites/Items/Tools/GoldAxe");
+        GoldPickaxeTexture = Content.Load<Texture2D>("Sprites/Items/Tools/GoldPickaxe");
+        GoldSwordTexture = Content.Load<Texture2D>("Sprites/Items/Tools/GoldSword");
+        EmeraldAxeTexture = Content.Load<Texture2D>("Sprites/Items/Tools/EmeraldAxe");
+        EmeraldPickaxeTexture = Content.Load<Texture2D>("Sprites/Items/Tools/EmeraldPickaxe");
+        EmeraldSwordTexture = Content.Load<Texture2D>("Sprites/Items/Tools/EmeraldSword");
+        AmethystAxeTexture = Content.Load<Texture2D>("Sprites/Items/Tools/AmethystAxe");
+        AmethystPickaxeTexture = Content.Load<Texture2D>("Sprites/Items/Tools/AmethystPickaxe");
+        AmethystSwordTexture = Content.Load<Texture2D>("Sprites/Items/Tools/AmethystSword");
     }
 
     // Items
@@ -89,4 +107,13 @@ public static class ItemsBank
     public static Item GoldOre => new PlaceableItem("Gold ore", 99, GoldOreTexture, id: 19, Tiles.GoldOre);
     public static Item EmeraldOre => new PlaceableItem("Emerald ore", 99, EmeraldOreTexture, id: 20, Tiles.EmeraldOre);
     public static Item AmethystOre => new PlaceableItem("Amethyst ore", 99, AmethystOreTexture, id: 21, Tiles.AmethystOre);
+    public static Item GoldAxe => new AxeItem("Gold axe", GoldAxeTexture, id: 22, speed: 1.4f, power: 2);
+    public static Item GoldPickaxe => new PickaxeItem("Gold pickaxe", GoldPickaxeTexture, id: 23, speed: 1.4f, power: 2);
+    public static Item GoldSword => new SwordItem("Gold sword", GoldSwordTexture, id: 24, damage: 7);
+    public static Item EmeraldAxe => new AxeItem("Emerald axe", EmeraldAxeTexture, id: 25, speed: 2f, power: 3);
+    public static Item EmeraldPickaxe => new PickaxeItem("Emerald pickaxe", EmeraldPickaxeTexture, id: 26, speed: 2f, power: 3);
+    public static Item EmeraldSword => new SwordItem("Emerald sword", EmeraldSwordTexture, id: 27, damage: 10);
+    public static Item AmethystAxe => new AxeItem("Amethyst axe", AmethystAxeTexture, id: 28, speed: 2.8f, power: 4);
+    public static Item AmethystPickaxe => new PickaxeItem("Amethyst pickaxe", AmethystPickaxeTexture, id: 29, speed: 2.8f, power: 4);
+    public static Item AmethystSword => new SwordItem("Amethyst sword", AmethystSwordTexture, id: 30, damage: 15);
 }

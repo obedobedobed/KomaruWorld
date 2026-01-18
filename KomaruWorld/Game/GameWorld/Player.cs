@@ -84,9 +84,9 @@ public class Player : GameObject
             - UI_SPACING), slotsPos: InventorySlotsPos, INV_SLOTS_LINES
         );
 
-        Inventory.HotbarSlots[0].UpdateItem(ItemsBank.Sword);
-        Inventory.HotbarSlots[1].UpdateItem(ItemsBank.Pickaxe);
-        Inventory.HotbarSlots[2].UpdateItem(ItemsBank.Axe);
+        Inventory.HotbarSlots[0].UpdateItem(ItemsBank.AmethystSword);
+        Inventory.HotbarSlots[1].UpdateItem(ItemsBank.AmethystPickaxe);
+        Inventory.HotbarSlots[2].UpdateItem(ItemsBank.AmethystAxe);
     }
 
     public void SetupSFX(SoundEffect place)
@@ -542,7 +542,7 @@ public class Player : GameObject
         }
 
         for (int i = 0; i < craftData.ItemAmount; i++)
-            World.AddItem(new DroppedItem(craftData.Item, Position));
+            World.AddItem(new DroppedItem(craftData.Item, Position + EntitySize / 2));
     }
 
     public override void Draw(SpriteBatch spriteBatch)
