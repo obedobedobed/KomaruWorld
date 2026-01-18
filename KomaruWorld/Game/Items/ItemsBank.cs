@@ -75,8 +75,8 @@ public static class ItemsBank
     public static Item Planks => new PlaceableItem("Planks", 99, PlanksTexture, id: 5, Tiles.Planks);
     public static Item Stick => new Item("Stick", 99, StickTexture, id: 6);
     public static Item Leaf => new Item("Leaf", 99, LeafTexture, id: 7);
-    public static Item Axe => new AxeItem("Iron axe", AxeTexture, id: 8, speed: 1f);
-    public static Item Pickaxe => new PickaxeItem("Iron pickaxe", PickaxeTexture, id: 9, speed: 1f);
+    public static Item Axe => new AxeItem("Iron axe", AxeTexture, id: 8, speed: 1f, power: 1);
+    public static Item Pickaxe => new PickaxeItem("Iron pickaxe", PickaxeTexture, id: 9, speed: 1f, power: 1);
     public static Item Sword => new SwordItem("Iron sword", SwordTexture, id: 10, damage: 5);
     public static Item IronHelmet => new ArmorElementItem("Iron helmet", IronHelmetTexture, id: 11, armor: 2, element: ArmorElement.Helmet, IronHelmetAtlas);
     public static Item IronChestplate => new ArmorElementItem("Iron chestplate", IronChestplateTexture, id: 12, armor: 3, element: ArmorElement.Chestplate, IronChestplateAtlas);

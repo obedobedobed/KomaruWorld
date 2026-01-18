@@ -20,6 +20,7 @@ public class Tile : GameObject
     private int health = 4;
     private int destroyingFrame;
     private float deltaTime;
+    private int minimalToolPower;
 
     private static SoundEffectInstance Damage;
     private const float DAMAGE_SFX_COOLDOWN = 0.15f;
@@ -27,7 +28,7 @@ public class Tile : GameObject
     private static SoundEffectInstance Destroy;
 
     public Tile(Texture2D texture, Vector2 position, Vector2 size, bool canCollide, Tiles tileType,
-    ToolToDestroy toolToDestroy, float destroyTime, DropData drop) : base(texture, position, size)
+    ToolToDestroy toolToDestroy, float destroyTime, int minimalToolPower, DropData drop) : base(texture, position, size)
     {
         CanCollide = canCollide;
         TileWorldID = ++totalTiles;
@@ -36,6 +37,7 @@ public class Tile : GameObject
         ToolToDestroy = toolToDestroy;
         takeDamageTime = destroyTime / health;
         destroyingFrame = health;
+        this.minimalToolPower = minimalToolPower;
     }
 
     public static void SetupSFX(SoundEffect damage, SoundEffect destroy)
@@ -61,8 +63,11 @@ public class Tile : GameObject
         damageSfxCooldown -= (float)gameTime.ElapsedGameTime.TotalSeconds;
     }
 
-    public void TakeDamage(float speed)
+    public void TakeDamage(float speed, int power)
     {
+        if (power < minimalToolPower)
+            return;
+            
         if ((timeToTakeDamage -= deltaTime * speed) <= 0)
         {
             if (damageSfxCooldown <= 0 && health > 1)

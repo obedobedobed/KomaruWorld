@@ -254,16 +254,29 @@ public class GameScene(ContentManager content, SpriteBatch spriteBatch, Graphics
             description.Add("Placeable");
         else if (slot.Item.IsTool)
         {
+            bool isSword = false;
+            string damage = "[Unknown parameter]";
             string power = "[Unknown parameter]";
 
             if (slot.Item is SwordItem sword)
-                power = $"Damage: {sword.Damage}";
+            {
+                damage = $"Damage: {sword.Damage}";
+                isSword = true;
+            }
             else if (slot.Item is PickaxeItem pickaxe)
-                power = $"Speed: {pickaxe.Speed}";
+            {
+                damage = $"Speed: {pickaxe.Speed}";
+                power = $"Power: {pickaxe.Power}";
+            }
             else if (slot.Item is AxeItem axe)
-                power = $"Speed: {axe.Speed}";
+            {
+                damage = $"Speed: {axe.Speed}";
+                power = $"Power: {axe.Power}";
+            }
 
-            description.Add(power);
+            if (!isSword)
+                description.Add(power);
+            description.Add(damage);
             description.Add("Tool");
         }
         else if (slot.Item is ArmorElementItem armor)
