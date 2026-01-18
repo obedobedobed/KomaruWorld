@@ -379,6 +379,18 @@
 /processorParam:TextureFormat=Color
 /build:Sprites/Items/Tools/AmethystAxe.png
 
+#begin Sprites/Items/Tools/AmethystAxe.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Sprites/Items/Tools/AmethystAxe.png
+
 #begin Sprites/Items/Tools/AmethystPickaxe.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -390,6 +402,30 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:Sprites/Items/Tools/AmethystPickaxe.png
+
+#begin Sprites/Items/Tools/AmethystPickaxe.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Sprites/Items/Tools/AmethystPickaxe.png
+
+#begin Sprites/Items/Tools/AmethystSword.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Sprites/Items/Tools/AmethystSword.png
 
 #begin Sprites/Items/Tools/AmethystSword.png
 /importer:TextureImporter
@@ -439,6 +475,18 @@
 /processorParam:TextureFormat=Color
 /build:Sprites/Items/Tools/EmeraldAxe.png
 
+#begin Sprites/Items/Tools/EmeraldAxe.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Sprites/Items/Tools/EmeraldAxe.png
+
 #begin Sprites/Items/Tools/EmeraldPickaxe.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -450,6 +498,30 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:Sprites/Items/Tools/EmeraldPickaxe.png
+
+#begin Sprites/Items/Tools/EmeraldPickaxe.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Sprites/Items/Tools/EmeraldPickaxe.png
+
+#begin Sprites/Items/Tools/EmeraldSword.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Sprites/Items/Tools/EmeraldSword.png
 
 #begin Sprites/Items/Tools/EmeraldSword.png
 /importer:TextureImporter
@@ -475,6 +547,18 @@
 /processorParam:TextureFormat=Color
 /build:Sprites/Items/Tools/GoldAxe.png
 
+#begin Sprites/Items/Tools/GoldAxe.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Sprites/Items/Tools/GoldAxe.png
+
 #begin Sprites/Items/Tools/GoldPickaxe.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -486,6 +570,30 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:Sprites/Items/Tools/GoldPickaxe.png
+
+#begin Sprites/Items/Tools/GoldPickaxe.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Sprites/Items/Tools/GoldPickaxe.png
+
+#begin Sprites/Items/Tools/GoldSword.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Sprites/Items/Tools/GoldSword.png
 
 #begin Sprites/Items/Tools/GoldSword.png
 /importer:TextureImporter
@@ -811,6 +919,30 @@
 /processorParam:TextureFormat=Color
 /build:Sprites/Tiles/LogTile.png
 
+#begin Sprites/Tiles/NatureLeavesTile.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Sprites/Tiles/NatureLeavesTile.png
+
+#begin Sprites/Tiles/NatureLogTile.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Sprites/Tiles/NatureLogTile.png
+
 #begin Sprites/Tiles/PlanksTile.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -882,6 +1014,30 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:Sprites/Tiles/TileDestroyingAtlas.png
+
+#begin Sprites/UI/Arrows.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Sprites/UI/Arrows.png
+
+#begin Sprites/UI/Arrows.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Sprites/UI/Arrows.png
 
 #begin Sprites/UI/CloseButtonAtlas.png
 /importer:TextureImporter
