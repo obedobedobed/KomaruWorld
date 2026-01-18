@@ -12,5 +12,7 @@ public enum Tiles
     IronOre,
     GoldOre,
     EmeraldOre,
-    AmethystOre
+    AmethystOre,
+    NatureLog,
+    NatureLeaves
 }

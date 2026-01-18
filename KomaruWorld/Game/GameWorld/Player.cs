@@ -84,9 +84,9 @@ public class Player : GameObject
             - UI_SPACING), slotsPos: InventorySlotsPos, INV_SLOTS_LINES
         );
 
-        Inventory.HotbarSlots[0].UpdateItem(ItemsBank.AmethystSword);
-        Inventory.HotbarSlots[1].UpdateItem(ItemsBank.AmethystPickaxe);
-        Inventory.HotbarSlots[2].UpdateItem(ItemsBank.AmethystAxe);
+        Inventory.HotbarSlots[0].UpdateItem(ItemsBank.Sword);
+        Inventory.HotbarSlots[1].UpdateItem(ItemsBank.Pickaxe);
+        Inventory.HotbarSlots[2].UpdateItem(ItemsBank.Axe);
     }
 
     public void SetupSFX(SoundEffect place)

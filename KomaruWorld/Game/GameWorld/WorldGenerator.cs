@@ -16,7 +16,7 @@ public static class WorldGenerator
             "  #  ",
             "  #  "
         ],
-        new Dictionary<char, Tiles>() { {'@', Tiles.Leaves}, {'#', Tiles.Log} },
+        new Dictionary<char, Tiles>() { {'@', Tiles.NatureLeaves}, {'#', Tiles.NatureLog} },
         new Point(3, 5)
     );
     private const int TREE_SPAWN_CHANCE = 30;

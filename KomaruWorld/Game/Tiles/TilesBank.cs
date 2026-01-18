@@ -9,16 +9,18 @@ namespace KomaruWorld;
 public static class TilesBank
 {
     // Textures
-    public static Texture2D GrassTexture { get; private set; }
-    public static Texture2D DirtTexture { get; private set; }
-    public static Texture2D StoneTexture { get; private set; }
-    public static Texture2D LogTexture { get; private set; }
-    public static Texture2D LeavesTexture { get; private set; }
-    public static Texture2D PlanksTexture { get; private set; }
-    public static Texture2D IronOreTexture { get; private set; }
-    public static Texture2D GoldOreTexture { get; private set; }
-    public static Texture2D EmeraldOreTexture { get; private set; }
-    public static Texture2D AmethystOreTexture { get; private set; }
+    private static Texture2D GrassTexture;
+    private static Texture2D DirtTexture;
+    private static Texture2D StoneTexture;
+    private static Texture2D LogTexture;
+    private static Texture2D LeavesTexture;
+    private static Texture2D PlanksTexture;
+    private static Texture2D IronOreTexture;
+    private static Texture2D GoldOreTexture;
+    private static Texture2D EmeraldOreTexture;
+    private static Texture2D AmethystOreTexture;
+    private static Texture2D NatureLogTexture;
+    private static Texture2D NatureLeavesTexture;
 
     public static void LoadContent(ContentManager Content)
     {
@@ -36,6 +38,8 @@ public static class TilesBank
         GoldOreTexture = Content.Load<Texture2D>("Sprites/Tiles/GoldOre");
         EmeraldOreTexture = Content.Load<Texture2D>("Sprites/Tiles/EmeraldOre");
         AmethystOreTexture = Content.Load<Texture2D>("Sprites/Tiles/AmethystOre");
+        NatureLogTexture = Content.Load<Texture2D>("Sprites/Tiles/NatureLogTile");
+        NatureLeavesTexture = Content.Load<Texture2D>("Sprites/Tiles/NatureLeavesTile");
     }
 
     // Tiles
@@ -49,6 +53,8 @@ public static class TilesBank
     public static Tile GoldOre(Vector2 position) => new Tile(GoldOreTexture, position, TileSize, true, Tiles.GoldOre, toolToDestroy: ToolToDestroy.Pickaxe, destroyTime: 1.2f, minimalToolPower: 1, new DropData([ItemsBank.GoldOre], [100], [new Range(1, 1)]));
     public static Tile EmeraldOre(Vector2 position) => new Tile(EmeraldOreTexture, position, TileSize, true, Tiles.EmeraldOre, toolToDestroy: ToolToDestroy.Pickaxe, destroyTime: 1.4f, minimalToolPower: 2, new DropData([ItemsBank.EmeraldOre], [100], [new Range(1, 1)]));
     public static Tile AmethystOre(Vector2 position) => new Tile(AmethystOreTexture, position, TileSize, true, Tiles.AmethystOre, toolToDestroy: ToolToDestroy.Pickaxe, destroyTime: 1.6f, minimalToolPower: 3, new DropData([ItemsBank.AmethystOre], [100], [new Range(1, 1)]));
+    public static Tile NatureLog(Vector2 position) => new Tile(NatureLogTexture, position, TileSize, false, Tiles.Log, toolToDestroy: ToolToDestroy.Axe, destroyTime: 0.7f, minimalToolPower: 1, new DropData([ItemsBank.Planks], [100], [new Range(4, 4)]));
+    public static Tile NatureLeaves(Vector2 position) => new Tile(NatureLeavesTexture, position, TileSize, false, Tiles.Leaves, toolToDestroy: ToolToDestroy.Both, destroyTime: 0.15f, minimalToolPower: 1, new DropData([ItemsBank.Leaf, ItemsBank.Stick], [100, 30], [new Range(1, 2), new Range(1, 1)]));
 
     public static Tile FindTile(Tiles tile, Vector2 position)
     {
@@ -64,6 +70,8 @@ public static class TilesBank
             Tiles.GoldOre => GoldOre(position),
             Tiles.EmeraldOre => EmeraldOre(position),
             Tiles.AmethystOre => AmethystOre(position),
+            Tiles.NatureLog => NatureLog(position),
+            Tiles.NatureLeaves => NatureLeaves(position),
             _ => null,
         };
     }
