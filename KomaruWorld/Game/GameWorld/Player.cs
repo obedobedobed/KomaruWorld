@@ -138,6 +138,12 @@ public class Player : GameObject
             isJumping = true;
         }
 
+        // Hotbar selection via Number Keys
+        if (keyboard.IsKeyDown(Keys.D1)) HotbarSlot = 0;
+        else if (keyboard.IsKeyDown(Keys.D2)) HotbarSlot = 1;
+        else if (keyboard.IsKeyDown(Keys.D3)) HotbarSlot = 2;
+        else if (keyboard.IsKeyDown(Keys.D4)) HotbarSlot = 3;
+        else if (keyboard.IsKeyDown(Keys.D5)) HotbarSlot = 4;
 
         // Mouse Input
 

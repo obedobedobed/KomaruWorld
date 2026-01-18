@@ -32,11 +32,22 @@ public class Game1 : Game
         Content.RootDirectory = "Content";
         IsMouseVisible = false;
         Instance = this;
+
+        // Enable full screen by default
+        Graphics.IsFullScreen = true;
     }
 
     protected override void Initialize()
     {
         // TODO: Add your initialization logic here
+
+        // If starting in full screen, match the screen resolution
+        if (Graphics.IsFullScreen)
+        {
+            Graphics.PreferredBackBufferWidth = GraphicsDevice.DisplayMode.Width;
+            Graphics.PreferredBackBufferHeight = GraphicsDevice.DisplayMode.Height;
+            Graphics.ApplyChanges();
+        }
 
         renderTarget = new RenderTarget2D(GraphicsDevice, VIRTUAL_WIDTH, VIRTUAL_HEIGHT);
 
@@ -67,7 +78,27 @@ public class Game1 : Game
         {
             var keyboard = Keyboard.GetState();
 
-            if (keyboard.IsKeyDown(Keys.F11) && !lastKeyboard.IsKeyDown(Keys.F11))
+            // Quit Game Logic
+            // We check !lastKeyboard to ensure we don't exit immediately if holding Escape from a previous action
+            if (keyboard.IsKeyDown(Keys.Escape) && !lastKeyboard.IsKeyDown(Keys.Escape))
+            {
+                // Check if the player is currently in the inventory to prevent exiting the game
+                // when the user just intends to close the menu.
+                var player = GameScene.Instance?.Player;
+                bool inInventory = player != null && player.InInventory;
+
+                if (!inInventory)
+                {
+                    Exit();
+                }
+            }
+
+            // Fullscreen Toggle Logic: F11 OR Alt+Enter
+            bool f11Pressed = keyboard.IsKeyDown(Keys.F11) && !lastKeyboard.IsKeyDown(Keys.F11);
+            bool altEnterPressed = (keyboard.IsKeyDown(Keys.LeftAlt) || keyboard.IsKeyDown(Keys.RightAlt)) 
+                                   && keyboard.IsKeyDown(Keys.Enter) && !lastKeyboard.IsKeyDown(Keys.Enter);
+
+            if (f11Pressed || altEnterPressed)
             {
                 Graphics.IsFullScreen = !Graphics.IsFullScreen;
                 if (Graphics.IsFullScreen)
