@@ -15,8 +15,7 @@ public class GameScene(ContentManager content, SpriteBatch spriteBatch, Graphics
 : Scene(content, spriteBatch, graphicsManager)
 {
     public static GameScene Instance;
-    public OrthographicCamera GameCamera { get; private set; } = new OrthographicCamera(graphicsManager.GraphicsDevice);
-    public OrthographicCamera InterfaceCamera { get; private set; } = new OrthographicCamera(graphicsManager.GraphicsDevice);
+    public OrthographicCamera Camera { get; private set; } = new OrthographicCamera(graphicsManager.GraphicsDevice);
     public Player Player { get; private set; }
     private KeyboardState lastKeyboard;
     private Texture2D pixel;
@@ -59,16 +58,13 @@ public class GameScene(ContentManager content, SpriteBatch spriteBatch, Graphics
         var craftMenuSprite = Content.Load<Texture2D>("Sprites/UI/CraftMenu");
         var closeButtonAtlas = new Atlas(Content.Load<Texture2D>("Sprites/UI/CloseButtonAtlas"), SlotSize / SIZE_MOD);
         craftMenu = new CraftMenu(craftMenuSprite, new Vector2
-        (SCREEN_WIDTH / 2 - CraftMenuSize.X / 2,
-        SCREEN_HEIGHT / 2 - CraftMenuSize.Y / 2),
+        (VIRTUAL_WIDTH / 2 - CraftMenuSize.X / 2,
+        VIRTUAL_HEIGHT / 2 - CraftMenuSize.Y / 2),
         CraftMenuSize, CallPlayerCraft, closeButtonAtlas);
 
         World.AddMob(MobsBank.Chicken(new Vector2(worldWidth * TileSize.X / 2, 100)));
 
-        GameCamera.Position = Player.Position;
-        GameCamera.Zoom = 0.8f;
-
-        InterfaceCamera.Zoom = 0.6f;
+        Camera.Position = Player.Position;
     }
     
 
@@ -86,8 +82,9 @@ public class GameScene(ContentManager content, SpriteBatch spriteBatch, Graphics
             CraftsBank.UpdateCraftSlots();
 
         var playerPosCentered = Player.Position - new Vector2
-        (SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2) + Player.Size / 2;
-        GameCamera.Position = Vector2.Lerp(GameCamera.Position, playerPosCentered, 0.1f);
+        (VIRTUAL_WIDTH / 2, VIRTUAL_HEIGHT / 2) +
+        Player.Size / 2;
+        Camera.Position = Vector2.Lerp(Camera.Position, playerPosCentered, 0.1f);
 
         foreach (var _object in Objects)
             _object.Update(gameTime);
@@ -109,13 +106,10 @@ public class GameScene(ContentManager content, SpriteBatch spriteBatch, Graphics
 
     public override void Draw()
     {
-        var gameView = GameCamera.GetViewMatrix();
-        var uiView = InterfaceCamera.GetViewMatrix();
+        var view = Camera.GetViewMatrix();
 
-        int screenWidth = SCREEN_WIDTH;
-
-        // Game world (Game camera)
-        SpriteBatch.Begin(samplerState: SamplerState.PointClamp, transformMatrix: gameView);
+        // Game world (applying transform matrix)
+        SpriteBatch.Begin(samplerState: SamplerState.PointClamp, transformMatrix: view);
 
         World.Draw(SpriteBatch);
         Player.Draw(SpriteBatch);
@@ -125,13 +119,13 @@ public class GameScene(ContentManager content, SpriteBatch spriteBatch, Graphics
 
         SpriteBatch.End(); 
 
-        // UI (Interface camera)
+        // UI (not applying transform matrix)
         SpriteBatch.Begin(samplerState: SamplerState.PointClamp);
 
         if (Player.InInventory)
         {
-            SpriteBatch.Draw(pixel, new Rectangle(0, 0, SCREEN_WIDTH,
-            SCREEN_HEIGHT), new Color(0, 0, 0, 150));
+            SpriteBatch.Draw(pixel, new Rectangle(0, 0, VIRTUAL_WIDTH,
+            VIRTUAL_HEIGHT), new Color(0, 0, 0, 150));
             string title = string.Empty;
             if (InventoryMenu == InventoryMenu.Inventory)
             {
@@ -144,12 +138,12 @@ public class GameScene(ContentManager content, SpriteBatch spriteBatch, Graphics
                 CraftsBank.DrawCraftSlots(SpriteBatch);
                 if (Crafting)
                 {
-                    SpriteBatch.Draw(pixel, new Rectangle(0, 0, SCREEN_WIDTH,
-                    SCREEN_HEIGHT), new Color(0, 0, 0, 150));
+                    SpriteBatch.Draw(pixel, new Rectangle(0, 0, VIRTUAL_WIDTH,
+                    VIRTUAL_HEIGHT), new Color(0, 0, 0, 150));
                     craftMenu.Draw(SpriteBatch);
                 }
             }
-            Text.Draw(title, new Vector2(screenWidth / 2, UI_SPACING), Color.White,
+            Text.Draw(title, new Vector2(VIRTUAL_WIDTH / 2, UI_SPACING), Color.White,
             SpriteBatch, TextDrawingMode.Center);
             inventoryMenuButton.Draw(SpriteBatch);
         }
@@ -201,8 +195,8 @@ public class GameScene(ContentManager content, SpriteBatch spriteBatch, Graphics
         {
             var cursorWorldRectangle = new Rectangle
             (
-                cursorRectangle.X + (int)GameCamera.Position.X,  
-                cursorRectangle.Y + (int)GameCamera.Position.Y,  
+                cursorRectangle.X + (int)Camera.Position.X,  
+                cursorRectangle.Y + (int)Camera.Position.Y,  
                 1, 1  
             );
 
@@ -345,8 +339,6 @@ public class GameScene(ContentManager content, SpriteBatch spriteBatch, Graphics
 
     private void DrawDebugMenu()
     {
-        int screenHeight = SCREEN_HEIGHT;
-
         int slot = Player.HotbarSlot;
         var slotItem = Player.Inventory?.HotbarSlots[slot];
         string hotbarSlotString =  (slotItem?.Item != null)
@@ -380,16 +372,16 @@ public class GameScene(ContentManager content, SpriteBatch spriteBatch, Graphics
         long totalMemory = GC.GetGCMemoryInfo().TotalAvailableMemoryBytes / 1024 / 1024;
 
         Text.Draw($"OS: {RuntimeInformation.OSDescription}",
-        new Vector2(UI_SPACING, screenHeight - GlyphSize.Y * TEXT_SPACING * 4 + GlyphSize.Y / 2 * 4),
+        new Vector2(UI_SPACING, VIRTUAL_HEIGHT - GlyphSize.Y * TEXT_SPACING * 4 + GlyphSize.Y / 2 * 4),
         Color.White, SpriteBatch, TextDrawingMode.Right, outline: true, outlineColor: Color.Black);
         Text.Draw($"CPU: {Environment.ProcessorCount} threads CPU",
-        new Vector2(UI_SPACING, screenHeight - GlyphSize.Y * TEXT_SPACING * 3 + GlyphSize.Y / 2 * 3),
+        new Vector2(UI_SPACING, VIRTUAL_HEIGHT - GlyphSize.Y * TEXT_SPACING * 3 + GlyphSize.Y / 2 * 3),
         Color.White, SpriteBatch, TextDrawingMode.Right, outline: true, outlineColor: Color.Black);
         Text.Draw($"Memory: {usedMemory}MB/{totalMemory}MB used",
-        new Vector2(UI_SPACING, screenHeight - GlyphSize.Y * TEXT_SPACING * 2 + GlyphSize.Y / 2 * 2),
+        new Vector2(UI_SPACING, VIRTUAL_HEIGHT - GlyphSize.Y * TEXT_SPACING * 2 + GlyphSize.Y / 2 * 2),
         Color.White, SpriteBatch, TextDrawingMode.Right, outline: true, outlineColor: Color.Black);
         Text.Draw($"GPU: {GraphicsAdapter.DefaultAdapter.Description}",
-        new Vector2(UI_SPACING, screenHeight - GlyphSize.Y * TEXT_SPACING * 1 + GlyphSize.Y / 2 * 1),
+        new Vector2(UI_SPACING, VIRTUAL_HEIGHT - GlyphSize.Y * TEXT_SPACING * 1 + GlyphSize.Y / 2 * 1),
         Color.White, SpriteBatch, TextDrawingMode.Right, outline: true, outlineColor: Color.Black);
     }
 

@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using System;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using static KomaruWorld.GameParameters;
@@ -25,9 +26,7 @@ public class Game1 : Game
     {
         Graphics = new GraphicsDeviceManager(this);
         Content.RootDirectory = "Content";
-        IsMouseVisible = true;
         IsMouseVisible = false;
-        Graphics.IsFullScreen = true;
         Instance = this;
     }
 
@@ -35,14 +34,11 @@ public class Game1 : Game
     {
         // TODO: Add your initialization logic here
 
+        renderTarget = new RenderTarget2D(GraphicsDevice, VIRTUAL_WIDTH, VIRTUAL_HEIGHT);
         Graphics.PreferredBackBufferWidth = GraphicsDevice.DisplayMode.Width;
         Graphics.PreferredBackBufferHeight = GraphicsDevice.DisplayMode.Height;
-
-        renderTarget = new RenderTarget2D
-        (
-            GraphicsDevice,
-            SCREEN_WIDTH, SCREEN_HEIGHT
-        );
+        Graphics.IsFullScreen = true;
+        Graphics.ApplyChanges();
 
         base.Initialize();
     }
@@ -68,7 +64,28 @@ public class Game1 : Game
         // TODO: Add your update logic here
         
         if (IsActive)
+        {
+            var renderRectangle = new Rectangle
+            (
+                0, 0,
+                renderTarget.Width,
+                renderTarget.Height
+            );
+            var mouse = Mouse.GetState();
+
+            int minX = renderRectangle.X;
+            int maxX = renderRectangle.Right - 1;
+            int minY = renderRectangle.Y;
+            int maxY = renderRectangle.Bottom - 1;
+
+            int clampedX = Math.Clamp(mouse.X, minX, maxX);
+            int clampedY = Math.Clamp(mouse.Y, minY, maxY);
+
+            if (mouse.X != clampedX || mouse.Y != clampedY)
+                Mouse.SetPosition(clampedX, clampedY);
+
             SceneManager.Update(gameTime);
+        }
 
         base.Update(gameTime);
     }
@@ -82,34 +99,24 @@ public class Game1 : Game
 
         SceneManager.Scene.Draw();
 
-        var mouse = Mouse.GetState();
-        var cursorRectangle = new Rectangle(mouse.Position, CursorSize);
-        spriteBatch.Begin(samplerState: SamplerState.PointClamp);
-        spriteBatch.Draw(cursorTexture, cursorRectangle, Color.White);
-        spriteBatch.End();
-
         GraphicsDevice.SetRenderTarget(null);
 
-        spriteBatch.Begin();
+        spriteBatch.Begin(samplerState: SamplerState.PointClamp);
 
-        if (Graphics.IsFullScreen)
-        {
-            spriteBatch.Draw
-            (
-                renderTarget,
-                new Rectangle(0, 0, Graphics.PreferredBackBufferWidth, Graphics.PreferredBackBufferHeight),
-                Color.White
-            );
-        }
-        else
-        {
-            spriteBatch.Draw
-            (
-                renderTarget,
-                new Rectangle(0, 0, Graphics.PreferredBackBufferWidth, Graphics.PreferredBackBufferHeight),
-                Color.White
-            );
-        }
+        var renderRectangle = new Rectangle(0, 0, Graphics.PreferredBackBufferWidth, Graphics.PreferredBackBufferHeight);
+        spriteBatch.Draw(renderTarget, renderRectangle, Color.White);
+
+        var mouse = Mouse.GetState();
+
+        var cursorPos = new Vector2
+        (
+            mouse.Position.X / (VIRTUAL_WIDTH / (float)Graphics.PreferredBackBufferWidth),
+            mouse.Position.Y / (VIRTUAL_HEIGHT / (float)Graphics.PreferredBackBufferHeight)
+
+        ).ToPoint();
+
+        var cursorRectangle = new Rectangle(cursorPos, CursorSize);
+        spriteBatch.Draw(cursorTexture, cursorRectangle, Color.White);
 
         spriteBatch.End();
 
