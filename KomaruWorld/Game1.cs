@@ -21,6 +21,7 @@ public class Game1 : Game
 
     // Window resizing
     private RenderTarget2D renderTarget;
+    private Point defaultScreenSize = new Point(800, 450);
 
     public Game1()
     {
@@ -35,10 +36,6 @@ public class Game1 : Game
         // TODO: Add your initialization logic here
 
         renderTarget = new RenderTarget2D(GraphicsDevice, VIRTUAL_WIDTH, VIRTUAL_HEIGHT);
-        Graphics.PreferredBackBufferWidth = GraphicsDevice.DisplayMode.Width;
-        Graphics.PreferredBackBufferHeight = GraphicsDevice.DisplayMode.Height;
-        Graphics.IsFullScreen = true;
-        Graphics.ApplyChanges();
 
         base.Initialize();
     }
@@ -65,6 +62,24 @@ public class Game1 : Game
         
         if (IsActive)
         {
+            var keyboard = Keyboard.GetState();
+
+            if (keyboard.IsKeyDown(Keys.F11))
+            {
+                Graphics.IsFullScreen = !Graphics.IsFullScreen;
+                if (Graphics.IsFullScreen)
+                {
+                    Graphics.PreferredBackBufferWidth = GraphicsDevice.DisplayMode.Width;
+                    Graphics.PreferredBackBufferHeight = GraphicsDevice.DisplayMode.Height;
+                }
+                else
+                {
+                    Graphics.PreferredBackBufferWidth = defaultScreenSize.X;
+                    Graphics.PreferredBackBufferHeight = defaultScreenSize.Y;
+                }
+                Graphics.ApplyChanges();
+            }
+
             var renderRectangle = new Rectangle
             (
                 0, 0,
@@ -112,7 +127,6 @@ public class Game1 : Game
         (
             mouse.Position.X / (VIRTUAL_WIDTH / (float)Graphics.PreferredBackBufferWidth),
             mouse.Position.Y / (VIRTUAL_HEIGHT / (float)Graphics.PreferredBackBufferHeight)
-
         ).ToPoint();
 
         var cursorRectangle = new Rectangle(cursorPos, CursorSize);
