@@ -10,7 +10,8 @@ public class CraftSlot : GameObject
     public delegate void OpenCraftMenu(CraftData craftData);
     private OpenCraftMenu openCraftMenu;
     private MouseState lastMouse;
-    public CraftData CraftData;
+    public CraftData CraftData { get; private set; }
+    public int page { get; private set; }
 
     private int defaultFrame = 0;
     private int choosedFrame = 1;
@@ -31,11 +32,12 @@ public class CraftSlot : GameObject
 
     private Vector2 itemAmountPosition => new Vector2(Position.X + Size.X, Position.Y + Size.Y - GlyphSize.Y);
 
-    public CraftSlot(Atlas atlas, Vector2 position, Vector2 size, CraftData craftData, OpenCraftMenu openCraftMenu)
+    public CraftSlot(Atlas atlas, Vector2 position, Vector2 size, CraftData craftData, OpenCraftMenu openCraftMenu, int page)
     : base(atlas, position, size, 0)
     {
         this.openCraftMenu = openCraftMenu;
         CraftData = craftData;
+        this.page = page;
     }
 
     public override void Update(GameTime gameTime)
