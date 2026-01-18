@@ -19,6 +19,9 @@ public class Game1 : Game
     private const float FPS_COUNT_TIME = 1f;
     private float fpsCountingTime = FPS_COUNT_TIME;
 
+    // Input
+    private KeyboardState lastKeyboard;
+
     // Window resizing
     private RenderTarget2D renderTarget;
     private Point defaultScreenSize = new Point(800, 450);
@@ -64,7 +67,7 @@ public class Game1 : Game
         {
             var keyboard = Keyboard.GetState();
 
-            if (keyboard.IsKeyDown(Keys.F11))
+            if (keyboard.IsKeyDown(Keys.F11) && !lastKeyboard.IsKeyDown(Keys.F11))
             {
                 Graphics.IsFullScreen = !Graphics.IsFullScreen;
                 if (Graphics.IsFullScreen)
@@ -80,12 +83,7 @@ public class Game1 : Game
                 Graphics.ApplyChanges();
             }
 
-            var renderRectangle = new Rectangle
-            (
-                0, 0,
-                renderTarget.Width,
-                renderTarget.Height
-            );
+            var renderRectangle = CalculateRenderRectangle();
             var mouse = Mouse.GetState();
 
             int minX = renderRectangle.X;
@@ -100,6 +98,8 @@ public class Game1 : Game
                 Mouse.SetPosition(clampedX, clampedY);
 
             SceneManager.Update(gameTime);
+
+            lastKeyboard = keyboard;
         }
 
         base.Update(gameTime);
@@ -118,16 +118,18 @@ public class Game1 : Game
 
         spriteBatch.Begin(samplerState: SamplerState.PointClamp);
 
-        var renderRectangle = new Rectangle(0, 0, Graphics.PreferredBackBufferWidth, Graphics.PreferredBackBufferHeight);
+        var renderRectangle = CalculateRenderRectangle();
         spriteBatch.Draw(renderTarget, renderRectangle, Color.White);
 
         var mouse = Mouse.GetState();
 
-        var cursorPos = new Vector2
+        var cursorPosVec2 = new Vector2
         (
-            mouse.Position.X / (VIRTUAL_WIDTH / (float)Graphics.PreferredBackBufferWidth),
-            mouse.Position.Y / (VIRTUAL_HEIGHT / (float)Graphics.PreferredBackBufferHeight)
-        ).ToPoint();
+            (mouse.Position.X - renderRectangle.X) / (VIRTUAL_WIDTH  / (float)Window.ClientBounds.Width),
+            (mouse.Position.Y - renderRectangle.Y) / (VIRTUAL_HEIGHT / (float)Window.ClientBounds.Height)
+        );
+
+        var cursorPos = cursorPosVec2.ToPoint();
 
         var cursorRectangle = new Rectangle(cursorPos, CursorSize);
         spriteBatch.Draw(cursorTexture, cursorRectangle, Color.White);
@@ -144,5 +146,36 @@ public class Game1 : Game
         fpsCounting++;
 
         base.Draw(gameTime);
+    }
+
+    private Rectangle CalculateRenderRectangle()
+    {
+        // Point renderSize;
+
+        // if (Window.ClientBounds.Width > Window.ClientBounds.Height)
+        // {
+        //     float scale = Window.ClientBounds.Height / VIRTUAL_HEIGHT;
+
+        //     renderSize.Y = Window.ClientBounds.Height;
+        //     renderSize.X = (int)(VIRTUAL_WIDTH * scale);
+        // }
+        // else
+        // {
+        //     float scale = Window.ClientBounds.Width / VIRTUAL_WIDTH;
+
+        //     renderSize.X = Window.ClientBounds.Width;
+        //     renderSize.Y = (int)(VIRTUAL_HEIGHT * scale);
+        // }
+
+        return new Rectangle
+        (
+            // Window.ClientBounds.Width / 2 - renderSize.X / 2,
+            // Window.ClientBounds.Height / 2 - renderSize.Y / 2,
+            // renderSize.X,
+            // renderSize.Y
+            0, 0,
+            Graphics.PreferredBackBufferWidth,
+            Graphics.PreferredBackBufferHeight
+        );
     }
 }
