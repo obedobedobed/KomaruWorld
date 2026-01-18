@@ -6,7 +6,7 @@ namespace KomaruWorld;
 
 public class Tile : GameObject
 {
-    public bool CanCollide { get; private set; }
+    public bool CanCollide { get; protected set; }
     public Rectangle Hitbox { get { return CanCollide ? Rectangle : Rectangle.Empty; } }
 
     private static int totalTiles = 0;

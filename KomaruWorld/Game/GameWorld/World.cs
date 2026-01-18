@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using static KomaruWorld.GameParameters;
 
 namespace KomaruWorld;
 
@@ -38,6 +39,26 @@ public static class World
                 return tile;
 
         return null;
+    }
+
+    public static Tile[] SearchTilesAround(Vector2 position)
+    {
+        List<Tile> tiles = new List<Tile>();
+        var offsets = new Vector2[]
+        {
+            new(-TileSize.X, -TileSize.Y), new(0, -TileSize.Y), new(TileSize.X, -TileSize.Y),
+            new(-TileSize.X, 0),                                new(TileSize.X, 0),
+            new(-TileSize.X, TileSize.Y),  new(0, TileSize.Y),  new(TileSize.X, TileSize.Y),
+        };
+
+        foreach (var offset in offsets)
+        {
+            var tile = SearchTile(position + offset);
+            if (tile != null)
+                tiles.Add(tile);
+        }
+
+        return tiles.ToArray();
     }
 
     public static void AddItem(DroppedItem item)

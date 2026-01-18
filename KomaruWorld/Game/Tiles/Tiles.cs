@@ -14,5 +14,6 @@ public enum Tiles
     EmeraldOre,
     AmethystOre,
     NatureLog,
-    NatureLeaves
+    NatureLeaves,
+    Door
 }

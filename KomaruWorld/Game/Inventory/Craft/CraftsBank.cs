@@ -10,6 +10,7 @@ public static class CraftsBank
 {
     public static CraftData Log { get; private set; } = new CraftData(ItemsBank.Log, itemAmount: 1, [ItemsBank.Planks], [4]);
     public static CraftData Leaves { get; private set; } = new CraftData(ItemsBank.Leaves, itemAmount: 1, [ItemsBank.Leaf], [4]);
+    public static CraftData Door { get; private set; } = new CraftData(ItemsBank.Door, itemAmount: 2, [ItemsBank.Planks], [4]);
     public static CraftData IronIngot { get; private set; } = new CraftData(ItemsBank.IronIngot, itemAmount: 1, [ItemsBank.IronOre], [1]);
     public static CraftData GoldIngot { get; private set; } = new CraftData(ItemsBank.GoldIngot, itemAmount: 1, [ItemsBank.GoldOre], [1]);
     public static CraftData Emerald { get; private set; } = new CraftData(ItemsBank.Emerald, itemAmount: 1, [ItemsBank.EmeraldOre], [1]);
@@ -32,11 +33,11 @@ public static class CraftsBank
 
     public static CraftData[] Crafts =
     [
-        Log, Leaves, IronIngot, GoldIngot, Emerald,
-        Amethyst, Sword, Pickaxe, Axe, GoldSword,
-        GoldPickaxe, GoldAxe, EmeraldSword, EmeraldPickaxe, EmeraldAxe,
-        AmethystSword, AmethystPickaxe, AmethystAxe, IronHelmet, IronChestplate,
-        IronLeggins
+        Log, Leaves, Door, IronIngot, GoldIngot,
+        Emerald, Amethyst, Sword, Pickaxe, Axe,
+        GoldSword, GoldPickaxe, GoldAxe, EmeraldSword, EmeraldPickaxe,
+        EmeraldAxe, AmethystSword, AmethystPickaxe, AmethystAxe, IronHelmet,
+        IronChestplate, IronLeggins
     ];
 
     public static List<CraftSlot> CraftSlots = new List<CraftSlot>();

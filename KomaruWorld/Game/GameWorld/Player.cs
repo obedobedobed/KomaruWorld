@@ -87,6 +87,7 @@ public class Player : GameObject
         Inventory.HotbarSlots[0].UpdateItem(ItemsBank.Sword);
         Inventory.HotbarSlots[1].UpdateItem(ItemsBank.Pickaxe);
         Inventory.HotbarSlots[2].UpdateItem(ItemsBank.Axe);
+        Inventory.HotbarSlots[3].UpdateItem(ItemsBank.Door, 10);
     }
 
     public void SetupSFX(SoundEffect place)
@@ -206,6 +207,20 @@ public class Player : GameObject
                             else if (itemInSlot is PickaxeItem _pickaxe)
                                 _tile.TakeDamage(_pickaxe.Speed, _pickaxe.Power);
                 }
+        }
+
+        if (mouse.RightButton == ButtonState.Pressed && lastMouse.RightButton == ButtonState.Released && !InInventory)
+        {
+            Vector2 targetPosition = new Vector2
+            (
+                cursorWorldPosition.X * TileSize.X,
+                cursorWorldPosition.Y * TileSize.Y
+            );
+
+            var tile = World.SearchTile(targetPosition);
+
+            if (tile is DoorTile door)
+                door.Toggle();
         }
 
         if (mouse.LeftButton == ButtonState.Pressed && lastMouse.LeftButton != ButtonState.Pressed && InInventory &&
