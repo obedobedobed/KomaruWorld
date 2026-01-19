@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Audio;
@@ -35,6 +36,9 @@ public class Player : GameObject
     private float deltaTime = 0f;
     private InventoryMenu inventoryMenu;
 
+    //Network
+    public bool IsRemote { get; set; } = false;
+    
     // Hitbox
     private int hitboxXSpacing = 2 * SIZE_MOD;
     private Rectangle hitbox
@@ -71,7 +75,7 @@ public class Player : GameObject
     private const int FRAME_RUN_0 = 2;
     private const int FRAME_RUN_1 = 3;
     private const int FRAME_ISNT_GROUNDED = 4;
-
+    
     public Player(Atlas atlas, Vector2 position, Vector2 size, int defaultFrame, Atlas slotAtlas)
     : base(atlas, position, size, defaultFrame)
     {
@@ -96,14 +100,25 @@ public class Player : GameObject
 
     public override void Update(GameTime gameTime)
     {
+        // Clamp delta time to prevent physics explosions during lag
         deltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
+        if (deltaTime > 0.05f) deltaTime = 0.05f;
 
-        inventoryMenu = GameScene.Instance.InventoryMenu;
+        // Only do inventory stuff for local player
+        if (!IsRemote)
+        {
+            inventoryMenu = GameScene.Instance.InventoryMenu;
 
-        if (inventoryMenu == InventoryMenu.Inventory)
-            foreach (var item in Inventory.HotbarSlots)
-                item.UpdateFrame();
+            if (inventoryMenu == InventoryMenu.Inventory)
+                foreach (var item in Inventory.HotbarSlots)
+                    item.UpdateFrame();
+        }
 
+        if (IsRemote)
+        {
+            return; 
+        }
+    
         GetInput();
         Move();
         if (isJumping)
@@ -112,10 +127,34 @@ public class Player : GameObject
             Gravity();
         Animate();
         CollectDroppedItems();
+    
+        // --- SEND POSITION PACKET ---
+        if (Game1.Instance.NetworkManager.IsRunning && !IsRemote)
+        {
+            bool isFlipped = (flip == SpriteEffects.FlipHorizontally);
+            Game1.Instance.NetworkManager.SendPosition(Position, frame, isFlipped);
+        }
     }
 
     private void GetInput()
     {
+        // If window is not focused, ignore input so we don't get stuck moving
+        if (!Game1.Instance.IsActive)
+        {
+            direction = Direction.Null;
+            return;
+        }
+
+        
+        // If Console is open, ignore player input
+        if (Game1.Instance.Console != null && Game1.Instance.Console.IsOpen)
+        {
+            // Reset direction so player doesn't keep walking if they opened console while moving
+            direction = Direction.Null; 
+            return;
+        }
+        
+        
         var keyboard = Keyboard.GetState();
         var mouse = Mouse.GetState();
         direction = Direction.Null;
@@ -184,6 +223,12 @@ public class Player : GameObject
                     {
                         Inventory.HotbarSlots[HotbarSlot].CountItem(countBack: true);
                         Place.Play();
+                        
+                        // Sync Placement
+                        if (NetworkManager.Instance != null && NetworkManager.Instance.IsRunning)
+                        {
+                            NetworkManager.Instance.SendBlockChange(targetPosition, tile.ItemTile, true);
+                        }
                     }
 
                     if (Inventory.HotbarSlots[HotbarSlot].ItemAmount <= 0)
@@ -196,15 +241,49 @@ public class Player : GameObject
                     Item itemInSlot = Inventory.HotbarSlots[HotbarSlot]?.Item;
 
                     if (tool != null && itemInSlot != null)
+                    {
+                        float speed = 0f;
+                        int power = 0;
+                        bool hit = false;
+                        
                         if (tool == ToolToDestroy.Pickaxe && itemInSlot is PickaxeItem pickaxe)
-                            _tile.TakeDamage(pickaxe.Speed, pickaxe.Power);
+                        {
+                            speed = pickaxe.Speed;
+                            power = pickaxe.Power;
+                            hit = true;
+                        }
                         else if (tool == ToolToDestroy.Axe && itemInSlot is AxeItem axe)
-                            _tile.TakeDamage(axe.Speed, axe.Power);
+                        {
+                            speed = axe.Speed;
+                            power = axe.Power;
+                            hit = true;
+                        }
                         else if (tool == ToolToDestroy.Both)
+                        {
                             if (itemInSlot is AxeItem _axe)
-                                _tile.TakeDamage(_axe.Speed, _axe.Power);
+                            {
+                                speed = _axe.Speed;
+                                power = _axe.Power;
+                                hit = true;
+                            }
                             else if (itemInSlot is PickaxeItem _pickaxe)
-                                _tile.TakeDamage(_pickaxe.Speed, _pickaxe.Power);
+                            {
+                                speed = _pickaxe.Speed;
+                                power = _pickaxe.Power;
+                                hit = true;
+                            }
+                        }
+                        
+                        if (hit)
+                        {
+                            _tile.TakeDamage(speed, power);
+                            // Sync Damage
+                            if (NetworkManager.Instance != null && NetworkManager.Instance.IsRunning)
+                            {
+                                NetworkManager.Instance.SendTileDamage(targetPosition, speed, power);
+                            }
+                        }
+                    }
                 }
         }
 
@@ -398,7 +477,8 @@ public class Player : GameObject
         {
             if (nextHitbox.Intersects(tile.Hitbox))
             {
-                isGrounded = true;
+                // We don't change isGrounded here, gravity handles that.
+                // Just stop X movement
                 Position = new Vector2(moveMod > 0
                     ? tile.Hitbox.Left - Rectangle.Width + hitboxXSpacing
                     : tile.Hitbox.Right - hitboxXSpacing, Position.Y);
@@ -413,26 +493,26 @@ public class Player : GameObject
     private void Gravity()
     {
         GravityVelocity += GRAVITY_ACELERATION * deltaTime;
-
         if (GravityVelocity > MAXIMAL_GRAVITY)
             GravityVelocity = MAXIMAL_GRAVITY;
 
         isGrounded = false;
-        var nextHitbox = new Rectangle(hitbox.X, (int)(hitbox.Y + GravityVelocity), hitbox.Width, hitbox.Height);
+        
+        int checkDistance = (int)Math.Ceiling(GravityVelocity);
+        if (checkDistance < 1) checkDistance = 1;
+
+        var nextHitbox = new Rectangle(hitbox.X, hitbox.Y + checkDistance, hitbox.Width, hitbox.Height);
 
         foreach (var tile in World.Tiles)
         {
             if (nextHitbox.Intersects(tile.Hitbox))
             {
                 isGrounded = true;
+                Position = new Vector2(Position.X, tile.Rectangle.Top - Size.Y);
                 GravityVelocity = DEFAULT_GRAVITY;
-                Position = new Vector2(Position.X, tile.Rectangle.Top - Rectangle.Height);
-                break;
+                return;
             }
         }
-
-        if (isGrounded)
-            return;
         
         Position += new Vector2(0f, GravityVelocity);
     }
@@ -455,7 +535,7 @@ public class Player : GameObject
         {
             if (nextHitbox.Intersects(tile.Hitbox))
             {
-                isGrounded = true;
+                // Hit head on ceiling
                 GravityVelocity = DEFAULT_GRAVITY;
                 Position = new Vector2(Position.X, tile.Rectangle.Bottom);
                 jumpTime = 0f;
@@ -469,6 +549,12 @@ public class Player : GameObject
 
     private void Animate()
     {
+        if (!Game1.Instance.IsActive && isGrounded)
+        {
+            frame = FRAME_IDLE_0;
+            return;
+        }
+        
         if (direction == Direction.Right)
             flip = SpriteEffects.None;
         else if (direction == Direction.Left)
@@ -513,7 +599,24 @@ public class Player : GameObject
             {
                 bool collected = Inventory.TryCollectItem(item.Item);
                 if (collected)
+                {
+                    //FileLogger.Log($"[PLAYER] Collected Item NetID: {item.NetworkId} (WorldID: {item.ItemWorldId})");
+                    
                     itemsToRemove.Add(item);
+                    
+                    // Network Sync: Tell everyone we picked this up
+                    if (NetworkManager.Instance != null && NetworkManager.Instance.IsRunning)
+                    {
+                        if (item.NetworkId != -1)
+                        {
+                            NetworkManager.Instance.SendItemPickup(item.NetworkId);
+                        }
+                        else
+                        {
+                            //FileLogger.Log("[PLAYER-ERR] Collected item has NetID -1! Not sending packet.");
+                        }
+                    }
+                }
             }
 
         foreach (var item in itemsToRemove)
@@ -559,14 +662,27 @@ public class Player : GameObject
             Color.White, 0f, Vector2.Zero, flip, 0f
         );
 
-        foreach (var slot in Inventory.ArmorSlots)
+        // Only draw armor for local player (remote players don't have inventory)
+        if (!IsRemote && Inventory != null)
         {
-            if (slot.Item != null)
-                spriteBatch.Draw
-                (
-                    slot.Item.ArmorAtlas.Texture, Rectangle, slot.Item.ArmorAtlas.Rectangles[frame],
-                    Color.White, 0f, Vector2.Zero, flip, 0f
-                );
+            foreach (var slot in Inventory.ArmorSlots)
+            {
+                if (slot.Item != null)
+                    spriteBatch.Draw
+                    (
+                        slot.Item.ArmorAtlas.Texture, Rectangle, slot.Item.ArmorAtlas.Rectangles[frame],
+                        Color.White, 0f, Vector2.Zero, flip, 0f
+                    );
+            }
         }
     }
+    
+    public void SetRemotePosition(Vector2 pos, int frameIndex, bool isFlipped)
+    {
+        Position = pos;
+        frame = frameIndex;
+        // Convert bool back to SpriteEffects
+        flip = isFlipped ? SpriteEffects.FlipHorizontally : SpriteEffects.None;
+    }
+    
 }

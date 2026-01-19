@@ -37,9 +37,19 @@ public class GameScene(ContentManager content, SpriteBatch spriteBatch, Graphics
     public override void Load()
     {
         Instance = this;
+        
+        // --- Ensure ID counters are reset ---
+        World.Reset();
+        
         pixel = Content.Load<Texture2D>("Sprites/Pixel");
 
-        WorldGenerator.Generate(worldWidth, worldHeight);
+        // Only generate world if we're the host OR not in multiplayer
+        if (Game1.Instance.NetworkManager == null || 
+            !Game1.Instance.NetworkManager.IsRunning || 
+            Game1.Instance.NetworkManager.IsHost)
+        {
+            WorldGenerator.Generate(worldWidth, worldHeight);
+        }
 
         var playerAtlas = new Atlas(texture: Content.Load<Texture2D>("Sprites/KomaruAtlas"), spriteSize: EntitySize / SIZE_MOD);
         var slotAtlas = new Atlas(texture: Content.Load<Texture2D>("Sprites/UI/SlotAtlas"), spriteSize: SlotSize / SIZE_MOD);
@@ -53,7 +63,7 @@ public class GameScene(ContentManager content, SpriteBatch spriteBatch, Graphics
         inventoryMenuButton = new SpriteButton(inventoryMenuAtlas, new Vector2 (UI_SPACING, UI_SPACING),
         SlotSize, 0, 1, action: CraftSwitchCall);
 
-        CraftsBank.CreateCraftSlots(slotAtlas, InventorySlotsPos, OpenCraftMenuCall);
+        //CraftsBank.CreateCraftSlots(slotAtlas, InventorySlotsPos, OpenCraftMenuCall, null);
 
         var craftMenuSprite = Content.Load<Texture2D>("Sprites/UI/CraftMenu");
         var closeButtonAtlas = new Atlas(Content.Load<Texture2D>("Sprites/UI/CloseButtonAtlas"), SlotSize / SIZE_MOD);

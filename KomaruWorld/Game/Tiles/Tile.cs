@@ -52,11 +52,23 @@ public class Tile : GameObject
 
         if (health <= 0)
         {
-            Drop();
+            // Only the Host determines item drops
+            if (NetworkManager.Instance == null || !NetworkManager.Instance.IsRunning || NetworkManager.Instance.IsHost)
+            {
+                Drop();
+                
+                // If Host, broadcast explicit destruction just in case (optional but safe)
+                if (NetworkManager.Instance != null && NetworkManager.Instance.IsRunning && NetworkManager.Instance.IsHost)
+                {
+                    NetworkManager.Instance.SendBlockChange(Position, TileType, false);
+                }
+            }
+            
             Destroy.Play();
             World.RemoveTile(this);
         }
     }
+
 
     public static void StaticUpdate(GameTime gameTime)
     {
@@ -87,8 +99,32 @@ public class Tile : GameObject
         var drop = DropData.CalculateDrop();
 
         foreach (var dropItem in drop)
-            for (int i = 0; i < dropItem.Amount; i++)
-                World.AddItem(new DroppedItem(dropItem.Item, Position));
+        {
+            // Sync drops if we are Host
+            if (NetworkManager.Instance != null && NetworkManager.Instance.IsRunning && NetworkManager.Instance.IsHost)
+            {
+                for (int i = 0; i < dropItem.Amount; i++)
+                {
+                    int netId = World.GetNextDropId();
+                    FileLogger.Log($"[TILE] Hosting Drop. Generated NetID: {netId} for {dropItem.Item.Name}");
+                    
+                    var droppedItem = new DroppedItem(dropItem.Item, Position);
+                    droppedItem.NetworkId = netId;
+                    
+                    World.AddItem(droppedItem);
+                    NetworkManager.Instance.SendItemDrop(netId, dropItem.Item.ID, 1, Position);
+                }
+            }
+            else
+            {
+                // Single player logic
+                if (NetworkManager.Instance == null || !NetworkManager.Instance.IsRunning)
+                {
+                    for (int i = 0; i < dropItem.Amount; i++)
+                        World.AddItem(new DroppedItem(dropItem.Item, Position));
+                }
+            }
+        }
     }
 
     public override void Draw(SpriteBatch spriteBatch)

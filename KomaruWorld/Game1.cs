@@ -1,4 +1,5 @@
 ﻿using System;
+using KomaruWorld;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -25,7 +26,13 @@ public class Game1 : Game
     // Window resizing
     private RenderTarget2D renderTarget;
     private Point defaultScreenSize = new Point(800, 450);
+    
+    //Network
+    public NetworkManager NetworkManager; 
 
+    //Dev Console
+    public DevConsole Console;
+    
     public Game1()
     {
         Graphics = new GraphicsDeviceManager(this);
@@ -35,10 +42,15 @@ public class Game1 : Game
 
         // Enable full screen by default
         Graphics.IsFullScreen = true;
+        
+        // Ensure game continues running when minimized
+        this.InactiveSleepTime = TimeSpan.Zero;
     }
 
     protected override void Initialize()
     {
+        this.Exiting += (sender, args) => { NetworkManager?.Stop(); };
+        
         // TODO: Add your initialization logic here
 
         // If starting in full screen, match the screen resolution
@@ -68,17 +80,27 @@ public class Game1 : Game
         cursorTexture = Content.Load<Texture2D>("Sprites/Cursor");
 
         SceneManager.Load(new GameScene(Content, spriteBatch, Graphics));
+        
+        
+        NetworkManager = new NetworkManager();
+        // Initialize Console
+        Console = new DevConsole(GraphicsDevice, Window);
     }
 
     protected override void Update(GameTime gameTime)
     {
         // TODO: Add your update logic here
         
+        // 1. Update Console (Toggling)
+        if (Console != null) Console.Update();
+            
+        // 2. Network always runs
+        if (NetworkManager != null) NetworkManager.Update();
+        
+        // Quit Game Logic
+        var keyboard = Keyboard.GetState();
         if (IsActive)
         {
-            var keyboard = Keyboard.GetState();
-
-            // Quit Game Logic
             // We check !lastKeyboard to ensure we don't exit immediately if holding Escape from a previous action
             if (keyboard.IsKeyDown(Keys.Escape) && !lastKeyboard.IsKeyDown(Keys.Escape))
             {
@@ -128,10 +150,11 @@ public class Game1 : Game
             if (mouse.X != clampedX || mouse.Y != clampedY)
                 Mouse.SetPosition(clampedX, clampedY);
 
-            SceneManager.Update(gameTime);
-
             lastKeyboard = keyboard;
         }
+        
+        // Always update scene
+        SceneManager.Update(gameTime);
 
         base.Update(gameTime);
     }
@@ -145,6 +168,14 @@ public class Game1 : Game
 
         SceneManager.Scene.Draw();
 
+        // Draw the Console on top of the game
+        if (Console != null && Console.IsOpen)
+        {
+            spriteBatch.Begin(samplerState: SamplerState.PointClamp);
+            Console.Draw(spriteBatch);
+            spriteBatch.End();
+        }
+        
         GraphicsDevice.SetRenderTarget(null);
 
         spriteBatch.Begin(samplerState: SamplerState.PointClamp);
@@ -175,7 +206,7 @@ public class Game1 : Game
         }
 
         fpsCounting++;
-
+        
         base.Draw(gameTime);
     }
 
