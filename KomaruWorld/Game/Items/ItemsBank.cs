@@ -43,6 +43,7 @@ public static class ItemsBank
     private static Texture2D AmethystAxeTexture;
     private static Texture2D AmethystPickaxeTexture;
     private static Texture2D AmethystSwordTexture;
+    private static Texture2D DoorTexture;
 
     public static void LoadContent(ContentManager Content)
     {
@@ -82,6 +83,7 @@ public static class ItemsBank
         AmethystAxeTexture = Content.Load<Texture2D>("Sprites/Items/Tools/AmethystAxe");
         AmethystPickaxeTexture = Content.Load<Texture2D>("Sprites/Items/Tools/AmethystPickaxe");
         AmethystSwordTexture = Content.Load<Texture2D>("Sprites/Items/Tools/AmethystSword");
+        DoorTexture = Content.Load<Texture2D>("Sprites/Tiles/DoorTileClosed");
     }
 
     // Items
@@ -116,6 +118,7 @@ public static class ItemsBank
     public static Item AmethystAxe => new AxeItem("Amethyst axe", AmethystAxeTexture, id: 28, speed: 2.8f, power: 4);
     public static Item AmethystPickaxe => new PickaxeItem("Amethyst pickaxe", AmethystPickaxeTexture, id: 29, speed: 2.8f, power: 4);
     public static Item AmethystSword => new SwordItem("Amethyst sword", AmethystSwordTexture, id: 30, damage: 15);
+    public static Item Door => new PlaceableItem("Door", 99, DoorTexture, id: 31, Tiles.Door);
     
     public static Item GetItem(int id)
     {
@@ -152,6 +155,7 @@ public static class ItemsBank
             28 => AmethystAxe,
             29 => AmethystPickaxe,
             30 => AmethystSword,
+            31 => Door, // Added the new door
             _ => null
         };
     }

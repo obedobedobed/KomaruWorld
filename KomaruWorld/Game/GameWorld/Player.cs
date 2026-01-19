@@ -177,7 +177,7 @@ public class Player : GameObject
             isJumping = true;
         }
 
-        // Hotbar selection via Number Keys
+        // Hotbar selection via number keys
         if (keyboard.IsKeyDown(Keys.D1)) HotbarSlot = 0;
         else if (keyboard.IsKeyDown(Keys.D2)) HotbarSlot = 1;
         else if (keyboard.IsKeyDown(Keys.D3)) HotbarSlot = 2;
@@ -186,10 +186,12 @@ public class Player : GameObject
 
         // Mouse Input
 
+        var normalizedCursorPos = mouse.NormalizeForWindow();
+
         cursorWorldPosition = new Point
         (
-            (int)((mouse.X + GameScene.Instance.Camera.Position.X) / TileSize.X),
-            (int)((mouse.Y + GameScene.Instance.Camera.Position.Y) / TileSize.Y)
+            (int)((normalizedCursorPos.X + GameScene.Instance.Camera.Position.X) / TileSize.X),
+            (int)((normalizedCursorPos.Y + GameScene.Instance.Camera.Position.Y) / TileSize.Y)
         );
 
         if (mouse.ScrollWheelValue < lastMouse.ScrollWheelValue)
@@ -287,10 +289,24 @@ public class Player : GameObject
                 }
         }
 
+        if (mouse.RightButton == ButtonState.Pressed && lastMouse.RightButton == ButtonState.Released && !InInventory)
+        {
+            Vector2 targetPosition = new Vector2
+            (
+                cursorWorldPosition.X * TileSize.X,
+                cursorWorldPosition.Y * TileSize.Y
+            );
+
+            var tile = World.SearchTile(targetPosition);
+
+            if (tile is DoorTile door)
+                door.Toggle();
+        }
+
         if (mouse.LeftButton == ButtonState.Pressed && lastMouse.LeftButton != ButtonState.Pressed && InInventory &&
             inventoryMenu == InventoryMenu.Inventory)
         {
-            var cursorRectangle = new Rectangle(mouse.X, mouse.Y, 1, 1);
+            var cursorRectangle = new Rectangle(normalizedCursorPos.X, normalizedCursorPos.Y, 1, 1);
 
             if (ItemInCursor == null)
             {

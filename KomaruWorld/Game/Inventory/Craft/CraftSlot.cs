@@ -43,7 +43,8 @@ public class CraftSlot : GameObject
     public override void Update(GameTime gameTime)
     {
         var mouse = Mouse.GetState();
-        var cursorRectangle = new Rectangle(mouse.X, mouse.Y, 1, 1);
+        var normalizedCursorPos = mouse.NormalizeForWindow();
+        var cursorRectangle = new Rectangle(normalizedCursorPos.X,normalizedCursorPos.Y, 1, 1);
 
         if (cursorRectangle.Intersects(Rectangle))
         {
