@@ -87,10 +87,6 @@ public class Player : GameObject
         Inventory.HotbarSlots[0].UpdateItem(ItemsBank.Sword);
         Inventory.HotbarSlots[1].UpdateItem(ItemsBank.Pickaxe);
         Inventory.HotbarSlots[2].UpdateItem(ItemsBank.Axe);
-        Inventory.HotbarSlots[3].UpdateItem(ItemsBank.Door, 99);
-        Inventory.HotbarSlots[4].UpdateItem(ItemsBank.Log, 99);
-        Inventory.Slots[0].UpdateItem(ItemsBank.Planks, 99);
-        Inventory.Slots[1].UpdateItem(ItemsBank.Stone, 99);
     }
 
     public void SetupSFX(SoundEffect place)
