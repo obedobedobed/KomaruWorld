@@ -17,7 +17,10 @@ public abstract class Mob : GameObject
     protected readonly RangeF moveTimeRange;
     protected readonly float moveBreak;
     protected float moveBreakEstimated;
-
+    
+    // Expose flip for NetworkManager
+    public SpriteEffects Flip => flip;
+    
     // Gravity
     private float GravityVelocity;
     protected bool IsGrounded;
@@ -28,6 +31,11 @@ public abstract class Mob : GameObject
     private readonly float originalJumpTime;
     private float jumpTime;
 
+    // Network
+    public int NetworkId { get; set; } = -1;
+    public bool IsRemote { get; set; } = false;
+    private int _netUpdateTimer = 0; // Throttle packets
+    
     // Collisions
     protected Rectangle Hitbox;
     protected Rectangle HitboxPosApplied
@@ -62,18 +70,56 @@ public abstract class Mob : GameObject
         this.moveTimeRange = moveTimeRange;
         this.moveBreak = moveBreak;
         moveBreakEstimated = moveBreak;
+        
+        // Auto-detect if we should be a remote entity (Client side)
+        // Note: This logic assumes Mobs are deterministic or synced via World.AddMob
+        if (Game1.Instance.NetworkManager != null && 
+            Game1.Instance.NetworkManager.IsRunning && 
+            !Game1.Instance.NetworkManager.IsHost)
+        {
+            IsRemote = true;
+        }
     }
 
     public override void Update(GameTime gameTime)
     {
         DeltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
 
+        // --- 1. Client (Remote) Logic ---
+        // If we are a client, we STOP here. We do not run physics or AI.
+        // We rely entirely on SetRemotePosition() called by NetworkManager.
+        if (IsRemote) return;
+        
+        // --- 2. Host / Local Logic ---
+        // Calculate physics, AI, and animation normally.
         Move();
         if (IsJumping)
             Jump();
         else
             Gravity();
         Animation();
+        
+        // --- 3. Network Send (Host Only) ---
+        // Send the results of the calculation above to clients.
+        if (Game1.Instance.NetworkManager != null && 
+            Game1.Instance.NetworkManager.IsHost && 
+            Game1.Instance.NetworkManager.IsRunning)
+        {
+            // Send update approx every 3 frames (20 times/sec) to save bandwidth
+            _netUpdateTimer++;
+            if (_netUpdateTimer >= 3)
+            {
+                _netUpdateTimer = 0;
+                Game1.Instance.NetworkManager.SendMobPosition(this);
+            }
+        }
+    }
+    
+    public void SetRemotePosition(Vector2 pos, int frameIdx, bool flipX)
+    {
+        Position = pos;
+        frame = frameIdx;
+        flip = flipX ? SpriteEffects.FlipHorizontally : SpriteEffects.None;
     }
 
     protected abstract void Move();

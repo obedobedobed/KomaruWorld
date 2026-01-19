@@ -10,7 +10,7 @@ public class GameObject
     protected Texture2D texture;
     public Vector2 Position { get; protected set; }
     public Vector2 Size { get; protected set; }
-    protected int frame;
+    public int frame; //needed by the network manager
 
     protected const float DEFAULT_GRAVITY = 0.25f * SIZE_MOD;
     protected const float GRAVITY_ACELERATION = 2.5f * SIZE_MOD;

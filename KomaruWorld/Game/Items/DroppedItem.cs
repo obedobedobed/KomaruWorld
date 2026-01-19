@@ -10,7 +10,13 @@ public class DroppedItem : GameObject
 
     public Item Item { get; private set; }
     private static int totalItems = 0;
+    
+    
+    // Local ID (kept for safety)
     public int ItemWorldId;
+    
+    // Network ID (used for multiplayer sync)
+    public int NetworkId { get; set; } = -1;
 
     public DroppedItem(Item item, Vector2 position) : base(item.Texture, position, DroppedItemSize)
     {

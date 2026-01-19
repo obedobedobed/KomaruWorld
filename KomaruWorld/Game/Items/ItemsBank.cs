@@ -119,4 +119,44 @@ public static class ItemsBank
     public static Item AmethystPickaxe => new PickaxeItem("Amethyst pickaxe", AmethystPickaxeTexture, id: 29, speed: 2.8f, power: 4);
     public static Item AmethystSword => new SwordItem("Amethyst sword", AmethystSwordTexture, id: 30, damage: 15);
     public static Item Door => new PlaceableItem("Door", 99, DoorTexture, id: 31, Tiles.Door);
+    
+    public static Item GetItem(int id)
+    {
+        return id switch
+        {
+            0 => Grass,
+            1 => Dirt,
+            2 => Stone,
+            3 => Log,
+            4 => Leaves,
+            5 => Planks,
+            6 => Stick,
+            7 => Leaf,
+            8 => Axe,
+            9 => Pickaxe,
+            10 => Sword,
+            11 => IronHelmet,
+            12 => IronChestplate,
+            13 => IronLeggins,
+            14 => IronIngot,
+            15 => GoldIngot,
+            16 => Emerald,
+            17 => Amethyst,
+            18 => IronOre,
+            19 => GoldOre,
+            20 => EmeraldOre,
+            21 => AmethystOre,
+            22 => GoldAxe,
+            23 => GoldPickaxe,
+            24 => GoldSword,
+            25 => EmeraldAxe,
+            26 => EmeraldPickaxe,
+            27 => EmeraldSword,
+            28 => AmethystAxe,
+            29 => AmethystPickaxe,
+            30 => AmethystSword,
+            31 => Door, // Added the new door
+            _ => null
+        };
+    }
 }

@@ -171,7 +171,16 @@ public static class Text
 
             bool canFindGlyph = charToGlyphId.TryGetValue(_char, out int glyphId);
             if (!canFindGlyph)
-                throw new System.Exception($"Cannot find glyph {_char} in dictionary!");
+            {
+                // Instead of crashing, try to draw a '?' (ID 55)
+                if (!charToGlyphId.TryGetValue('?', out glyphId))
+                {
+                    // If even '?' is missing, just default to Space (ID 0)
+                    glyphId = 0; 
+                }
+                // console debug warning (optional, won't crash game)
+                System.Diagnostics.Debug.WriteLine($"Warning: Missing glyph for '{_char}'");
+            }
             else
             {
                 var glyphRectangle = new Rectangle
