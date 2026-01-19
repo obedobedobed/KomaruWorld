@@ -50,7 +50,9 @@ public class Player : GameObject
     }
 
     // Sounds
-    private SoundEffectInstance Place;
+    private SoundEffectInstance PlaceSFX;
+    private SoundEffectInstance JumpSFX;
+    private SoundEffectInstance CollectSFX;
 
     // Input
     private MouseState lastMouse;
@@ -89,9 +91,11 @@ public class Player : GameObject
         Inventory.HotbarSlots[2].UpdateItem(ItemsBank.Axe);
     }
 
-    public void SetupSFX(SoundEffect place)
+    public void SetupSFX(SoundEffect place, SoundEffect jump, SoundEffect collect)
     {
-        Place = place.CreateInstance();
+        PlaceSFX = place.CreateInstance();
+        JumpSFX = jump.CreateInstance();
+        CollectSFX = collect.CreateInstance();
     }
 
     public override void Update(GameTime gameTime)
@@ -134,6 +138,7 @@ public class Player : GameObject
 
         if (keyboard.IsKeyDown(key_Jump) && isGrounded && !InInventory)
         {
+            JumpSFX.Play();
             isGrounded = false;
             isJumping = true;
         }
@@ -185,7 +190,7 @@ public class Player : GameObject
                     if (canAddTile)
                     {
                         Inventory.HotbarSlots[HotbarSlot].CountItem(countBack: true);
-                        Place.Play();
+                        PlaceSFX.Play();
                     }
 
                     if (Inventory.HotbarSlots[HotbarSlot].ItemAmount <= 0)
@@ -529,7 +534,10 @@ public class Player : GameObject
             {
                 bool collected = Inventory.TryCollectItem(item.Item);
                 if (collected)
+                {
+                    CollectSFX.Play();
                     itemsToRemove.Add(item);
+                }
             }
 
         foreach (var item in itemsToRemove)

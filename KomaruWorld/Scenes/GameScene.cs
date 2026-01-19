@@ -44,9 +44,11 @@ public class GameScene(ContentManager content, SpriteBatch spriteBatch, Graphics
         var playerAtlas = new Atlas(texture: Content.Load<Texture2D>("Sprites/KomaruAtlas"), spriteSize: EntitySize / SIZE_MOD);
         var slotAtlas = new Atlas(texture: Content.Load<Texture2D>("Sprites/UI/SlotAtlas"), spriteSize: SlotSize / SIZE_MOD);
         var placeSfx = Content.Load<SoundEffect>("Audio/SFX/TilePlace");
+        var jumpSfx = Content.Load<SoundEffect>("Audio/SFX/PlayerJump");
+        var collectSfx = Content.Load<SoundEffect>("Audio/SFX/PlayerCollect");
         Player = new Player(playerAtlas, new Vector2(worldWidth * TileSize.X / 2, 100), EntitySize,
         defaultFrame: 1, slotAtlas: slotAtlas);
-        Player.SetupSFX(placeSfx);
+        Player.SetupSFX(placeSfx, jumpSfx, collectSfx);
 
         var inventoryMenuAtlas = new Atlas
         (texture: Content.Load<Texture2D>("Sprites/UI/InventoryMenuAtlas"), SlotSize / SIZE_MOD);
