@@ -30,8 +30,11 @@ public class DoorTile : Tile
             if (tile is DoorTile door)
                 door.GetDoorsAround();
 
-        foreach (var door in doorsToToggle)
-            door.ToggleSelf();
+        if (doorsToToggle.Count == 0)
+            ToggleSelf();
+        else
+            foreach (var door in doorsToToggle)
+                door.ToggleSelf();
 
         doorsToToggle = new List<DoorTile>();
     }
