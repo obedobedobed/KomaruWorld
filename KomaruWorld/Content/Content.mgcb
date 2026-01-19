@@ -13,6 +13,24 @@
 
 #---------------------------------- Content ---------------------------------#
 
+#begin Audio/SFX/PlayerCollect.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Audio/SFX/PlayerCollect.wav
+
+#begin Audio/SFX/PlayerJump.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Audio/SFX/PlayerJump.wav
+
+#begin Audio/SFX/TileDamage.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Audio/SFX/TileDamage.wav
+
 #begin Audio/SFX/TileDamage.wav
 /importer:WavImporter
 /processor:SoundEffectProcessor
@@ -24,6 +42,18 @@
 /processor:SoundEffectProcessor
 /processorParam:Quality=Best
 /build:Audio/SFX/TileDestroy.wav
+
+#begin Audio/SFX/TileDestroy.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Audio/SFX/TileDestroy.wav
+
+#begin Audio/SFX/TilePlace.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Audio/SFX/TilePlace.wav
 
 #begin Audio/SFX/TilePlace.wav
 /importer:WavImporter
@@ -391,30 +421,6 @@
 /processorParam:TextureFormat=Color
 /build:Sprites/Tiles/AmethystOre.png
 
-#begin Sprites/Tiles/AmethystOre.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:Sprites/Tiles/AmethystOre.png
-
-#begin Sprites/Tiles/DirtTile.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:Sprites/Tiles/DirtTile.png
-
 #begin Sprites/Tiles/DirtTile.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -463,18 +469,6 @@
 /processorParam:TextureFormat=Color
 /build:Sprites/Tiles/EmeraldOre.png
 
-#begin Sprites/Tiles/EmeraldOre.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:Sprites/Tiles/EmeraldOre.png
-
 #begin Sprites/Tiles/GoldOre.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -486,30 +480,6 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:Sprites/Tiles/GoldOre.png
-
-#begin Sprites/Tiles/GoldOre.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:Sprites/Tiles/GoldOre.png
-
-#begin Sprites/Tiles/GrassTile.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:Sprites/Tiles/GrassTile.png
 
 #begin Sprites/Tiles/GrassTile.png
 /importer:TextureImporter
@@ -535,18 +505,6 @@
 /processorParam:TextureFormat=Color
 /build:Sprites/Tiles/IronOre.png
 
-#begin Sprites/Tiles/IronOre.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:Sprites/Tiles/IronOre.png
-
 #begin Sprites/Tiles/LeavesTile.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -558,30 +516,6 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:Sprites/Tiles/LeavesTile.png
-
-#begin Sprites/Tiles/LeavesTile.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:Sprites/Tiles/LeavesTile.png
-
-#begin Sprites/Tiles/LogTile.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:Sprites/Tiles/LogTile.png
 
 #begin Sprites/Tiles/LogTile.png
 /importer:TextureImporter
@@ -607,30 +541,6 @@
 /processorParam:TextureFormat=Color
 /build:Sprites/Tiles/NatureLeavesTile.png
 
-#begin Sprites/Tiles/NatureLeavesTile.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:Sprites/Tiles/NatureLeavesTile.png
-
-#begin Sprites/Tiles/NatureLogTile.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:Sprites/Tiles/NatureLogTile.png
-
 #begin Sprites/Tiles/NatureLogTile.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -655,18 +565,6 @@
 /processorParam:TextureFormat=Color
 /build:Sprites/Tiles/PlanksTile.png
 
-#begin Sprites/Tiles/PlanksTile.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:Sprites/Tiles/PlanksTile.png
-
 #begin Sprites/Tiles/StoneTile.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -678,30 +576,6 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:Sprites/Tiles/StoneTile.png
-
-#begin Sprites/Tiles/StoneTile.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:Sprites/Tiles/StoneTile.png
-
-#begin Sprites/Tiles/TileDestroyingAtlas.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:Sprites/Tiles/TileDestroyingAtlas.png
 
 #begin Sprites/Tiles/TileDestroyingAtlas.png
 /importer:TextureImporter
