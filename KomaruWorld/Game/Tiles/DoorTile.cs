@@ -31,12 +31,12 @@ public class DoorTile : Tile
                 door.GetDoorsAround();
 
         foreach (var door in doorsToToggle)
-            door._Toggle();
+            door.ToggleSelf();
 
         doorsToToggle = new List<DoorTile>();
     }
 
-    private void _Toggle()
+    private void ToggleSelf()
     {
         CanCollide = !CanCollide;
         texture = CanCollide ? closedTexture : openedTexture;

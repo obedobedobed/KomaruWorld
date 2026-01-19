@@ -53,7 +53,9 @@ public class GameScene(ContentManager content, SpriteBatch spriteBatch, Graphics
         inventoryMenuButton = new SpriteButton(inventoryMenuAtlas, new Vector2 (UI_SPACING, UI_SPACING),
         SlotSize, 0, 1, action: CraftSwitchCall);
 
-        CraftsBank.CreateCraftSlots(slotAtlas, InventorySlotsPos, OpenCraftMenuCall);
+        var arrowsAtlas = new Atlas(texture: Content.Load<Texture2D>("Sprites/UI/Arrows"),
+        spriteSize: SlotSize / SIZE_MOD);
+        CraftsBank.CreateCraftSlots(slotAtlas, arrowsAtlas, InventorySlotsPos, OpenCraftMenuCall);
 
         var craftMenuSprite = Content.Load<Texture2D>("Sprites/UI/CraftMenu");
         var closeButtonAtlas = new Atlas(Content.Load<Texture2D>("Sprites/UI/CloseButtonAtlas"), SlotSize / SIZE_MOD);
@@ -156,7 +158,8 @@ public class GameScene(ContentManager content, SpriteBatch spriteBatch, Graphics
         Player.Inventory.DrawHotbar(SpriteBatch);
 
         var mouse = Mouse.GetState();
-        var cursorRectangle = new Rectangle(mouse.X, mouse.Y, 1, 1);
+        var normalizedCursorPos = mouse.NormalizeForWindow();
+        var cursorRectangle = new Rectangle(normalizedCursorPos.X, normalizedCursorPos.Y, 1, 1);
 
         bool drawDescription = false;
         Slot slotToDescription = null;
@@ -223,8 +226,8 @@ public class GameScene(ContentManager content, SpriteBatch spriteBatch, Graphics
         {
             string itemAmountString = itemInCursorAmount > 1 ? itemInCursorAmount.ToString() : string.Empty;
 
-            SpriteBatch.Draw(itemInCursor.Texture, new Rectangle(mouse.Position + CursorSize, ItemSize.ToPoint()), Color.White);
-            Text.Draw(itemAmountString, (mouse.Position + CursorSize + ItemSize.ToPoint()).ToVector2(),
+            SpriteBatch.Draw(itemInCursor.Texture, new Rectangle(normalizedCursorPos + CursorSize, ItemSize.ToPoint()),
+            Color.White); Text.Draw(itemAmountString, (normalizedCursorPos + CursorSize + ItemSize.ToPoint()).ToVector2(),
             Color.White, SpriteBatch, TextDrawingMode.Center);
         }
 
@@ -245,9 +248,10 @@ public class GameScene(ContentManager content, SpriteBatch spriteBatch, Graphics
     private void DrawItemDescription(Slot slot, bool hotbarSlot = false)
     {
         var mouse = Mouse.GetState();
+        var normalizedCursorPos = mouse.NormalizeForWindow();
         var descriptionPos = hotbarSlot 
-            ? new Vector2(mouse.X + CursorSize.X, mouse.Y)
-            : new Vector2(mouse.X + CursorSize.X, mouse.Y + CursorSize.Y);
+            ? new Vector2(normalizedCursorPos.X + CursorSize.X, normalizedCursorPos.Y)
+            : new Vector2(normalizedCursorPos.X + CursorSize.X, normalizedCursorPos.Y + CursorSize.Y);
         List<string> description = new List<string>() { slot.Item.Name + $" (x{slot.ItemAmount})" };
 
         if (slot.Item is PlaceableItem)
@@ -310,7 +314,9 @@ public class GameScene(ContentManager content, SpriteBatch spriteBatch, Graphics
     private void DrawItemDescription(ArmorSlot slot)
     {
         var mouse = Mouse.GetState();
-        var descriptionPos = new Vector2(mouse.X + CursorSize.X, mouse.Y + CursorSize.Y + GlyphSize.Y);
+        var normalizedCursorPos = mouse.NormalizeForWindow();
+        var descriptionPos = new Vector2(normalizedCursorPos.X + CursorSize.X, normalizedCursorPos.Y
+        + CursorSize.Y + GlyphSize.Y);
         List<string> description = new List<string>() { slot.Item.Name + $" (x1)" };
 
         string armorElement = slot.Item.Element switch
@@ -335,7 +341,9 @@ public class GameScene(ContentManager content, SpriteBatch spriteBatch, Graphics
     private void DrawMobDescription(Mob mob)
     {
         var mouse = Mouse.GetState();
-        var descriptionPos = new Vector2(mouse.X + CursorSize.X, mouse.Y + CursorSize.Y + GlyphSize.Y);
+        var normalizedCursorPos = mouse.NormalizeForWindow();
+        var descriptionPos = new Vector2(normalizedCursorPos.X + CursorSize.X, normalizedCursorPos.Y
+        + CursorSize.Y + GlyphSize.Y);
         List<string> description = new List<string>()
         {
             mob.Name,
@@ -383,8 +391,13 @@ public class GameScene(ContentManager content, SpriteBatch spriteBatch, Graphics
 
         long usedMemory = GC.GetTotalMemory(false) / 1024;
         long totalMemory = GC.GetGCMemoryInfo().TotalAvailableMemoryBytes / 1024 / 1024;
+        var windowSize = Game1.Instance.Window.ClientBounds.Size;
+        string windowMode = GraphicsManager.IsFullScreen ? "Fullscreen" : "Windowed";
 
         Text.Draw($"OS: {RuntimeInformation.OSDescription}",
+        new Vector2(UI_SPACING, VIRTUAL_HEIGHT - GlyphSize.Y * TEXT_SPACING * 5 + GlyphSize.Y / 2 * 5),
+        Color.White, SpriteBatch, TextDrawingMode.Right, outline: true, outlineColor: Color.Black);
+        Text.Draw($"Screen: {windowSize.X}x{windowSize.Y} ({windowMode}, F11 for toggle)",
         new Vector2(UI_SPACING, VIRTUAL_HEIGHT - GlyphSize.Y * TEXT_SPACING * 4 + GlyphSize.Y / 2 * 4),
         Color.White, SpriteBatch, TextDrawingMode.Right, outline: true, outlineColor: Color.Black);
         Text.Draw($"CPU: {Environment.ProcessorCount} threads CPU",

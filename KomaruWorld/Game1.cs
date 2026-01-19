@@ -78,12 +78,9 @@ public class Game1 : Game
         {
             var keyboard = Keyboard.GetState();
 
-            // Quit Game Logic
-            // We check !lastKeyboard to ensure we don't exit immediately if holding Escape from a previous action
+            // Quit Game
             if (keyboard.IsKeyDown(Keys.Escape) && !lastKeyboard.IsKeyDown(Keys.Escape))
             {
-                // Check if the player is currently in the inventory to prevent exiting the game
-                // when the user just intends to close the menu.
                 var player = GameScene.Instance?.Player;
                 bool inInventory = player != null && player.InInventory;
 
@@ -93,7 +90,7 @@ public class Game1 : Game
                 }
             }
 
-            // Fullscreen Toggle Logic: F11 OR Alt+Enter
+            // Fullscreen Toggle
             bool f11Pressed = keyboard.IsKeyDown(Keys.F11) && !lastKeyboard.IsKeyDown(Keys.F11);
             bool altEnterPressed = (keyboard.IsKeyDown(Keys.LeftAlt) || keyboard.IsKeyDown(Keys.RightAlt)) 
                                    && keyboard.IsKeyDown(Keys.Enter) && !lastKeyboard.IsKeyDown(Keys.Enter);
@@ -113,20 +110,6 @@ public class Game1 : Game
                 }
                 Graphics.ApplyChanges();
             }
-
-            var renderRectangle = CalculateRenderRectangle();
-            var mouse = Mouse.GetState();
-
-            int minX = renderRectangle.X;
-            int maxX = renderRectangle.Right - 1;
-            int minY = renderRectangle.Y;
-            int maxY = renderRectangle.Bottom - 1;
-
-            int clampedX = Math.Clamp(mouse.X, minX, maxX);
-            int clampedY = Math.Clamp(mouse.Y, minY, maxY);
-
-            if (mouse.X != clampedX || mouse.Y != clampedY)
-                Mouse.SetPosition(clampedX, clampedY);
 
             SceneManager.Update(gameTime);
 
@@ -153,14 +136,7 @@ public class Game1 : Game
         spriteBatch.Draw(renderTarget, renderRectangle, Color.White);
 
         var mouse = Mouse.GetState();
-
-        var cursorPosVec2 = new Vector2
-        (
-            (mouse.Position.X - renderRectangle.X) / (VIRTUAL_WIDTH  / (float)Window.ClientBounds.Width),
-            (mouse.Position.Y - renderRectangle.Y) / (VIRTUAL_HEIGHT / (float)Window.ClientBounds.Height)
-        );
-
-        var cursorPos = cursorPosVec2.ToPoint();
+        var cursorPos = new Point(mouse.X, mouse.Y);
 
         var cursorRectangle = new Rectangle(cursorPos, CursorSize);
         spriteBatch.Draw(cursorTexture, cursorRectangle, Color.White);
@@ -181,29 +157,8 @@ public class Game1 : Game
 
     private Rectangle CalculateRenderRectangle()
     {
-        // Point renderSize;
-
-        // if (Window.ClientBounds.Width > Window.ClientBounds.Height)
-        // {
-        //     float scale = Window.ClientBounds.Height / VIRTUAL_HEIGHT;
-
-        //     renderSize.Y = Window.ClientBounds.Height;
-        //     renderSize.X = (int)(VIRTUAL_WIDTH * scale);
-        // }
-        // else
-        // {
-        //     float scale = Window.ClientBounds.Width / VIRTUAL_WIDTH;
-
-        //     renderSize.X = Window.ClientBounds.Width;
-        //     renderSize.Y = (int)(VIRTUAL_HEIGHT * scale);
-        // }
-
         return new Rectangle
         (
-            // Window.ClientBounds.Width / 2 - renderSize.X / 2,
-            // Window.ClientBounds.Height / 2 - renderSize.Y / 2,
-            // renderSize.X,
-            // renderSize.Y
             0, 0,
             Graphics.PreferredBackBufferWidth,
             Graphics.PreferredBackBufferHeight

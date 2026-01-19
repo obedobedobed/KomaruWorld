@@ -102,7 +102,7 @@ public class CraftMenu : GameObject
         closeButton.Draw(spriteBatch);
         spriteBatch.Draw(CraftData.Item.Texture, itemRectangle, Color.White);
         Text.Draw($"{CraftData.Item.Name} (x{CraftData.ItemAmount})", itemNamePos, Color.White,
-        spriteBatch, TextDrawingMode.Center);
+        spriteBatch, TextDrawingMode.Center, outline: true, outlineColor: Color.Black);
         Text.Draw("From:", fromTextPos, Color.White,
         spriteBatch, TextDrawingMode.Center);
         foreach (var material in materials)
