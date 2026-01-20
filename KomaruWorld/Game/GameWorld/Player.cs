@@ -15,13 +15,9 @@ public class Player : GameObject
     private SpriteEffects flip = SpriteEffects.None;
 
     // Gravity
-    private const float JUMP_FORCE = 125f * SIZE_MOD;
-    private bool isJumping = false;
+    private const float JUMP_FORCE = 1.5f * SIZE_MOD; // jumping 3 blocks up
     private bool isGrounded = false;
     public float GravityVelocity { get; private set; } = DEFAULT_GRAVITY;
-    private float jumpMod = JUMP_FORCE;
-    private const float ORIGINAL_JUMP_TIME = 0.5f;
-    private float jumpTime = ORIGINAL_JUMP_TIME;
 
     // Inventory
     public Point cursorWorldPosition { get; private set; } = Point.Zero;
@@ -110,10 +106,7 @@ public class Player : GameObject
 
         GetInput();
         Move();
-        if (isJumping)
-            Jump();
-        else
-            Gravity();
+        Gravity();
         Animate();
         CollectDroppedItems();
     }
@@ -140,7 +133,7 @@ public class Player : GameObject
         {
             JumpSFX.Play();
             isGrounded = false;
-            isJumping = true;
+            GravityVelocity = -JUMP_FORCE;
         }
 
         // Hotbar selection via number keys
@@ -456,36 +449,6 @@ public class Player : GameObject
             return;
         
         Position += new Vector2(0f, GravityVelocity);
-    }
-
-    private void Jump()
-    {
-        if ((jumpTime -= deltaTime) <= 0f)
-        {
-            isJumping = false;
-            jumpMod = JUMP_FORCE;
-            jumpTime = ORIGINAL_JUMP_TIME;
-            return;
-        }
-
-        jumpMod = JUMP_FORCE * (jumpTime / ORIGINAL_JUMP_TIME);
-        float velocity = jumpMod * deltaTime;
-        var nextHitbox = new Rectangle(hitbox.X, (int)(hitbox.Y - velocity), hitbox.Width, hitbox.Height);
-
-        foreach (var tile in World.Tiles)
-        {
-            if (nextHitbox.Intersects(tile.Hitbox))
-            {
-                isGrounded = true;
-                GravityVelocity = DEFAULT_GRAVITY;
-                Position = new Vector2(Position.X, tile.Rectangle.Bottom);
-                jumpTime = 0f;
-                velocity = 0f;
-                break;
-            }
-        }
-
-        Position -= new Vector2(0f, velocity);
     }
 
     private void Animate()
