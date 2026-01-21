@@ -69,21 +69,21 @@ public class Player : GameObject
         get
         {
             int xPos = flip == SpriteEffects.None
-                ? (int)(Position.X + EntitySize.X - ItemSize.X / 2)
-                : (int)(Position.X + ItemSize.X / 2);
+                ? (int)(Position.X + EntitySize.X - TileSize.X / 4)
+                : (int)(Position.X + TileSize.X / 4);
 
             return new Rectangle
             (
-                xPos, (int)(Position.Y + EntitySize.Y / 2 - ItemSize.Y / 2),
-                (int)ItemSize.X, (int)ItemSize.Y
+                xPos, (int)(Position.Y + EntitySize.Y / 2),
+                (int)TileSize.X, (int)TileSize.Y
             );
         }
     }
     private bool usingTools = false;
     private float toolRotation;
-    private const float TOOL_ROTATION_SPEED = 10f;
-    private readonly float minimalToolRotation = MathHelper.ToRadians(-45f);
-    private readonly float maximalToolRotation = MathHelper.ToRadians(45f);
+    private const float TOOL_ROTATION_SPEED = 7.5f;
+    private readonly float minimalToolRotation = MathHelper.ToRadians(-90f);
+    private readonly float maximalToolRotation = MathHelper.ToRadians(90f);
 
     // Frames
     private const int FRAME_IDLE_0 = 0;
@@ -464,9 +464,17 @@ public class Player : GameObject
         {
             if (nextHitbox.Intersects(tile.Hitbox))
             {
-                isGrounded = true;
-                GravityVelocity = DEFAULT_GRAVITY;
-                Position = new Vector2(Position.X, tile.Rectangle.Top - Rectangle.Height);
+                if (GravityVelocity > 0)
+                {
+                    isGrounded = true;
+                    GravityVelocity = DEFAULT_GRAVITY;
+                    Position = new Vector2(Position.X, tile.Rectangle.Top - Rectangle.Height);
+                }
+                else
+                {
+                    GravityVelocity = DEFAULT_GRAVITY;
+                }
+
                 break;
             }
         }
@@ -493,7 +501,8 @@ public class Player : GameObject
 
             toolRotation += TOOL_ROTATION_SPEED * deltaTime * flipMod;
 
-            if (toolRotation > maximalToolRotation * flipMod)
+            if ((toolRotation > maximalToolRotation * flipMod && flipMod == 1) ||
+                (toolRotation < maximalToolRotation * flipMod && flipMod == -1))
                 toolRotation = minimalToolRotation * flipMod;
         }
         else
