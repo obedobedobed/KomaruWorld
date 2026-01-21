@@ -14,8 +14,8 @@ public class PassiveMob : Mob
     private const int FRAME_JUMP = 3;
 
     public PassiveMob(Atlas atlas, Vector2 position, Vector2 size, string name, float speed, int defaultFrame,
-    float jumpForce, float jumpTime, Rectangle hitbox, RangeF moveTimeRange) : base(atlas, position, size, name,
-    speed, defaultFrame, jumpForce, jumpTime, hitbox, moveTimeRange, 3f)
+    float jumpForce, float jumpTime, Rectangle hitbox, RangeF moveTimeRange, int health) : base(atlas, position, size, name,
+    speed, defaultFrame, jumpForce, jumpTime, hitbox, moveTimeRange, 3f, health)
     {
          
     }

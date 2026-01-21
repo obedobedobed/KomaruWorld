@@ -43,12 +43,16 @@ public class GameScene(ContentManager content, SpriteBatch spriteBatch, Graphics
 
         var playerAtlas = new Atlas(texture: Content.Load<Texture2D>("Sprites/KomaruAtlas"), spriteSize: EntitySize / SIZE_MOD);
         var slotAtlas = new Atlas(texture: Content.Load<Texture2D>("Sprites/UI/SlotAtlas"), spriteSize: SlotSize / SIZE_MOD);
+        var heartAtlas = new Atlas(texture: Content.Load<Texture2D>("Sprites/UI/HeartAtlas"), spriteSize: HeartSize / SIZE_MOD);
         var placeSfx = Content.Load<SoundEffect>("Audio/SFX/TilePlace");
         var jumpSfx = Content.Load<SoundEffect>("Audio/SFX/PlayerJump");
         var collectSfx = Content.Load<SoundEffect>("Audio/SFX/PlayerCollect");
         Player = new Player(playerAtlas, new Vector2(worldWidth * TileSize.X / 2, 100), EntitySize,
-        defaultFrame: 1, slotAtlas: slotAtlas);
+        defaultFrame: 1, slotAtlas: slotAtlas, heartAtlas: heartAtlas);
         Player.SetupSFX(placeSfx, jumpSfx, collectSfx);
+
+        var doorSFX = Content.Load<SoundEffect>("Audio/SFX/Tiles/Door");
+        DoorTile.SetupSFX(doorSFX);
 
         var inventoryMenuAtlas = new Atlas
         (texture: Content.Load<Texture2D>("Sprites/UI/InventoryMenuAtlas"), SlotSize / SIZE_MOD);
@@ -158,6 +162,7 @@ public class GameScene(ContentManager content, SpriteBatch spriteBatch, Graphics
         }
 
         Player.Inventory.DrawHotbar(SpriteBatch);
+        Player.DrawHearts(SpriteBatch);
 
         var mouse = Mouse.GetState();
         var normalizedCursorPos = mouse.NormalizeForWindow();
@@ -349,6 +354,7 @@ public class GameScene(ContentManager content, SpriteBatch spriteBatch, Graphics
         List<string> description = new List<string>()
         {
             mob.Name,
+            $"Health: {mob.Health}/{mob.MaxHealth}",
             $"Pos: x{(int)(mob.Position.X / TileSize.X / SIZE_MOD)} y{(int)(mob.Position.Y / TileSize.Y / SIZE_MOD)}"
         };
 

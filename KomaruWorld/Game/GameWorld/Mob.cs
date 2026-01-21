@@ -8,6 +8,8 @@ public abstract class Mob : GameObject
 {
     // Statistic
     public string Name { get; private set; }
+    public readonly int MaxHealth;
+    public int Health { get; private set; }
 
     // Movement
     protected readonly float speed;
@@ -30,7 +32,7 @@ public abstract class Mob : GameObject
 
     // Collisions
     protected Rectangle Hitbox;
-    protected Rectangle HitboxPosApplied
+    public Rectangle HitboxPosApplied
     {
         get
         {
@@ -49,7 +51,7 @@ public abstract class Mob : GameObject
     protected float timeToFrame = FRAME_TIME;
 
     public Mob(Atlas atlas, Vector2 position, Vector2 size, string name, float speed, int defaultFrame,
-    float jumpForce, float jumpTime, Rectangle hitbox, RangeF moveTimeRange, float moveBreak)
+    float jumpForce, float jumpTime, Rectangle hitbox, RangeF moveTimeRange, float moveBreak, int health)
     : base(atlas, position, size, defaultFrame)
     {
         Name = name;
@@ -62,6 +64,8 @@ public abstract class Mob : GameObject
         this.moveTimeRange = moveTimeRange;
         this.moveBreak = moveBreak;
         moveBreakEstimated = moveBreak;
+        MaxHealth = health;
+        Health = health;
     }
 
     public override void Update(GameTime gameTime)
@@ -142,6 +146,11 @@ public abstract class Mob : GameObject
         }
 
         Position -= new Vector2(0f, velocity);
+    }
+
+    public void TakeDamage(int damage)
+    {
+        Health -= damage;
     }
 
     public override void Draw(SpriteBatch spriteBatch)

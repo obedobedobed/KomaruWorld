@@ -33,6 +33,18 @@ public class Player : GameObject
     private int health = MAX_HEALTH;
     private GameObject[] hearts = new GameObject[MAX_HEALTH];
 
+    private Rectangle swordAttackRectangle
+    {
+        get
+        {
+            return new Rectangle
+            (
+                (int)(Position.X + EntitySize.X / 4 * (flip == SpriteEffects.None ? 1 : -1)),
+                (int)Position.Y, (int)EntitySize.X, (int)EntitySize.Y
+            );
+        }
+    }
+
     // Game
     private float deltaTime = 0f;
     private InventoryMenu inventoryMenu;
@@ -269,20 +281,31 @@ public class Player : GameObject
                 else if (item.IsTool)
                 {
                     usingTools = true;
-                    var _tile = World.SearchTile(targetPosition);
-                    ToolToDestroy? tool = _tile?.ToolToDestroy;
-                    Item itemInSlot = Inventory.HotbarSlots[HotbarSlot]?.Item;
 
-                    if (tool != null && itemInSlot != null)
-                        if (tool == ToolToDestroy.Pickaxe && itemInSlot is PickaxeItem pickaxe)
-                            _tile.TakeDamage(pickaxe.Speed, pickaxe.Power);
-                        else if (tool == ToolToDestroy.Axe && itemInSlot is AxeItem axe)
-                            _tile.TakeDamage(axe.Speed, axe.Power);
-                        else if (tool == ToolToDestroy.Both)
-                            if (itemInSlot is AxeItem _axe)
-                                _tile.TakeDamage(_axe.Speed, _axe.Power);
-                            else if (itemInSlot is PickaxeItem _pickaxe)
-                                _tile.TakeDamage(_pickaxe.Speed, _pickaxe.Power);
+                    if (item is SwordItem sword)
+                    {
+                        foreach (var mob in World.Mobs)
+                            if (mob.HitboxPosApplied.Intersects(swordAttackRectangle))
+                                mob.TakeDamage(sword.Damage);
+                    }
+                    else
+                    {
+                        var _tile = World.SearchTile(targetPosition);
+                        ToolToDestroy? tool = _tile?.ToolToDestroy;
+                        Item itemInSlot = Inventory.HotbarSlots[HotbarSlot]?.Item;
+
+                        if (tool != null && itemInSlot != null)
+                            if (tool == ToolToDestroy.Pickaxe && itemInSlot is PickaxeItem pickaxe)
+                                _tile.TakeDamage(pickaxe.Speed, pickaxe.Power);
+                            else if (tool == ToolToDestroy.Axe && itemInSlot is AxeItem axe)
+                                _tile.TakeDamage(axe.Speed, axe.Power);
+                            else if (tool == ToolToDestroy.Both)
+                                if (itemInSlot is AxeItem _axe)
+                                    _tile.TakeDamage(_axe.Speed, _axe.Power);
+                                else if (itemInSlot is PickaxeItem _pickaxe)
+                                    _tile.TakeDamage(_pickaxe.Speed, _pickaxe.Power);
+                    }
+
                 }
         }
 
@@ -648,6 +671,8 @@ public class Player : GameObject
 
     public override void Draw(SpriteBatch spriteBatch)
     {
+        // spriteBatch.Draw(TilesBank.CavesWall(Vector2.Zero).texture, swordAttackRectangle, Color.White);
+
         spriteBatch.Draw
         (
             atlas.Texture, Rectangle, atlas.Rectangles[Frame],
