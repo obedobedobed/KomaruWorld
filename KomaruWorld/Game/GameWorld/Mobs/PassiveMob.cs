@@ -82,15 +82,15 @@ public class PassiveMob : Mob
         if (IsJumping)
         {
             timeToFrame = 0;
-            frame = FRAME_JUMP;
+            Frame = FRAME_JUMP;
             return;
         }
         else if ((timeToFrame -= DeltaTime) <= 0)
         {
             if (Direction == Direction.Null)
-                frame = FRAME_IDLE;
+                Frame = FRAME_IDLE;
             else
-                frame = frame switch
+                Frame = Frame switch
                 {
                     FRAME_RUN_0 => FRAME_RUN_1,
                     _ => FRAME_RUN_0  

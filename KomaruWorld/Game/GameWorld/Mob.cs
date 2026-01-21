@@ -148,7 +148,7 @@ public abstract class Mob : GameObject
     {
         spriteBatch.Draw
         (
-            atlas.Texture, Rectangle, atlas.Rectangles[frame],
+            atlas.Texture, Rectangle, atlas.Rectangles[Frame],
             Color.White, 0f, Vector2.Zero, flip, 0f
         );
     }

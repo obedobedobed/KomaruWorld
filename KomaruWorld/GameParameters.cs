@@ -14,6 +14,7 @@ public static class GameParameters
     public const int UI_SPACING = 1 * SIZE_MOD;
     public const int INV_SLOTS_IN_LINE = 5;
     public const int INV_SLOTS_LINES = 3;
+    public const int HEARTS_IN_LINE = 8;
     public const int OUT_PIXELS = 1 * TEXT_MOD;
     public static readonly Vector2 EntitySize = new Vector2(16, 16) * SIZE_MOD;
     public static readonly Vector2 SlotSize = new Vector2(16, 16) * SIZE_MOD;
@@ -21,6 +22,7 @@ public static class GameParameters
     public static readonly Vector2 ItemSize = new Vector2(10, 10) * SIZE_MOD;
     public static readonly Point ToolsHandlePos = new Point(2, 7);
     public static readonly Vector2 TileSize = new Vector2(8, 8) * SIZE_MOD;
+    public static readonly Vector2 HeartSize = new Vector2(6, 6) * SIZE_MOD;
     public static readonly Vector2 CraftMenuSize = new Vector2(72, 64) * SIZE_MOD;
     public static readonly Vector2 CraftMenuItemSlotPos = new Vector2(28, 4) * SIZE_MOD;
     public static readonly Point GlyphSize = new Point(8 * TEXT_MOD, 8 * TEXT_MOD);

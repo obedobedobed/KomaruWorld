@@ -10,7 +10,7 @@ public class GameObject
     public Texture2D texture;
     public Vector2 Position { get; protected set; }
     public Vector2 Size { get; protected set; }
-    protected int frame;
+    public int Frame { get; set; }
 
     protected const float DEFAULT_GRAVITY = 0.25f * SIZE_MOD;
     protected const float GRAVITY_ACELERATION = 2.5f * SIZE_MOD;
@@ -33,7 +33,7 @@ public class GameObject
         this.atlas = atlas;
         Position = position;
         Size = size;
-        frame = defaultFrame;
+        Frame = defaultFrame;
     }
 
     public GameObject(Texture2D texture, Vector2 position, Vector2 size)
@@ -54,7 +54,7 @@ public class GameObject
             spriteBatch.Draw
             (
                 atlas.Texture, Rectangle,
-                atlas.Rectangles[frame], Color.White
+                atlas.Rectangles[Frame], Color.White
             );
         else
             spriteBatch.Draw(texture, Rectangle, Color.White);

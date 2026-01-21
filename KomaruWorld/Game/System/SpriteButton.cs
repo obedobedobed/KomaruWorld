@@ -33,12 +33,12 @@ public class SpriteButton : GameObject
         if (cursorRectangle.Intersects(Rectangle))
         {
             pressed = true;
-            frame = choosedFrame + frameAdder;
+            Frame = choosedFrame + frameAdder;
         }
         else
         {
             pressed = false;
-            frame = defaultFrame + frameAdder;
+            Frame = defaultFrame + frameAdder;
         }
 
         if (pressed && mouse.LeftButton == ButtonState.Pressed && lastMouse.LeftButton == ButtonState.Released)

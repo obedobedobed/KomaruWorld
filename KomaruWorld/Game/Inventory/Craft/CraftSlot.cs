@@ -49,12 +49,12 @@ public class CraftSlot : GameObject
         if (cursorRectangle.Intersects(Rectangle))
         {
             pressed = true;
-            frame = choosedFrame;
+            Frame = choosedFrame;
         }
         else
         {
             pressed = false;
-            frame = defaultFrame;
+            Frame = defaultFrame;
         }
 
         if (pressed && mouse.LeftButton == ButtonState.Pressed && lastMouse.LeftButton == ButtonState.Released)
@@ -63,7 +63,7 @@ public class CraftSlot : GameObject
         lastMouse = mouse;
     }
     
-    public void SetDefaultFrame() => frame = defaultFrame;
+    public void SetDefaultFrame() => Frame = defaultFrame;
 
     public override void Draw(SpriteBatch spriteBatch)
     {

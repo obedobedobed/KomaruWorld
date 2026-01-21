@@ -34,7 +34,7 @@ public class Slot : GameObject
         this.slotId = slotId;
     }
 
-    public void UpdateFrame() => frame = GameScene.Instance.Player.HotbarSlot == slotId ? choosedFrame : defaultFrame;
+    public void UpdateFrame() => Frame = GameScene.Instance.Player.HotbarSlot == slotId ? choosedFrame : defaultFrame;
     public void UpdateItem(Item item)
     {
         Item = item;
@@ -59,12 +59,12 @@ public class Slot : GameObject
     public void CountItem(bool countBack = false) => ItemAmount += countBack ? -1 : 1;
     public override void Draw(SpriteBatch spriteBatch)
     {
-        spriteBatch.Draw(atlas.Texture, Rectangle, atlas.Rectangles[frame], Color.White);
+        spriteBatch.Draw(atlas.Texture, Rectangle, atlas.Rectangles[Frame], Color.White);
         if (Item != null)
         {
             spriteBatch.Draw(Item.Texture, itemRectangle, Color.White);
             if (ItemAmount > 1)
-                Text.Draw(ItemAmount.ToString(), itemCountPosition, frame == defaultFrame ? Color.White : Color.Black,
+                Text.Draw(ItemAmount.ToString(), itemCountPosition, Frame == defaultFrame ? Color.White : Color.Black,
                 spriteBatch, TextDrawingMode.Left);
         }
     }

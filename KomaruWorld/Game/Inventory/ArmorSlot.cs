@@ -31,7 +31,7 @@ public class ArmorSlot : GameObject
     public void UpdateItem(ArmorElementItem item) => Item = item;
     public override void Draw(SpriteBatch spriteBatch)
     {
-        spriteBatch.Draw(atlas.Texture, Rectangle, atlas.Rectangles[frame], Color.White);
+        spriteBatch.Draw(atlas.Texture, Rectangle, atlas.Rectangles[Frame], Color.White);
         if (Item != null)
             spriteBatch.Draw(Item.Texture, itemRectangle, Color.White);
     }

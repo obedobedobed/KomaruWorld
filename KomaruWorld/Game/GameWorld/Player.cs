@@ -28,6 +28,11 @@ public class Player : GameObject
     public Item ItemInCursor { get; private set; }
     public int ItemInCursorAmount { get; private set; }
 
+    // Combat
+    private const int MAX_HEALTH = 16;
+    private int health = MAX_HEALTH;
+    private GameObject[] hearts = new GameObject[MAX_HEALTH];
+
     // Game
     private float deltaTime = 0f;
     private InventoryMenu inventoryMenu;
@@ -109,9 +114,10 @@ public class Player : GameObject
     private const int FRAME_RUN_1 = 3;
     private const int FRAME_ISNT_GROUNDED = 4;
 
-    public Player(Atlas atlas, Vector2 position, Vector2 size, int defaultFrame, Atlas slotAtlas)
+    public Player(Atlas atlas, Vector2 position, Vector2 size, int defaultFrame, Atlas slotAtlas, Atlas heartAtlas)
     : base(atlas, position, size, defaultFrame)
     {
+        // Creating inventory
         float lineXHotbar = (VIRTUAL_WIDTH - SlotSize.X * INV_SLOTS_IN_LINE -
         UI_SPACING * (INV_SLOTS_IN_LINE - 1)) / 2;
 
@@ -124,6 +130,23 @@ public class Player : GameObject
         Inventory.HotbarSlots[0].UpdateItem(ItemsBank.Sword);
         Inventory.HotbarSlots[1].UpdateItem(ItemsBank.Pickaxe);
         Inventory.HotbarSlots[2].UpdateItem(ItemsBank.Axe);
+
+        // Creating hearts
+        float xPos = VIRTUAL_WIDTH - HeartSize.X * HEARTS_IN_LINE - UI_SPACING * HEARTS_IN_LINE;
+        float yPos = UI_SPACING;
+        float xAdder = 0f;
+
+        for (int i = 0; i < MAX_HEALTH; i++)
+        {
+            if (i != 0 && i % HEARTS_IN_LINE == 0)
+            {
+                yPos += HeartSize.Y + UI_SPACING;
+                xAdder = 0f;
+            }
+
+            hearts[i] = new GameObject(heartAtlas, new Vector2(xPos + xAdder, yPos), HeartSize, 0);
+            xAdder += HeartSize.X + UI_SPACING;
+        }
     }
 
     public void SetupSFX(SoundEffect place, SoundEffect jump, SoundEffect collect)
@@ -138,6 +161,14 @@ public class Player : GameObject
         deltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
 
         inventoryMenu = GameScene.Instance.InventoryMenu;
+
+        for (int i = hearts.Length - 1; i >= 0; i--)
+        {
+            if (i >= health)
+                hearts[i].Frame = 1;
+            else
+                hearts[i].Frame = 0;
+        }
 
         if (inventoryMenu == InventoryMenu.Inventory)
             foreach (var item in Inventory.HotbarSlots)
@@ -535,7 +566,7 @@ public class Player : GameObject
 
         if (!isGrounded)
         {
-            frame = FRAME_ISNT_GROUNDED;
+            Frame = FRAME_ISNT_GROUNDED;
             timeToFrame = 0f;
             return;
         }
@@ -544,7 +575,7 @@ public class Player : GameObject
         {
             if (direction == Direction.Null)
             {
-                frame = frame switch
+                Frame = Frame switch
                 {
                     FRAME_IDLE_0 => FRAME_IDLE_1,
                     _ => FRAME_IDLE_0  
@@ -552,7 +583,7 @@ public class Player : GameObject
             }
             else
             {
-                frame = frame switch
+                Frame = Frame switch
                 {
                     FRAME_RUN_0 => FRAME_RUN_1,
                     _ => FRAME_RUN_0  
@@ -619,7 +650,7 @@ public class Player : GameObject
     {
         spriteBatch.Draw
         (
-            atlas.Texture, Rectangle, atlas.Rectangles[frame],
+            atlas.Texture, Rectangle, atlas.Rectangles[Frame],
             Color.White, 0f, Vector2.Zero, flip, 0f
         );
 
@@ -628,7 +659,7 @@ public class Player : GameObject
             if (slot.Item != null)
                 spriteBatch.Draw
                 (
-                    slot.Item.ArmorAtlas.Texture, Rectangle, slot.Item.ArmorAtlas.Rectangles[frame],
+                    slot.Item.ArmorAtlas.Texture, Rectangle, slot.Item.ArmorAtlas.Rectangles[Frame],
                     Color.White, 0f, Vector2.Zero, flip, 0f
                 );
         }
@@ -645,5 +676,11 @@ public class Player : GameObject
                 toolRotation, origin, flip, 0f
             );
         }
+    }
+
+    public void DrawHearts(SpriteBatch spriteBatch)
+    {
+        foreach (var heart in hearts)
+            heart.Draw(spriteBatch);
     }
 }
