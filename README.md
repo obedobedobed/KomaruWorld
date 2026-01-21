@@ -6,8 +6,9 @@ Survival game with Komaru the cat
 # How to build
 1. Download repository
 2. Make sure .NET 9 installed on your PC
-3. Open terminal in .csproj file directory
-4. Enter command: `dotnet publish -c Release -r (win-x64/linux-x64) --self-contained=true -p:PublishSingleFile=true -p:PublishTrimmed=true`
+3. Build content to XNB format with MGCB (MonoGame Content Builder)
+4. Open terminal in .csproj file directory
+5. Enter command: `dotnet publish -c Release -r (win-x64/linux-x64/osx-x64) --self-contained=true -p:PublishSingleFile=true -p:PublishTrimmed=true`
 
 # TODO List (28% completed)
 1. Tiles and items system [V]
