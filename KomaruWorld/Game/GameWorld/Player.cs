@@ -13,6 +13,7 @@ public class Player : GameObject
     private const float SPEED = 35f * SIZE_MOD;
     private Direction direction = Direction.Null;
     private SpriteEffects flip = SpriteEffects.None;
+    private SpriteEffects lastFlip = SpriteEffects.None;
 
     // Gravity
     private const float JUMP_FORCE = 1.5f * SIZE_MOD; // jumping 3 blocks up
@@ -62,6 +63,27 @@ public class Player : GameObject
 
     // Animation
     private float timeToFrame = FRAME_TIME;
+
+    private Rectangle toolRectangle
+    {
+        get
+        {
+            int xPos = flip == SpriteEffects.None
+                ? (int)(Position.X + EntitySize.X - ItemSize.X / 2)
+                : (int)(Position.X + ItemSize.X / 2);
+
+            return new Rectangle
+            (
+                xPos, (int)(Position.Y + EntitySize.Y / 2 - ItemSize.Y / 2),
+                (int)ItemSize.X, (int)ItemSize.Y
+            );
+        }
+    }
+    private bool usingTools = false;
+    private float toolRotation;
+    private const float TOOL_ROTATION_SPEED = 10f;
+    private readonly float minimalToolRotation = MathHelper.ToRadians(-45f);
+    private readonly float maximalToolRotation = MathHelper.ToRadians(45f);
 
     // Frames
     private const int FRAME_IDLE_0 = 0;
@@ -191,6 +213,7 @@ public class Player : GameObject
                 }
                 else if (item.IsTool)
                 {
+                    usingTools = true;
                     var _tile = World.SearchTile(targetPosition);
                     ToolToDestroy? tool = _tile?.ToolToDestroy;
                     Item itemInSlot = Inventory.HotbarSlots[HotbarSlot]?.Item;
@@ -207,6 +230,9 @@ public class Player : GameObject
                                 _tile.TakeDamage(_pickaxe.Speed, _pickaxe.Power);
                 }
         }
+
+        if (mouse.LeftButton == ButtonState.Released)
+            usingTools = false;
 
         if (mouse.RightButton == ButtonState.Pressed && lastMouse.RightButton == ButtonState.Released && !InInventory)
         {
@@ -458,6 +484,21 @@ public class Player : GameObject
         else if (direction == Direction.Left)
             flip = SpriteEffects.FlipHorizontally;
 
+        if (usingTools)
+        {
+            int flipMod = flip == SpriteEffects.None ? 1 : -1;
+
+            if (lastFlip != flip)
+                toolRotation = minimalToolRotation;
+
+            toolRotation += TOOL_ROTATION_SPEED * deltaTime * flipMod;
+
+            if (toolRotation > maximalToolRotation * flipMod)
+                toolRotation = minimalToolRotation * flipMod;
+        }
+        else
+            toolRotation = minimalToolRotation;
+
         if (!isGrounded)
         {
             frame = FRAME_ISNT_GROUNDED;
@@ -486,6 +527,8 @@ public class Player : GameObject
 
             timeToFrame = FRAME_TIME;
         }
+
+        lastFlip = flip;
     }
 
     private void CollectDroppedItems()
@@ -554,6 +597,19 @@ public class Player : GameObject
                     slot.Item.ArmorAtlas.Texture, Rectangle, slot.Item.ArmorAtlas.Rectangles[frame],
                     Color.White, 0f, Vector2.Zero, flip, 0f
                 );
+        }
+
+        var _slot = Inventory.HotbarSlots[HotbarSlot];
+
+        if (usingTools && _slot.Item.IsTool)
+        {
+            var texture = _slot.Item.Texture;
+            var origin = new Vector2(texture.Width / 2, texture.Height / 2);
+            spriteBatch.Draw
+            (
+                texture, toolRectangle, null, Color.White,
+                toolRotation, origin, flip, 0f
+            );
         }
     }
 }
