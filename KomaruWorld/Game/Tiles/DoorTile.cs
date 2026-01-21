@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Graphics;
 
 namespace KomaruWorld;
@@ -9,6 +10,7 @@ public class DoorTile : Tile
     private static List<DoorTile> doorsToToggle = new List<DoorTile>();
     private Texture2D closedTexture;
     private Texture2D openedTexture;
+    private static SoundEffectInstance toggleSFX;
 
     public bool ToggleOperationEnded { get; private set; } = false;
 
@@ -18,6 +20,11 @@ public class DoorTile : Tile
     {
         this.closedTexture = closedTexture;
         this.openedTexture = openedTexture;
+    }
+
+    public static void SetupSFX(SoundEffect toggle)
+    {
+        toggleSFX = toggle.CreateInstance();
     }
 
     public void Toggle()
@@ -37,6 +44,7 @@ public class DoorTile : Tile
                 door.ToggleSelf();
 
         doorsToToggle = new List<DoorTile>();
+        toggleSFX.Play();
     }
 
     private void ToggleSelf()

@@ -472,6 +472,7 @@ public class Player : GameObject
                 }
                 else
                 {
+                    Position = new Vector2(Position.X, tile.Rectangle.Bottom);
                     GravityVelocity = DEFAULT_GRAVITY;
                 }
 

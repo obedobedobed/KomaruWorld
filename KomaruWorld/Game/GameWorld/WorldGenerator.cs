@@ -33,7 +33,8 @@ public static class WorldGenerator
             float xPos = 0;
             for (int x = 0; x < width; x++)
             {
-                Tile targetTile;
+                Tile targetTile = null;
+                Tile targetWall = null;
                 Vector2 targetPosition = new Vector2(xPos, yPos);
 
                 if (y > 18)
@@ -42,13 +43,19 @@ public static class WorldGenerator
                         targetTile = TilesBank.FindTile((Tiles)Random.Shared.Next(7, 11), targetPosition);
                     else  
                         targetTile = TilesBank.Stone(targetPosition);
+
+                    targetWall = TilesBank.CavesWall(targetPosition);
                 }
                 else if (y > 15)
+                {
                     targetTile = TilesBank.Dirt(targetPosition);
+                    targetWall = TilesBank.DirtWall(targetPosition);
+                }
                 else if (y == 15)
+                {
                     targetTile = TilesBank.Grass(targetPosition);
-                else
-                    targetTile = null;
+                    targetWall = TilesBank.DirtWall(targetPosition);
+                }
 
                 if (y == 15 && Random.Shared.Next(0, 101) <= TREE_SPAWN_CHANCE && canGenerateTrees)
                 {
@@ -64,6 +71,9 @@ public static class WorldGenerator
 
                 if (targetTile != null)
                     World.AddTile(targetTile);
+
+                if (targetWall != null)
+                    World.AddWall(targetWall);
 
                 xPos += TileSize.X;
             }

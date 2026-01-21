@@ -23,6 +23,8 @@ public static class TilesBank
     private static Texture2D NatureLeavesTexture;
     private static Texture2D DoorClosedTexture;
     private static Texture2D DoorOpenedTexture;
+    private static Texture2D CavesWallTexture;
+    private static Texture2D DirtWallTexture;
 
     public static void LoadContent(ContentManager Content)
     {
@@ -44,6 +46,8 @@ public static class TilesBank
         NatureLeavesTexture = Content.Load<Texture2D>("Sprites/Tiles/NatureLeavesTile");
         DoorClosedTexture = Content.Load<Texture2D>("Sprites/Tiles/DoorTileClosed");
         DoorOpenedTexture = Content.Load<Texture2D>("Sprites/Tiles/DoorTileOpened");
+        CavesWallTexture = Content.Load<Texture2D>("Sprites/Tiles/Walls/CavesWall");
+        DirtWallTexture = Content.Load<Texture2D>("Sprites/Tiles/Walls/DirtWall");
     }
 
     // Tiles
@@ -60,6 +64,8 @@ public static class TilesBank
     public static Tile NatureLog(Vector2 position) => new Tile(NatureLogTexture, position, TileSize, false, Tiles.Log, toolToDestroy: ToolToDestroy.Axe, destroyTime: 0.7f, minimalToolPower: 1, new DropData([ItemsBank.Planks], [100], [new Range(4, 4)]));
     public static Tile NatureLeaves(Vector2 position) => new Tile(NatureLeavesTexture, position, TileSize, false, Tiles.Leaves, toolToDestroy: ToolToDestroy.Both, destroyTime: 0.15f, minimalToolPower: 1, new DropData([ItemsBank.Leaf, ItemsBank.Stick], [100, 30], [new Range(1, 2), new Range(1, 1)]));
     public static Tile Door(Vector2 position) => new DoorTile(DoorClosedTexture, DoorOpenedTexture, position, TileSize, true, Tiles.Door, toolToDestroy: ToolToDestroy.Axe, destroyTime: 0.4f, minimalToolPower: 1, new DropData([ItemsBank.Door], [100], [new Range(1, 1)]));
+    public static Tile CavesWall(Vector2 position) => new Tile(CavesWallTexture, position, TileSize, false, Tiles.CavesWall, toolToDestroy: ToolToDestroy.None, destroyTime: 0f, minimalToolPower: 0, null);
+    public static Tile DirtWall(Vector2 position) => new Tile(DirtWallTexture, position, TileSize, false, Tiles.DirtWall, toolToDestroy: ToolToDestroy.None, destroyTime: 0f, minimalToolPower: 0, null);
 
     public static Tile FindTile(Tiles tile, Vector2 position)
     {
@@ -78,6 +84,8 @@ public static class TilesBank
             Tiles.NatureLog => NatureLog(position),
             Tiles.NatureLeaves => NatureLeaves(position),
             Tiles.Door => Door(position),
+            Tiles.CavesWall => CavesWall(position),
+            Tiles.DirtWall => DirtWall(position),
             _ => null,
         };
     }

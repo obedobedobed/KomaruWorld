@@ -4,5 +4,6 @@ public enum ToolToDestroy
 {
     Pickaxe,
     Axe,
-    Both
+    Both,
+    None
 }
