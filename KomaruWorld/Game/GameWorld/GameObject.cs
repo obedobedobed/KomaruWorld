@@ -7,7 +7,7 @@ namespace KomaruWorld;
 public class GameObject
 {
     protected Atlas atlas;
-    protected Texture2D texture;
+    public Texture2D texture;
     public Vector2 Position { get; protected set; }
     public Vector2 Size { get; protected set; }
     protected int frame;

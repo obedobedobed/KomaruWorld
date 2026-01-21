@@ -46,6 +46,23 @@ public class Player : GameObject
         }
     }
 
+    private Rectangle actionRectangle
+    {
+        get
+        {
+            var playerPosCentered = Position + Size / 2;
+            var PlrActRadWorldSize = PlayerActionRadius.ToVector2() * TileSize;
+
+            return new Rectangle
+            (
+                (int)(playerPosCentered.X - PlrActRadWorldSize.X),  
+                (int)(playerPosCentered.Y - PlrActRadWorldSize.Y),
+                (int)(PlrActRadWorldSize.X * 2),
+                (int)(PlrActRadWorldSize.Y * 2)
+            );
+        }
+    }
+
     // Sounds
     private SoundEffectInstance PlaceSFX;
     private SoundEffectInstance JumpSFX;
@@ -192,13 +209,20 @@ public class Player : GameObject
         {
             var item = Inventory.HotbarSlots[HotbarSlot].Item;
 
-            Vector2 targetPosition = new Vector2
+            var targetPosition = new Vector2
             (
                 cursorWorldPosition.X * TileSize.X,
                 cursorWorldPosition.Y * TileSize.Y
             );
 
-            if (item != null)
+            var targetRectangle = new Rectangle
+            (
+                (int)(normalizedCursorPos.X + GameScene.Instance.Camera.Position.X),
+                (int)(normalizedCursorPos.Y + GameScene.Instance.Camera.Position.Y),
+                1, 1
+            );
+
+            if (item != null && targetRectangle.Intersects(actionRectangle))
                 if (item is PlaceableItem tile)
                 {
                     bool canAddTile = World.AddTile(TilesBank.FindTile(tile.ItemTile, targetPosition));

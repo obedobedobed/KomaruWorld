@@ -25,6 +25,7 @@ public static class GameParameters
     public static readonly Vector2 CraftMenuItemSlotPos = new Vector2(28, 4) * SIZE_MOD;
     public static readonly Point GlyphSize = new Point(8 * TEXT_MOD, 8 * TEXT_MOD);
     public static readonly Point CursorSize = new Point(6 * SIZE_MOD, 6 * SIZE_MOD);
+    public static readonly Point PlayerActionRadius = new Point(4, 4);
     public static Vector2 InventorySlotsPos { get; private set; }
     public const float FRAME_TIME = 0.4f;
 
