@@ -745,6 +745,18 @@
 /processorParam:TextureFormat=Color
 /build:Sprites/Mobs/Chicken.png
 
+#begin Sprites/Mobs/Skeleton.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Sprites/Mobs/Skeleton.png
+
 #begin Sprites/Pixel.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -1248,6 +1260,18 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:Sprites/UI/CraftMenu.png
+
+#begin Sprites/UI/HeartAtlas.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Sprites/UI/HeartAtlas.png
 
 #begin Sprites/UI/HeartAtlas.png
 /importer:TextureImporter
