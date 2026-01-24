@@ -13,6 +13,8 @@ public static class World
     public static List<DroppedItem> Items { get; private set; } = new List<DroppedItem>();
     public static List<Mob> Mobs { get; private set; } = new List<Mob>();
 
+    private static List<Mob> mobsToRemove = new List<Mob>();
+
     private static Vector2 cameraPosOffset = new Vector2(-TileSize.X, -TileSize.Y);
     private static Vector2 cameraSizeOffset = new Vector2(TileSize.X * 2, TileSize.Y * 2);
 
@@ -111,12 +113,17 @@ public static class World
         Mobs.Add(mob);
     }
 
+    public static void RemoveMob(Mob mob)
+    {
+        mobsToRemove.Add(mob);
+    }
+
     public static void Update(GameTime gameTime)
     {
-        Tile[] tiles = Tiles.ToArray();
-        Tile[] walls = Walls.ToArray();
-        DroppedItem[] items = Items.ToArray();
-        Mob[] mobs = Mobs.ToArray();
+        var tiles = Tiles.ToArray();
+        var walls = Walls.ToArray();
+        var items = Items.ToArray();
+        var mobs = Mobs.ToArray();
 
         foreach (var tile in tiles)
             tile?.Update(gameTime);
@@ -129,6 +136,11 @@ public static class World
 
         foreach (var mob in mobs)
             mob?.Update(gameTime);
+
+        foreach (var mob in mobsToRemove)
+            Mobs.Remove(mob);
+
+        mobsToRemove.Clear();
     }
 
     public static void Draw(SpriteBatch spriteBatch)

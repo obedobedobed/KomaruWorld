@@ -44,6 +44,9 @@ public abstract class Mob : GameObject
         }
     }
 
+    private const float TAKE_DAMAGE_COOLDOWN = 1;
+    private float timeToTakeDamage = 0;
+
     // Game
     protected float DeltaTime;
 
@@ -71,6 +74,7 @@ public abstract class Mob : GameObject
     public override void Update(GameTime gameTime)
     {
         DeltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
+        timeToTakeDamage -= DeltaTime;
 
         Move();
         if (IsJumping)
@@ -150,7 +154,15 @@ public abstract class Mob : GameObject
 
     public void TakeDamage(int damage)
     {
-        Health -= damage;
+        if (timeToTakeDamage <= 0)
+        {
+            Health -= damage;
+
+            if (Health <= 0)
+                World.RemoveMob(this);
+
+            timeToTakeDamage = TAKE_DAMAGE_COOLDOWN;
+        }
     }
 
     public override void Draw(SpriteBatch spriteBatch)

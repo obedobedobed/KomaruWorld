@@ -34,7 +34,10 @@ public class Game1 : Game
         Instance = this;
 
         // Enable full screen by default
-        Graphics.IsFullScreen = true;
+        // Graphics.IsFullScreen = true;
+
+        Graphics.PreferredBackBufferWidth = defaultScreenSize.X;
+        Graphics.PreferredBackBufferHeight = defaultScreenSize.Y;
     }
 
     protected override void Initialize()
@@ -52,6 +55,8 @@ public class Game1 : Game
         renderTarget = new RenderTarget2D(GraphicsDevice, VIRTUAL_WIDTH, VIRTUAL_HEIGHT);
 
         base.Initialize();
+
+        Logger.Log("Game initialized");
     }
 
     protected override void LoadContent()
@@ -68,6 +73,8 @@ public class Game1 : Game
         cursorTexture = Content.Load<Texture2D>("Sprites/Cursor");
 
         SceneManager.Load(new GameScene(Content, spriteBatch, Graphics));
+
+        Logger.Log("Content loaded");
     }
 
     protected override void Update(GameTime gameTime)
@@ -86,6 +93,8 @@ public class Game1 : Game
 
                 if (!inInventory)
                 {
+                    Logger.Log("Good Bye!");
+                    Logger.WriteLogs();
                     Exit();
                 }
             }
@@ -130,10 +139,14 @@ public class Game1 : Game
 
         GraphicsDevice.SetRenderTarget(null);
 
-        spriteBatch.Begin(samplerState: SamplerState.PointClamp);
+        spriteBatch.Begin(samplerState: SamplerState.AnisotropicWrap);
 
         var renderRectangle = CalculateRenderRectangle();
         spriteBatch.Draw(renderTarget, renderRectangle, Color.White);
+
+        spriteBatch.End();
+
+        spriteBatch.Begin(samplerState: SamplerState.PointClamp);
 
         var mouse = Mouse.GetState();
         var cursorPos = new Point(mouse.X, mouse.Y);

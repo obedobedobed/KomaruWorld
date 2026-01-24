@@ -70,9 +70,13 @@ public class GameScene(ContentManager content, SpriteBatch spriteBatch, Graphics
         VIRTUAL_HEIGHT / 2 - CraftMenuSize.Y / 2),
         CraftMenuSize, CallPlayerCraft, closeButtonAtlas);
 
-        World.AddMob(MobsBank.Chicken(new Vector2(worldWidth * TileSize.X / 2, 100)));
-
         Camera.Position = Player.Position;
+
+        // Test
+        World.AddMob(MobsBank.Chicken(new Vector2(worldWidth * TileSize.X / 2, 100)));
+        World.AddMob(MobsBank.Skeleton(new Vector2(worldWidth * TileSize.X / 2 + 200, 100)));
+
+        Logger.Log("Game scene loaded");
     }
     
 

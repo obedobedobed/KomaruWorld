@@ -97,7 +97,7 @@ public static class ItemsBank
     public static Item Leaf => new Item("Leaf", 99, LeafTexture, id: 7);
     public static Item Axe => new AxeItem("Iron axe", AxeTexture, id: 8, speed: 1f, power: 1);
     public static Item Pickaxe => new PickaxeItem("Iron pickaxe", PickaxeTexture, id: 9, speed: 1f, power: 1);
-    public static Item Sword => new SwordItem("Iron sword", SwordTexture, id: 10, damage: 5);
+    public static Item Sword => new SwordItem("Iron sword", SwordTexture, id: 10, damage: 1);
     public static Item IronHelmet => new ArmorElementItem("Iron helmet", IronHelmetTexture, id: 11, armor: 2, element: ArmorElement.Helmet, IronHelmetAtlas);
     public static Item IronChestplate => new ArmorElementItem("Iron chestplate", IronChestplateTexture, id: 12, armor: 3, element: ArmorElement.Chestplate, IronChestplateAtlas);
     public static Item IronLeggins => new ArmorElementItem("Iron leggins", IronLegginsTexture, id: 13, armor: 2, element: ArmorElement.Leggins, IronLegginsAtlas);
@@ -111,12 +111,12 @@ public static class ItemsBank
     public static Item AmethystOre => new PlaceableItem("Amethyst ore", 99, AmethystOreTexture, id: 21, Tiles.AmethystOre);
     public static Item GoldAxe => new AxeItem("Gold axe", GoldAxeTexture, id: 22, speed: 1.4f, power: 2);
     public static Item GoldPickaxe => new PickaxeItem("Gold pickaxe", GoldPickaxeTexture, id: 23, speed: 1.4f, power: 2);
-    public static Item GoldSword => new SwordItem("Gold sword", GoldSwordTexture, id: 24, damage: 7);
+    public static Item GoldSword => new SwordItem("Gold sword", GoldSwordTexture, id: 24, damage: 2);
     public static Item EmeraldAxe => new AxeItem("Emerald axe", EmeraldAxeTexture, id: 25, speed: 2f, power: 3);
     public static Item EmeraldPickaxe => new PickaxeItem("Emerald pickaxe", EmeraldPickaxeTexture, id: 26, speed: 2f, power: 3);
-    public static Item EmeraldSword => new SwordItem("Emerald sword", EmeraldSwordTexture, id: 27, damage: 10);
+    public static Item EmeraldSword => new SwordItem("Emerald sword", EmeraldSwordTexture, id: 27, damage: 4);
     public static Item AmethystAxe => new AxeItem("Amethyst axe", AmethystAxeTexture, id: 28, speed: 2.8f, power: 4);
     public static Item AmethystPickaxe => new PickaxeItem("Amethyst pickaxe", AmethystPickaxeTexture, id: 29, speed: 2.8f, power: 4);
-    public static Item AmethystSword => new SwordItem("Amethyst sword", AmethystSwordTexture, id: 30, damage: 15);
+    public static Item AmethystSword => new SwordItem("Amethyst sword", AmethystSwordTexture, id: 30, damage: 7);
     public static Item Door => new PlaceableItem("Door", 99, DoorTexture, id: 31, Tiles.Door);
 }
