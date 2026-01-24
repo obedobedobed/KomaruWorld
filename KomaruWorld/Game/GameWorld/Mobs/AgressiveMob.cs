@@ -24,36 +24,27 @@ public class AgressiveMob : Mob
         if (GameScene.Instance.Player.Position.X == Position.X)
             return;
 
-        Logger.Log("------------------Move------------------");
         int moveMod = GameScene.Instance.Player.Position.X > Position.X ? 1 : -1;
         float velocity = speed * DeltaTime * moveMod;
 
         Direction = moveMod > 0 ? Direction.Right : Direction.Left;
-
-        Logger.Log($"Vel = {velocity}");
-        Logger.Log($"Dir = {Direction}");
 
         var nextHitbox = new Rectangle((int)(HitboxPosApplied.X + velocity), HitboxPosApplied.Y,
         HitboxPosApplied.Width, HitboxPosApplied.Height);
 
         foreach (var tile in World.Tiles)
         {
-            if (nextHitbox.IntersectsNonInclusive(tile.Hitbox))
+            if (tile.Hitbox.Bottom <= Position.Y || tile.Hitbox.Top >= Position.Y + Hitbox.Height)
+                continue;
+
+            if (nextHitbox.Right > tile.Hitbox.Left && nextHitbox.Left < tile.Hitbox.Right)
             {
-                if (tile.Hitbox.Bottom <= Hitbox.Top || tile.Hitbox.Top >= Hitbox.Bottom)
-                    continue;
-                Position = new Vector2(moveMod > 0
-                ? tile.Hitbox.Left - Rectangle.Width
-                : tile.Hitbox.Right, Position.Y);
                 velocity = 0f;
-                Logger.Log($"Intersection with: {tile.TileType} - {tile.TileWorldID}");
                 break;
             }
         }
 
         Position += new Vector2(velocity, 0f);
-        Logger.Log($"Applyed Vel: pos x{Position.X} y{Position.Y}");
-        Logger.Log("----------------------------------------");
     }
 
     protected override void Animation()

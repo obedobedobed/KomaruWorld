@@ -19,5 +19,5 @@ public static class MobsBank
 
     // Mobs
     public static Mob Chicken(Vector2 position) => new PassiveMob(ChickenAtlas, position, EntitySize, "Chicken", 35f * SIZE_MOD, 0, 125f * SIZE_MOD, 0.5f, new Rectangle(2 * SIZE_MOD, 1 * SIZE_MOD, (int)EntitySize.X - 4 * SIZE_MOD, (int)EntitySize.Y - 1 * SIZE_MOD), new RangeF(2, 5), health: 2);
-    public static Mob Skeleton(Vector2 position) => new AgressiveMob(SkeletonAtlas, position, EntitySize, "Skeleton", 30f * SIZE_MOD, 0, 105f * SIZE_MOD, 0.5f, new Rectangle(0, 2 * SIZE_MOD, (int)EntitySize.X - 2 * SIZE_MOD, (int)EntitySize.Y), health: 4);
+    public static Mob Skeleton(Vector2 position) => new AgressiveMob(SkeletonAtlas, position, EntitySize, "Skeleton", 30f * SIZE_MOD, 0, 105f * SIZE_MOD, 0.5f, new Rectangle(2 * SIZE_MOD, 0, (int)EntitySize.X - 2 * SIZE_MOD, (int)EntitySize.Y), health: 4);
 }

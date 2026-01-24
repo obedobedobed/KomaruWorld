@@ -44,6 +44,9 @@ public abstract class Mob : GameObject
         }
     }
 
+    protected int HitboxRightOffset => Rectangle.Right - HitboxPosApplied.Right;
+    protected int HitboxBottomOffset => Rectangle.Bottom - HitboxPosApplied.Bottom;
+
     private const float TAKE_DAMAGE_COOLDOWN = 1;
     private float timeToTakeDamage = 0;
 
@@ -159,7 +162,10 @@ public abstract class Mob : GameObject
             Health -= damage;
 
             if (Health <= 0)
+            {
+                Logger.Log($"{Name} died");
                 World.RemoveMob(this);
+            }
 
             timeToTakeDamage = TAKE_DAMAGE_COOLDOWN;
         }
