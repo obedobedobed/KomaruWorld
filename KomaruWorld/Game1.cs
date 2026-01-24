@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Runtime.InteropServices;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -34,10 +35,10 @@ public class Game1 : Game
         Instance = this;
 
         // Enable full screen by default
-        // Graphics.IsFullScreen = true;
+        Graphics.IsFullScreen = true;
 
-        Graphics.PreferredBackBufferWidth = defaultScreenSize.X;
-        Graphics.PreferredBackBufferHeight = defaultScreenSize.Y;
+        // Graphics.PreferredBackBufferWidth = defaultScreenSize.X;
+        // Graphics.PreferredBackBufferHeight = defaultScreenSize.Y;
     }
 
     protected override void Initialize()
@@ -57,6 +58,16 @@ public class Game1 : Game
         base.Initialize();
 
         Logger.Log("Game initialized");
+
+        Logger.Log(string.Empty);
+        Logger.Log("----------INFO----------");
+        Logger.Log($"CPU: {Environment.ProcessorCount} threads CPU");
+        Logger.Log($"GPU: {GraphicsAdapter.DefaultAdapter.Description}");
+        Logger.Log($"Display: {GraphicsDevice.DisplayMode.Width}x{GraphicsDevice.DisplayMode.Height}p");
+        Logger.Log($"Memory: {GC.GetGCMemoryInfo().TotalAvailableMemoryBytes / 1024 / 1024}MB");
+        Logger.Log($"OS: {RuntimeInformation.OSDescription}");
+        Logger.Log($"{RuntimeInformation.FrameworkDescription}");
+        Logger.Log(string.Empty);
     }
 
     protected override void LoadContent()
@@ -139,7 +150,7 @@ public class Game1 : Game
 
         GraphicsDevice.SetRenderTarget(null);
 
-        spriteBatch.Begin(samplerState: SamplerState.AnisotropicWrap);
+        spriteBatch.Begin(samplerState: SamplerState.PointWrap);
 
         var renderRectangle = CalculateRenderRectangle();
         spriteBatch.Draw(renderTarget, renderRectangle, Color.White);
