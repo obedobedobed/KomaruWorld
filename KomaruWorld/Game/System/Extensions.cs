@@ -14,6 +14,12 @@ public static class Extensions
                rectangle.Top < intersectRectangle.Bottom;
     }
 
+    public static bool IntersectsX(this Rectangle rectangle, Rectangle intersectRectangle)
+    {
+        return rectangle.Right > intersectRectangle.Left &&
+               rectangle.Left < intersectRectangle.Right;
+    }
+
     public static Point NormalizeForWindow(this MouseState mouse)
     {
         return new Point
