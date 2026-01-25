@@ -16,16 +16,18 @@ public class GameScene(ContentManager content, SpriteBatch spriteBatch, Graphics
 {
     public static GameScene Instance;
     public OrthographicCamera Camera { get; private set; } = new OrthographicCamera(graphicsManager.GraphicsDevice);
+    private Vector2 maximalCameraPos = new Vector2
+    (
+        VerySmallWorldSize.X * TileSize.X - VIRTUAL_WIDTH,
+        VerySmallWorldSize.Y * TileSize.Y - VIRTUAL_HEIGHT
+    );
+    private Vector2 minimalCameraPos = new Vector2(0f, 0f);
     public Player Player { get; private set; }
     private KeyboardState lastKeyboard;
     private Texture2D pixel;
 
     private SpriteButton inventoryMenuButton;
     private CraftMenu craftMenu;
-
-    // World
-    private int worldWidth = 60;
-    private int worldHeight = 40;
 
     // Debug
     private bool debugMenuOpened = false;
@@ -39,21 +41,24 @@ public class GameScene(ContentManager content, SpriteBatch spriteBatch, Graphics
         Instance = this;
         pixel = Content.Load<Texture2D>("Sprites/Pixel");
 
-        WorldGenerator.Generate(worldWidth, worldHeight);
+        WorldGenerator.Generate(VerySmallWorldSize.X, VerySmallWorldSize.Y);
 
+        // Player
         var playerAtlas = new Atlas(texture: Content.Load<Texture2D>("Sprites/KomaruAtlas"), spriteSize: EntitySize / SIZE_MOD);
         var slotAtlas = new Atlas(texture: Content.Load<Texture2D>("Sprites/UI/SlotAtlas"), spriteSize: SlotSize / SIZE_MOD);
         var heartAtlas = new Atlas(texture: Content.Load<Texture2D>("Sprites/UI/HeartAtlas"), spriteSize: HeartSize / SIZE_MOD);
         var placeSfx = Content.Load<SoundEffect>("Audio/SFX/TilePlace");
         var jumpSfx = Content.Load<SoundEffect>("Audio/SFX/PlayerJump");
         var collectSfx = Content.Load<SoundEffect>("Audio/SFX/PlayerCollect");
-        Player = new Player(playerAtlas, new Vector2(worldWidth * TileSize.X / 2, 100), EntitySize,
+        Player = new Player(playerAtlas, new Vector2(VerySmallWorldSize.X * TileSize.X / 2, 100), EntitySize,
         defaultFrame: 1, slotAtlas: slotAtlas, heartAtlas: heartAtlas);
         Player.SetupSFX(placeSfx, jumpSfx, collectSfx);
 
+        // Door
         var doorSFX = Content.Load<SoundEffect>("Audio/SFX/Tiles/Door");
         DoorTile.SetupSFX(doorSFX);
 
+        // Craft
         var inventoryMenuAtlas = new Atlas
         (texture: Content.Load<Texture2D>("Sprites/UI/InventoryMenuAtlas"), SlotSize / SIZE_MOD);
         inventoryMenuButton = new SpriteButton(inventoryMenuAtlas, new Vector2 (UI_SPACING, UI_SPACING),
@@ -70,11 +75,13 @@ public class GameScene(ContentManager content, SpriteBatch spriteBatch, Graphics
         VIRTUAL_HEIGHT / 2 - CraftMenuSize.Y / 2),
         CraftMenuSize, CallPlayerCraft, closeButtonAtlas);
 
-        Camera.Position = Player.Position;
+        // Background
+        var cloudsAtlas = new Atlas(Content.Load<Texture2D>("Sprites/CloudsAtlas"), CloudSize / BG_MOD);
 
-        // Test
-        World.AddMob(MobsBank.Chicken(new Vector2(worldWidth * TileSize.X / 2, 100)));
-        World.AddMob(MobsBank.Skeleton(new Vector2(worldWidth * TileSize.X / 2 + 200, 100)));
+        Background.Load(cloudsAtlas);
+
+        // Camera
+        Camera.Position = Player.Position;
 
         Logger.Log("Game scene loaded");
     }
@@ -86,6 +93,7 @@ public class GameScene(ContentManager content, SpriteBatch spriteBatch, Graphics
         World.Update(gameTime);
         Tile.StaticUpdate(gameTime);
         Player.Update(gameTime);
+        // Background.Update(gameTime);
 
         if (Crafting)
             craftMenu.Update(gameTime);
@@ -97,6 +105,17 @@ public class GameScene(ContentManager content, SpriteBatch spriteBatch, Graphics
         (VIRTUAL_WIDTH / 2, VIRTUAL_HEIGHT / 2) +
         Player.Size / 2;
         Camera.Position = Vector2.Lerp(Camera.Position, playerPosCentered, 0.1f);
+
+        // Checking camera position
+        if (Camera.Position.X < minimalCameraPos.X)
+            Camera.Position = new Vector2(minimalCameraPos.X, Camera.Position.Y);
+        else if (Camera.Position.X > maximalCameraPos.X)
+            Camera.Position = new Vector2(maximalCameraPos.X, Camera.Position.Y);
+
+        if (Camera.Position.Y < minimalCameraPos.Y)
+            Camera.Position = new Vector2(Camera.Position.X, minimalCameraPos.Y);
+        else if (Camera.Position.Y > maximalCameraPos.Y)
+            Camera.Position = new Vector2(Camera.Position.X, maximalCameraPos.Y);
 
         foreach (var _object in Objects)
             _object.Update(gameTime);
@@ -119,6 +138,11 @@ public class GameScene(ContentManager content, SpriteBatch spriteBatch, Graphics
     public override void Draw()
     {
         var view = Camera.GetViewMatrix();
+
+        // Background
+        // SpriteBatch.Begin(samplerState: SamplerState.PointClamp, transformMatrix: Background.Camera.GetViewMatrix());
+        // Background.Draw(SpriteBatch);
+        // SpriteBatch.End();
 
         // Game world (applying transform matrix)
         SpriteBatch.Begin(samplerState: SamplerState.PointClamp, transformMatrix: view);
