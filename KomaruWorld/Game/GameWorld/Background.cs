@@ -15,10 +15,10 @@ public static class Background
     // Clouds
     private static Atlas cloudsAtlas;
     private static List<BackgroundObject> clouds = new List<BackgroundObject>();
-    private const float CLOUDS_Y_POS = 32;
+    private readonly static RangeF cloudsYRange = new RangeF(BGTileSize.Y * 0, BGTileSize.Y * 3);
     private const float CLOUDS_SPEED = 5;
     private const int START_CLOUDS_AMOUNT = 5;
-    private const int CLOUDS_SPACING = 8 * BG_MOD;
+    private static float cloudsSpacing => BGTileSize.X;
 
     public static void Load(Atlas cloudsAtlas)
     {
@@ -28,14 +28,16 @@ public static class Background
         for (int i = 0; i < START_CLOUDS_AMOUNT; i++)
         {
             CreateCloud(cloudXPos);
-            cloudXPos += CloudSize.X + CLOUDS_SPACING;
+            cloudXPos += CloudSize.X + cloudsSpacing;
         }
     }
 
     public static void CreateCloud(float xPos)
     {
         int targetTexture = Random.Shared.Next(0, cloudsAtlas.Rectangles.Count);
-        clouds.Add(new BackgroundObject(cloudsAtlas, new Vector2(xPos, CLOUDS_Y_POS), CloudSize, targetTexture));
+        clouds.Add(new BackgroundObject(cloudsAtlas, new Vector2
+        (xPos, Random.Shared.NextSingle(cloudsYRange.MinimalValue, cloudsYRange.MaximalValue)),
+        CloudSize, targetTexture));
     }
 
     public static void Update(GameTime gameTime)
@@ -46,19 +48,23 @@ public static class Background
         Camera.Position = gameCamPos - gameCamPos * (1f - PARALAX);
 
         var cloudsToRemove = new List<BackgroundObject>();
+        var cloudsToCreate = new List<float>();
 
-        foreach (var cloud in clouds)
+        for (int i = 0; i < clouds.Count; i++)
         {
-            cloud.Move(new Vector2(-CLOUDS_SPEED * BG_MOD * deltaTime, 0));
-            if (cloud.Rectangle.Right < 0)
-            {
-                cloudsToRemove.Add(cloud);
-                Logger.Log("rmv");
-            }
+            clouds[i].Move(new Vector2(-CLOUDS_SPEED * BG_MOD * deltaTime, 0));
+            if (clouds[i].Rectangle.Right < 0)
+                cloudsToRemove.Add(clouds[i]);
+            else if (clouds[i].Rectangle.Right + cloudsSpacing < VerySmallWorldSize.X * TileSize.X &&
+                     i == clouds.Count - 1)
+                cloudsToCreate.Add(clouds[i].Rectangle.Right + cloudsSpacing);
         }
 
         foreach (var toRemove in cloudsToRemove)
             clouds.Remove(toRemove);
+
+        foreach (var toCreate in cloudsToCreate)
+            CreateCloud(toCreate);
     }
 
     public static void Draw(SpriteBatch spriteBatch)

@@ -23,6 +23,7 @@ public static class GameParameters
     public static readonly Vector2 ItemSize = new Vector2(10, 10) * SIZE_MOD;
     public static readonly Point ToolsHandlePos = new Point(2, 7);
     public static readonly Vector2 TileSize = new Vector2(8, 8) * SIZE_MOD;
+    public static readonly Vector2 BGTileSize = new Vector2(8, 8) * BG_MOD;
     public static readonly Vector2 HeartSize = new Vector2(6, 6) * SIZE_MOD;
     public static readonly Vector2 CraftMenuSize = new Vector2(72, 64) * SIZE_MOD;
     public static readonly Vector2 CraftMenuItemSlotPos = new Vector2(28, 4) * SIZE_MOD;
@@ -32,6 +33,10 @@ public static class GameParameters
     public static readonly Point PlayerActionRadius = new Point(4, 4);
     public static Vector2 InventorySlotsPos { get; private set; }
     public const float FRAME_TIME = 0.4f;
+    public static readonly Point VerySmallWorldSize = new Point(80, 60);
+    public static readonly Point SmallWorldSize = new Point(360, 180);
+    public static readonly Point MediumWorldSize = new Point(540, 270);
+    public static readonly Point BigWorldSize = new Point(720, 360);
 
     public static void Setup()
     {
