@@ -781,6 +781,18 @@
 /processorParam:TextureFormat=Color
 /build:Sprites/Mobs/Slime.png
 
+#begin Sprites/Mobs/Slime.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Sprites/Mobs/Slime.png
+
 #begin Sprites/Pixel.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -828,6 +840,18 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:Sprites/Tiles/AmethystOre.png
+
+#begin Sprites/Tiles/Border.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Sprites/Tiles/Border.png
 
 #begin Sprites/Tiles/DirtTile.png
 /importer:TextureImporter
