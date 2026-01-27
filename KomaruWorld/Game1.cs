@@ -102,7 +102,7 @@ public class Game1 : Game
                 var player = GameScene.Instance?.Player;
                 bool inInventory = player != null && player.InInventory;
 
-                if (!inInventory)
+                if (!inInventory && !SignTile.BlockedInput)
                 {
                     Logger.Log("Good Bye!");
                     Logger.WriteLogs();

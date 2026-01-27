@@ -17,5 +17,7 @@ public enum Tiles
     NatureLeaves,
     Door,
     CavesWall,
-    DirtWall
+    DirtWall,
+    Border,
+    Sign
 }

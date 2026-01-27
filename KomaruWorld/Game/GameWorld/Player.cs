@@ -324,6 +324,8 @@ public class Player : GameObject
 
             if (tile is DoorTile door)
                 door.Toggle();
+            else if (tile is SignTile sign)
+                sign.Writing = true;
         }
 
         if (mouse.LeftButton == ButtonState.Pressed && lastMouse.LeftButton != ButtonState.Pressed && InInventory &&
@@ -671,8 +673,6 @@ public class Player : GameObject
 
     public override void Draw(SpriteBatch spriteBatch)
     {
-        // spriteBatch.Draw(TilesBank.CavesWall(Vector2.Zero).texture, swordAttackRectangle, Color.White);
-
         spriteBatch.Draw
         (
             atlas.Texture, Rectangle, atlas.Rectangles[Frame],

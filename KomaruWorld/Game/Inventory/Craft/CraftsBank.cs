@@ -30,14 +30,15 @@ public static class CraftsBank
     public static CraftData IronHelmet { get; private set; } = new CraftData(ItemsBank.IronHelmet, itemAmount: 1, [ItemsBank.IronIngot], [3]);
     public static CraftData IronChestplate { get; private set; } = new CraftData(ItemsBank.IronChestplate, itemAmount: 1, [ItemsBank.IronIngot], [8]);
     public static CraftData IronLeggins { get; private set; } = new CraftData(ItemsBank.IronLeggins, itemAmount: 1, [ItemsBank.IronIngot], [5]);
+    public static CraftData Sign { get; private set; } = new CraftData(ItemsBank.Sign, itemAmount: 1, [ItemsBank.Planks], [2]);
 
     public static CraftData[] Crafts =
     [
-        Log, Leaves, Door, IronIngot, GoldIngot,
-        Emerald, Amethyst, Sword, Pickaxe, Axe,
-        GoldSword, GoldPickaxe, GoldAxe, EmeraldSword, EmeraldPickaxe,
-        EmeraldAxe, AmethystSword, AmethystPickaxe, AmethystAxe, IronHelmet,
-        IronChestplate, IronLeggins
+        Log, Leaves, Door, Sign, IronIngot,
+        GoldIngot, Emerald, Amethyst, Sword, Pickaxe,
+        Axe, GoldSword, GoldPickaxe, GoldAxe, EmeraldSword,
+        EmeraldPickaxe, EmeraldAxe, AmethystSword, AmethystPickaxe, AmethystAxe,
+        IronHelmet, IronChestplate, IronLeggins
     ];
 
     public static List<CraftSlot> CraftSlots = new List<CraftSlot>();

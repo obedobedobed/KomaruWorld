@@ -25,6 +25,8 @@ public static class TilesBank
     private static Texture2D DoorOpenedTexture;
     private static Texture2D CavesWallTexture;
     private static Texture2D DirtWallTexture;
+    private static Texture2D BorderTexture;
+    private static Texture2D SignTexture;
 
     public static void LoadContent(ContentManager Content)
     {
@@ -48,6 +50,8 @@ public static class TilesBank
         DoorOpenedTexture = Content.Load<Texture2D>("Sprites/Tiles/DoorTileOpened");
         CavesWallTexture = Content.Load<Texture2D>("Sprites/Tiles/Walls/CavesWall");
         DirtWallTexture = Content.Load<Texture2D>("Sprites/Tiles/Walls/DirtWall");
+        BorderTexture = Content.Load<Texture2D>("Sprites/Tiles/Border");
+        SignTexture = Content.Load<Texture2D>("Sprites/Tiles/SignTile");
     }
 
     // Tiles
@@ -66,6 +70,8 @@ public static class TilesBank
     public static Tile Door(Vector2 position) => new DoorTile(DoorClosedTexture, DoorOpenedTexture, position, TileSize, true, Tiles.Door, toolToDestroy: ToolToDestroy.Axe, destroyTime: 0.4f, minimalToolPower: 1, new DropData([ItemsBank.Door], [100], [new Range(1, 1)]));
     public static Tile CavesWall(Vector2 position) => new Tile(CavesWallTexture, position, TileSize, false, Tiles.CavesWall, toolToDestroy: ToolToDestroy.None, destroyTime: 0f, minimalToolPower: 0, null);
     public static Tile DirtWall(Vector2 position) => new Tile(DirtWallTexture, position, TileSize, false, Tiles.DirtWall, toolToDestroy: ToolToDestroy.None, destroyTime: 0f, minimalToolPower: 0, null);
+    public static Tile Border(Vector2 position) => new Tile(BorderTexture, position, TileSize, true, Tiles.Border, toolToDestroy: ToolToDestroy.None, destroyTime: 0f, minimalToolPower: 0, null);
+    public static Tile Sign(Vector2 position) => new SignTile(SignTexture, position, TileSize, false, Tiles.Sign, toolToDestroy: ToolToDestroy.Axe, destroyTime: 0.3f, minimalToolPower: 1, new DropData([ItemsBank.Sign], [100], [new Range(1, 1)]));
 
     public static Tile FindTile(Tiles tile, Vector2 position)
     {
@@ -86,6 +92,8 @@ public static class TilesBank
             Tiles.Door => Door(position),
             Tiles.CavesWall => CavesWall(position),
             Tiles.DirtWall => DirtWall(position),
+            Tiles.Border => Border(position),
+            Tiles.Sign => Sign(position),
             _ => null,
         };
     }

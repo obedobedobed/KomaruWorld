@@ -75,6 +75,17 @@ public static class WorldGenerator
                 if (targetWall != null)
                     World.AddWall(targetWall);
 
+                // Creating border
+                if (x == 0)
+                    World.AddTile(TilesBank.Border(new Vector2(xPos - TileSize.X, yPos)));
+                else if (x == width - 1)
+                    World.AddTile(TilesBank.Border(new Vector2(xPos + TileSize.X, yPos)));
+
+                if (y == 0)
+                    World.AddTile(TilesBank.Border(new Vector2(xPos, yPos - TileSize.Y)));
+                else if (y == height - 1)
+                    World.AddTile(TilesBank.Border(new Vector2(xPos, yPos + TileSize.Y)));
+
                 xPos += TileSize.X;
             }
 
