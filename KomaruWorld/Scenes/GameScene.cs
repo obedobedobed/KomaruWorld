@@ -85,15 +85,32 @@ public class GameScene(ContentManager content, SpriteBatch spriteBatch, Graphics
 
         Logger.Log("Game scene loaded");
     }
-    
 
     public override void Update(GameTime gameTime)
     {
         inventoryMenuButton.Update(gameTime);
         World.Update(gameTime);
+        MobsSpawner.Update(gameTime);
         Tile.StaticUpdate(gameTime);
-        Player.Update(gameTime);
-        // Background.Update(gameTime);
+        Background.Update(gameTime);
+
+        var keyboard = Keyboard.GetState();
+
+        // Functions
+        if (keyboard.IsKeyDown(Keys.F1) && !lastKeyboard.IsKeyDown(Keys.F1))
+            debugMenuOpened = !debugMenuOpened;
+
+        if (keyboard.IsKeyDown(Keys.F2) && !lastKeyboard.IsKeyDown(Keys.F2))
+        {
+            GraphicsManager.SynchronizeWithVerticalRetrace = !GraphicsManager.SynchronizeWithVerticalRetrace;
+            GraphicsManager.ApplyChanges();
+        }
+
+        lastKeyboard = keyboard;
+
+        if (!SignTile.BlockedInput)
+            Player.Update(gameTime);
+
 
         if (Crafting)
             craftMenu.Update(gameTime);
@@ -120,19 +137,7 @@ public class GameScene(ContentManager content, SpriteBatch spriteBatch, Graphics
         foreach (var _object in Objects)
             _object.Update(gameTime);
 
-        var keyboard = Keyboard.GetState();
-
-        // Functions
-        if (keyboard.IsKeyDown(Keys.F1) && !lastKeyboard.IsKeyDown(Keys.F1))
-            debugMenuOpened = !debugMenuOpened;
-
-        if (keyboard.IsKeyDown(Keys.F2) && !lastKeyboard.IsKeyDown(Keys.F2))
-        {
-            GraphicsManager.SynchronizeWithVerticalRetrace = !GraphicsManager.SynchronizeWithVerticalRetrace;
-            GraphicsManager.ApplyChanges();
-        }
-
-        lastKeyboard = keyboard;
+        
     }
 
     public override void Draw()
@@ -140,9 +145,9 @@ public class GameScene(ContentManager content, SpriteBatch spriteBatch, Graphics
         var view = Camera.GetViewMatrix();
 
         // Background
-        // SpriteBatch.Begin(samplerState: SamplerState.PointClamp, transformMatrix: Background.Camera.GetViewMatrix());
-        // Background.Draw(SpriteBatch);
-        // SpriteBatch.End();
+        SpriteBatch.Begin(samplerState: SamplerState.PointClamp, transformMatrix: Background.Camera.GetViewMatrix());
+        Background.Draw(SpriteBatch);
+        SpriteBatch.End();
 
         // Game world (applying transform matrix)
         SpriteBatch.Begin(samplerState: SamplerState.PointClamp, transformMatrix: view);
@@ -244,6 +249,13 @@ public class GameScene(ContentManager content, SpriteBatch spriteBatch, Graphics
                     DrawMobDescription(mob);
                     break;
                 }
+
+            foreach (var tile in World.Tiles)
+                if (tile is SignTile sign && sign.Rectangle.Intersects(cursorWorldRectangle))
+                {
+                    DrawSignText(sign);
+                    break;
+                }
         }
 
         string slotItemName = Player.Inventory.HotbarSlots[Player.HotbarSlot].Item?.Name;
@@ -273,6 +285,11 @@ public class GameScene(ContentManager content, SpriteBatch spriteBatch, Graphics
             else if (armorSlotToDescription != null)
                 DrawItemDescription(armorSlotToDescription);
         }
+
+        if (SignTile.BlockedInput)
+            foreach (var tile in World.Tiles)
+                if (tile is SignTile sign && sign.Writing)
+                    sign.DrawInputMenu(SpriteBatch, pixel);
 
         if (debugMenuOpened)
             DrawDebugMenu();
@@ -394,6 +411,16 @@ public class GameScene(ContentManager content, SpriteBatch spriteBatch, Graphics
         }
     }
 
+    private void DrawSignText(SignTile sign)
+    {
+        var mouse = Mouse.GetState();
+        var normalizedCursorPos = mouse.NormalizeForWindow();
+        var textPos = new Vector2(normalizedCursorPos.X + CursorSize.X, normalizedCursorPos.Y
+        + CursorSize.Y);
+        Text.Draw(sign.SignText, textPos, Color.White, SpriteBatch, TextDrawingMode.Right,
+        outline: true, outlineColor: Color.Black);
+    }
+
     private void DrawDebugMenu()
     {
         int slot = Player.HotbarSlot;
@@ -436,7 +463,7 @@ public class GameScene(ContentManager content, SpriteBatch spriteBatch, Graphics
         Text.Draw($"Screen: {windowSize.X}x{windowSize.Y} ({windowMode}, F11 for toggle)",
         new Vector2(UI_SPACING, VIRTUAL_HEIGHT - GlyphSize.Y * TEXT_SPACING * 4 + GlyphSize.Y / 2 * 4),
         Color.White, SpriteBatch, TextDrawingMode.Right, outline: true, outlineColor: Color.Black);
-        Text.Draw($"CPU: {Environment.ProcessorCount} threads CPU",
+        Text.Draw($"CPU: {Environment.ProcessorCount} threads {RuntimeInformation.ProcessArchitecture} CPU",
         new Vector2(UI_SPACING, VIRTUAL_HEIGHT - GlyphSize.Y * TEXT_SPACING * 3 + GlyphSize.Y / 2 * 3),
         Color.White, SpriteBatch, TextDrawingMode.Right, outline: true, outlineColor: Color.Black);
         Text.Draw($"Memory: {usedMemory}MB/{totalMemory}MB used",
