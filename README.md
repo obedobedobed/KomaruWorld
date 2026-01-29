@@ -15,7 +15,7 @@ Survival game with Komaru the cat
 2. Inventory [\*] - 90% completed
 3. Crafting system [*\] - 95% completed
 4. Armor [\*] - 50% completed
-5. Mobs and AI [\*] - 15% completed
+5. Mobs and AI [\*] - 17% completed
 6. Combat system [\*] - 15%
 7. NPCs and dialogues [X]
 8. Main menu [X]
