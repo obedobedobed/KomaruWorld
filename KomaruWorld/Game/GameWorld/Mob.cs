@@ -47,14 +47,20 @@ public abstract class Mob : GameObject
     protected int HitboxRightOffset => Rectangle.Right - HitboxPosApplied.Right;
     protected int HitboxBottomOffset => Rectangle.Bottom - HitboxPosApplied.Bottom;
 
-    private const float TAKE_DAMAGE_COOLDOWN = 1;
-    private float timeToTakeDamage = 0;
+    private const float TAKE_DAMAGE_COOLDOWN = 1f;
+    private float timeToTakeDamage = 0f;
 
     // Game
     protected float DeltaTime;
 
     // Animation
     protected float timeToFrame = FRAME_TIME;
+
+    // Combat
+    private const float IMMORTAL_TIME = 0.5f;
+    private float immortalTime = 0f;
+
+    private Vector2 knockbackVelocity;
 
     public Mob(Atlas atlas, Vector2 position, Vector2 size, string name, float speed, int defaultFrame,
     float jumpForce, float jumpTime, Rectangle hitbox, RangeF moveTimeRange, float moveBreak, int health)
@@ -78,13 +84,26 @@ public abstract class Mob : GameObject
     {
         DeltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
         timeToTakeDamage -= DeltaTime;
+        immortalTime -= DeltaTime;
 
-        Move();
+        if (knockbackVelocity.X == 0 && knockbackVelocity.Y == 0)
+            Move();
+        else
+            TakeKnockback();
+
         if (IsJumping)
             Jump();
         else
             Gravity();
+
         Animation();
+
+
+        if (Health <= 0 && immortalTime <= 0)
+        {
+            Logger.Log($"{Name} died");
+            World.RemoveMob(this);
+        }
     }
 
     protected abstract void Move();
@@ -157,18 +176,21 @@ public abstract class Mob : GameObject
 
     public void TakeDamage(int damage)
     {
-        if (timeToTakeDamage <= 0)
+        if (timeToTakeDamage <= 0 && immortalTime <= 0)
         {
             Health -= damage;
 
-            if (Health <= 0)
-            {
-                Logger.Log($"{Name} died");
-                World.RemoveMob(this);
-            }
-
             timeToTakeDamage = TAKE_DAMAGE_COOLDOWN;
+            immortalTime = IMMORTAL_TIME;
+            knockbackVelocity = new Vector2(10f, 10f);
         }
+    }
+
+    public void TakeKnockback()
+    {
+        knockbackVelocity -= new Vector2(DeltaTime * 5f, DeltaTime * 5f);
+        
+        Position += knockbackVelocity;
     }
 
     public override void Draw(SpriteBatch spriteBatch)
@@ -176,7 +198,7 @@ public abstract class Mob : GameObject
         spriteBatch.Draw
         (
             atlas.Texture, Rectangle, atlas.Rectangles[Frame],
-            Color.White, 0f, Vector2.Zero, flip, 0f
+            immortalTime <= 0 ? Color.White : Color.Red, 0f, Vector2.Zero, flip, 0f
         );
     }
 }

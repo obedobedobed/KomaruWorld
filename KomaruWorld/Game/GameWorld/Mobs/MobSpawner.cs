@@ -16,7 +16,7 @@ public static class MobsSpawner
 
         if (timeToMobSpawn <= 0 && Random.Shared.Next(0, 101) <= mobSpawnChance)
         {
-            World.AddMob(MobsBank.Skeleton(new Vector2
+            World.AddMob(MobsBank.Slime(new Vector2
             (Random.Shared.Next(0, (int)(VerySmallWorldSize.X * TileSize.X - EntitySize.X)), 100)));
             
             timeToMobSpawn = MOB_SPAWN_TIME;
