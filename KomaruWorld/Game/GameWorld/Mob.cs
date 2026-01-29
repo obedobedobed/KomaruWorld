@@ -182,15 +182,21 @@ public abstract class Mob : GameObject
 
             timeToTakeDamage = TAKE_DAMAGE_COOLDOWN;
             immortalTime = IMMORTAL_TIME;
-            knockbackVelocity = new Vector2(10f, 10f);
+            knockbackVelocity = new Vector2(2f, -0.5f);
         }
     }
 
     public void TakeKnockback()
     {
-        knockbackVelocity -= new Vector2(DeltaTime * 5f, DeltaTime * 5f);
+        knockbackVelocity -= new Vector2(DeltaTime * 5f, DeltaTime * -5f);
         
         Position += knockbackVelocity;
+
+        if (knockbackVelocity.X < 0f)
+            knockbackVelocity.X = 0f;
+
+        if (knockbackVelocity.Y > 0f)
+            knockbackVelocity.Y = 0f;
     }
 
     public override void Draw(SpriteBatch spriteBatch)
