@@ -25,6 +25,7 @@ public class GameScene(ContentManager content, SpriteBatch spriteBatch, Graphics
     public Player Player { get; private set; }
     private KeyboardState lastKeyboard;
     private Texture2D pixel;
+    private GameObject youAreDeadText;
 
     private SpriteButton inventoryMenuButton;
     private CraftMenu craftMenu;
@@ -74,6 +75,11 @@ public class GameScene(ContentManager content, SpriteBatch spriteBatch, Graphics
         (VIRTUAL_WIDTH / 2 - CraftMenuSize.X / 2,
         VIRTUAL_HEIGHT / 2 - CraftMenuSize.Y / 2),
         CraftMenuSize, CallPlayerCraft, closeButtonAtlas);
+
+        // UI
+        var youAreDeadTexture = Content.Load<Texture2D>("Sprites/UI/YouAreDead");
+        youAreDeadText = new GameObject(youAreDeadTexture, new Vector2(VIRTUAL_WIDTH / 2 - YouAreDeadTextSize.X / 2,
+        VIRTUAL_HEIGHT / 2 - YouAreDeadTextSize.Y / 2), YouAreDeadTextSize);
 
         // Background
         var cloudsAtlas = new Atlas(Content.Load<Texture2D>("Sprites/CloudsAtlas"), CloudSize / BG_MOD);
@@ -196,6 +202,12 @@ public class GameScene(ContentManager content, SpriteBatch spriteBatch, Graphics
 
         Player.Inventory.DrawHotbar(SpriteBatch);
         Player.DrawHearts(SpriteBatch);
+
+        if (Player.IsDead)
+        {
+            SpriteBatch.Draw(pixel, new Rectangle(0, 0, VIRTUAL_WIDTH, VIRTUAL_HEIGHT), new Color(87, 7, 12, 50));
+            youAreDeadText.Draw(SpriteBatch);
+        }
 
         var mouse = Mouse.GetState();
         var normalizedCursorPos = mouse.NormalizeForWindow();

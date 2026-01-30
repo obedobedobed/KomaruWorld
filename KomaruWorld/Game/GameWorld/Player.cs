@@ -55,6 +55,7 @@ public class Player : GameObject
     // Game
     private float deltaTime = 0f;
     private InventoryMenu inventoryMenu;
+    public bool IsDead => health <= 0;
 
     // Hitbox
     private int hitboxXSpacing = 2 * SIZE_MOD;
@@ -181,6 +182,9 @@ public class Player : GameObject
         deltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
         timeToTakeDamage -= deltaTime;
         immortalTime -= deltaTime;
+
+        if (IsDead)
+            return;
 
         inventoryMenu = GameScene.Instance.InventoryMenu;
 
@@ -716,6 +720,9 @@ public class Player : GameObject
 
     public override void Draw(SpriteBatch spriteBatch)
     {
+        if (IsDead)
+            return;
+
         spriteBatch.Draw
         (
             atlas.Texture, Rectangle, atlas.Rectangles[Frame],

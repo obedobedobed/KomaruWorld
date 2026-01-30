@@ -23,6 +23,7 @@ public static class GameParameters
     public static readonly Vector2 ItemSize = new Vector2(10, 10) * SIZE_MOD;
     public static readonly Point ToolsHandlePos = new Point(2, 7);
     public static readonly Vector2 TileSize = new Vector2(8, 8) * SIZE_MOD;
+    public static readonly Vector2 YouAreDeadTextSize = new Vector2(160, 32) * SIZE_MOD;
     public static readonly Vector2 BGTileSize = new Vector2(8, 8) * BG_MOD;
     public static readonly Vector2 HeartSize = new Vector2(6, 6) * SIZE_MOD;
     public static readonly Vector2 CraftMenuSize = new Vector2(72, 64) * SIZE_MOD;
