@@ -6,6 +6,9 @@ namespace KomaruWorld;
 
 public class AgressiveMob : Mob
 {
+    // Statistics
+    private int damage;
+
     // Frames
     private const int FRAME_IDLE = 0;
     private const int FRAME_RUN_0 = 1;
@@ -13,10 +16,16 @@ public class AgressiveMob : Mob
     private const int FRAME_JUMP = 3;
 
     public AgressiveMob(Atlas atlas, Vector2 position, Vector2 size, string name, float speed, int defaultFrame,
-    float jumpForce, float jumpTime, Rectangle hitbox, int health) : base(atlas, position, size, name,
+    float jumpForce, float jumpTime, Rectangle hitbox, int health, int damage) : base(atlas, position, size, name,
     speed, defaultFrame, jumpForce, jumpTime, hitbox, new RangeF(), 3f, health)
     {
-         
+        this.damage = damage;
+    }
+
+    public override void Update(GameTime gameTime)
+    {
+        TryAttackPlayer();
+        base.Update(gameTime);
     }
 
     protected override void Move()
@@ -49,11 +58,11 @@ public class AgressiveMob : Mob
 
     protected override void Animation()
     {
-        flip = Direction switch
+        Flip = Direction switch
         {
             Direction.Right => SpriteEffects.None,
             Direction.Left => SpriteEffects.FlipHorizontally,
-            _ => flip
+            _ => Flip
         };
 
         if (IsJumping)
@@ -74,6 +83,15 @@ public class AgressiveMob : Mob
                 };
 
             timeToFrame = FRAME_TIME;
+        }
+    }
+
+    private void TryAttackPlayer()
+    {
+        var player = GameScene.Instance.Player;
+        if (player.Hitbox.Intersects(HitboxPosApplied))
+        {
+            player.TakeDamage(damage, sender: this);
         }
     }
 }

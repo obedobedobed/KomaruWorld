@@ -14,7 +14,7 @@ public abstract class Mob : GameObject
     // Movement
     protected readonly float speed;
     protected Direction Direction = Direction.Null;
-    protected SpriteEffects flip = SpriteEffects.None;
+    public SpriteEffects Flip { get; protected set; } = SpriteEffects.None;
     protected float moveTime;
     protected readonly RangeF moveTimeRange;
     protected readonly float moveBreak;
@@ -207,7 +207,7 @@ public abstract class Mob : GameObject
         spriteBatch.Draw
         (
             atlas.Texture, Rectangle, atlas.Rectangles[Frame],
-            immortalTime <= 0 ? Color.White : Color.Red, 0f, Vector2.Zero, flip, 0f
+            immortalTime <= 0 ? Color.White : Color.Red, 0f, Vector2.Zero, Flip, 0f
         );
     }
 }

@@ -72,11 +72,11 @@ public class PassiveMob : Mob
 
     protected override void Animation()
     {
-        flip = Direction switch
+        Flip = Direction switch
         {
             Direction.Right => SpriteEffects.None,
             Direction.Left => SpriteEffects.FlipHorizontally,
-            _ => flip
+            _ => Flip
         };
 
         if (IsJumping)

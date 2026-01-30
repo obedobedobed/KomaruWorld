@@ -58,7 +58,7 @@ public class Player : GameObject
 
     // Hitbox
     private int hitboxXSpacing = 2 * SIZE_MOD;
-    private Rectangle hitbox
+    public Rectangle Hitbox
     {
         get
         {
@@ -146,6 +146,7 @@ public class Player : GameObject
             - UI_SPACING), slotsPos: InventorySlotsPos, INV_SLOTS_LINES
         );
 
+        // Adding start tools
         Inventory.HotbarSlots[0].UpdateItem(ItemsBank.Sword);
         Inventory.HotbarSlots[1].UpdateItem(ItemsBank.Pickaxe);
         Inventory.HotbarSlots[2].UpdateItem(ItemsBank.Axe);
@@ -178,6 +179,8 @@ public class Player : GameObject
     public override void Update(GameTime gameTime)
     {
         deltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
+        timeToTakeDamage -= deltaTime;
+        immortalTime -= deltaTime;
 
         inventoryMenu = GameScene.Instance.InventoryMenu;
 
@@ -199,7 +202,7 @@ public class Player : GameObject
             Move();
         else
             TakeKnockback();
-            
+
         Gravity();
         Animate();
         CollectDroppedItems();
@@ -524,7 +527,7 @@ public class Player : GameObject
         };
 
         float velocity = SPEED * deltaTime * moveMod;
-        var nextHitbox = new Rectangle((int)(hitbox.X + velocity), hitbox.Y, hitbox.Width, hitbox.Height);
+        var nextHitbox = new Rectangle((int)(Hitbox.X + velocity), Hitbox.Y, Hitbox.Width, Hitbox.Height);
 
         foreach (var tile in World.Tiles)
         {
@@ -550,7 +553,7 @@ public class Player : GameObject
             GravityVelocity = MAXIMAL_GRAVITY;
 
         isGrounded = false;
-        var nextHitbox = new Rectangle(hitbox.X, (int)(hitbox.Y + GravityVelocity), hitbox.Width, hitbox.Height);
+        var nextHitbox = new Rectangle(Hitbox.X, (int)(Hitbox.Y + GravityVelocity), Hitbox.Width, Hitbox.Height);
 
         foreach (var tile in World.Tiles)
         {
@@ -638,7 +641,7 @@ public class Player : GameObject
         var itemsToRemove = new List<DroppedItem>();
 
         foreach (var item in World.Items)
-            if (hitbox.Intersects(item.Rectangle))
+            if (Hitbox.Intersects(item.Rectangle))
             {
                 bool collected = Inventory.TryCollectItem(item.Item);
                 if (collected)
@@ -683,7 +686,7 @@ public class Player : GameObject
             World.AddItem(new DroppedItem(craftData.Item, Position + EntitySize / 2));
     }
 
-    public void TakeDamage(int damage)
+    public void TakeDamage(int damage, Mob sender)
     {
         if (timeToTakeDamage <= 0 && immortalTime <= 0)
         {
@@ -691,7 +694,7 @@ public class Player : GameObject
 
             timeToTakeDamage = TAKE_DAMAGE_COOLDOWN;
             immortalTime = IMMORTAL_TIME;
-            knockbackVelocity = new Vector2(3.5f * (GameScene.Instance.Player.Flip == SpriteEffects.None ? 1 : -1), -0.10f);
+            knockbackVelocity = new Vector2(3.5f * (sender.Flip == SpriteEffects.None ? 1 : -1), -0.12f);
         }
     }
 
@@ -716,7 +719,7 @@ public class Player : GameObject
         spriteBatch.Draw
         (
             atlas.Texture, Rectangle, atlas.Rectangles[Frame],
-            Color.White, 0f, Vector2.Zero, Flip, 0f
+            immortalTime <= 0 ? Color.White : Color.Red, 0f, Vector2.Zero, Flip, 0f
         );
 
         foreach (var slot in Inventory.ArmorSlots)
@@ -725,7 +728,7 @@ public class Player : GameObject
                 spriteBatch.Draw
                 (
                     slot.Item.ArmorAtlas.Texture, Rectangle, slot.Item.ArmorAtlas.Rectangles[Frame],
-                    Color.White, 0f, Vector2.Zero, Flip, 0f
+                    immortalTime <= 0 ? Color.White : Color.Red, 0f, Vector2.Zero, Flip, 0f
                 );
         }
 

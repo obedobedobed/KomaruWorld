@@ -21,6 +21,6 @@ public static class MobsBank
 
     // Mobs
     public static Mob Chicken(Vector2 position) => new PassiveMob(ChickenAtlas, position, EntitySize, "Chicken", 35f * SIZE_MOD, 0, 125f * SIZE_MOD, 0.5f, new Rectangle(2 * SIZE_MOD, 1 * SIZE_MOD, (int)EntitySize.X - 4 * SIZE_MOD, (int)EntitySize.Y - 1 * SIZE_MOD), new RangeF(2, 5), health: 2);
-    public static Mob Skeleton(Vector2 position) => new AgressiveMob(SkeletonAtlas, position, EntitySize, "Skeleton", 30f * SIZE_MOD, 0, 105f * SIZE_MOD, 0.5f, new Rectangle(2 * SIZE_MOD, 0, (int)EntitySize.X - 4 * SIZE_MOD, (int)EntitySize.Y), health: 4);
-    public static Mob Slime(Vector2 position) => new AgressiveMob(SlimeAtlas, position, EntitySize, "Slime", 25f * SIZE_MOD, 0, 130f * SIZE_MOD, 0.5f, new Rectangle(2 * SIZE_MOD, 5 * SIZE_MOD, (int)EntitySize.X - 4 * SIZE_MOD, (int)EntitySize.Y - 5 * SIZE_MOD), health: 3);
+    public static Mob Skeleton(Vector2 position) => new AgressiveMob(SkeletonAtlas, position, EntitySize, "Skeleton", 30f * SIZE_MOD, 0, 105f * SIZE_MOD, 0.5f, new Rectangle(2 * SIZE_MOD, 0, (int)EntitySize.X - 4 * SIZE_MOD, (int)EntitySize.Y), health: 4, damage: 3);
+    public static Mob Slime(Vector2 position) => new AgressiveMob(SlimeAtlas, position, EntitySize, "Slime", 25f * SIZE_MOD, 0, 130f * SIZE_MOD, 0.5f, new Rectangle(2 * SIZE_MOD, 5 * SIZE_MOD, (int)EntitySize.X - 4 * SIZE_MOD, (int)EntitySize.Y - 5 * SIZE_MOD), health: 3, damage: 2);
 }
