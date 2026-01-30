@@ -19,6 +19,7 @@ public static class MobsSpawner
             World.AddMob(MobsBank.Slime(new Vector2
             (Random.Shared.Next(0, (int)(VerySmallWorldSize.X * TileSize.X - EntitySize.X)), 100)));
             
+            Logger.Log("Spawned mob");
             timeToMobSpawn = MOB_SPAWN_TIME;
         }
     }

@@ -14,6 +14,7 @@ public class Player : GameObject
     private Direction direction = Direction.Null;
     public SpriteEffects Flip { get; private set; } = SpriteEffects.None;
     private SpriteEffects lastFlip = SpriteEffects.None;
+    private Vector2 knockbackVelocity;
 
     // Gravity
     private const float JUMP_FORCE = 1.5f * SIZE_MOD; // jumping 3 blocks up
@@ -44,6 +45,12 @@ public class Player : GameObject
             );
         }
     }
+
+    private const float IMMORTAL_TIME = 0.5f;
+    private float immortalTime = 0f;
+
+    private const float TAKE_DAMAGE_COOLDOWN = 1f;
+    private float timeToTakeDamage = 0f;
 
     // Game
     private float deltaTime = 0f;
@@ -187,7 +194,12 @@ public class Player : GameObject
                 item.UpdateFrame();
 
         GetInput();
-        Move();
+
+        if (knockbackVelocity.X == 0 && knockbackVelocity.Y == 0)
+            Move();
+        else
+            TakeKnockback();
+            
         Gravity();
         Animate();
         CollectDroppedItems();
@@ -669,6 +681,34 @@ public class Player : GameObject
 
         for (int i = 0; i < craftData.ItemAmount; i++)
             World.AddItem(new DroppedItem(craftData.Item, Position + EntitySize / 2));
+    }
+
+    public void TakeDamage(int damage)
+    {
+        if (timeToTakeDamage <= 0 && immortalTime <= 0)
+        {
+            health -= damage;
+
+            timeToTakeDamage = TAKE_DAMAGE_COOLDOWN;
+            immortalTime = IMMORTAL_TIME;
+            knockbackVelocity = new Vector2(3.5f * (GameScene.Instance.Player.Flip == SpriteEffects.None ? 1 : -1), -0.10f);
+        }
+    }
+
+    public void TakeKnockback()
+    {
+        int knockbackXMod = knockbackVelocity.X > 0 ? 1 : -1;
+
+        knockbackVelocity -= new Vector2(deltaTime * 5f * knockbackXMod, deltaTime * -5f);
+        Position += knockbackVelocity;
+
+        if (knockbackVelocity.X < 0f && knockbackXMod > 0)
+            knockbackVelocity.X = 0f;
+        else if (knockbackVelocity.X > 0f && knockbackXMod < 0)
+            knockbackVelocity.X = 0f;
+
+        if (knockbackVelocity.Y > 0f)
+            knockbackVelocity.Y = 0f;
     }
 
     public override void Draw(SpriteBatch spriteBatch)
