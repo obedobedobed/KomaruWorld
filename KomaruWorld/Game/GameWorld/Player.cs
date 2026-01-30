@@ -12,7 +12,7 @@ public class Player : GameObject
     // Movement
     private const float SPEED = 35f * SIZE_MOD;
     private Direction direction = Direction.Null;
-    private SpriteEffects flip = SpriteEffects.None;
+    public SpriteEffects Flip { get; private set; } = SpriteEffects.None;
     private SpriteEffects lastFlip = SpriteEffects.None;
 
     // Gravity
@@ -39,7 +39,7 @@ public class Player : GameObject
         {
             return new Rectangle
             (
-                (int)(Position.X + EntitySize.X / 4 * (flip == SpriteEffects.None ? 1 : -1)),
+                (int)(Position.X + EntitySize.X / 4 * (Flip == SpriteEffects.None ? 1 : -1)),
                 (int)Position.Y, (int)EntitySize.X, (int)EntitySize.Y
             );
         }
@@ -102,7 +102,7 @@ public class Player : GameObject
     {
         get
         {
-            int xPos = flip == SpriteEffects.None
+            int xPos = Flip == SpriteEffects.None
                 ? (int)(Position.X + EntitySize.X - TileSize.X / 4)
                 : (int)(Position.X + TileSize.X / 4);
 
@@ -569,15 +569,15 @@ public class Player : GameObject
     private void Animate()
     {
         if (direction == Direction.Right)
-            flip = SpriteEffects.None;
+            Flip = SpriteEffects.None;
         else if (direction == Direction.Left)
-            flip = SpriteEffects.FlipHorizontally;
+            Flip = SpriteEffects.FlipHorizontally;
 
         if (usingTools)
         {
-            int flipMod = flip == SpriteEffects.None ? 1 : -1;
+            int flipMod = Flip == SpriteEffects.None ? 1 : -1;
 
-            if (lastFlip != flip)
+            if (lastFlip != Flip)
                 toolRotation = minimalToolRotation;
 
             toolRotation += TOOL_ROTATION_SPEED * deltaTime * flipMod;
@@ -618,7 +618,7 @@ public class Player : GameObject
             timeToFrame = FRAME_TIME;
         }
 
-        lastFlip = flip;
+        lastFlip = Flip;
     }
 
     private void CollectDroppedItems()
@@ -676,7 +676,7 @@ public class Player : GameObject
         spriteBatch.Draw
         (
             atlas.Texture, Rectangle, atlas.Rectangles[Frame],
-            Color.White, 0f, Vector2.Zero, flip, 0f
+            Color.White, 0f, Vector2.Zero, Flip, 0f
         );
 
         foreach (var slot in Inventory.ArmorSlots)
@@ -685,7 +685,7 @@ public class Player : GameObject
                 spriteBatch.Draw
                 (
                     slot.Item.ArmorAtlas.Texture, Rectangle, slot.Item.ArmorAtlas.Rectangles[Frame],
-                    Color.White, 0f, Vector2.Zero, flip, 0f
+                    Color.White, 0f, Vector2.Zero, Flip, 0f
                 );
         }
 
@@ -698,7 +698,7 @@ public class Player : GameObject
             spriteBatch.Draw
             (
                 texture, toolRectangle, null, Color.White,
-                toolRotation, origin, flip, 0f
+                toolRotation, origin, Flip, 0f
             );
         }
     }

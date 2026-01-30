@@ -182,17 +182,20 @@ public abstract class Mob : GameObject
 
             timeToTakeDamage = TAKE_DAMAGE_COOLDOWN;
             immortalTime = IMMORTAL_TIME;
-            knockbackVelocity = new Vector2(2f, -0.5f);
+            knockbackVelocity = new Vector2(5f * (GameScene.Instance.Player.Flip == SpriteEffects.None ? 1 : -1), -0.12f);
         }
     }
 
     public void TakeKnockback()
     {
-        knockbackVelocity -= new Vector2(DeltaTime * 5f, DeltaTime * -5f);
-        
+        int knockbackXMod = knockbackVelocity.X > 0 ? 1 : -1;
+
+        knockbackVelocity -= new Vector2(DeltaTime * 5f * knockbackXMod, DeltaTime * -5f);
         Position += knockbackVelocity;
 
-        if (knockbackVelocity.X < 0f)
+        if (knockbackVelocity.X < 0f && knockbackXMod > 0)
+            knockbackVelocity.X = 0f;
+        else if (knockbackVelocity.X > 0f && knockbackXMod < 0)
             knockbackVelocity.X = 0f;
 
         if (knockbackVelocity.Y > 0f)
