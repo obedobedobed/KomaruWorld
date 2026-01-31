@@ -758,4 +758,9 @@ public class Player : GameObject
         foreach (var heart in hearts)
             heart.Draw(spriteBatch);
     }
+
+    public void Respawn()
+    {
+        health = MAX_HEALTH;
+    }
 }

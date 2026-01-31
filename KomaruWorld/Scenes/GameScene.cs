@@ -25,7 +25,7 @@ public class GameScene(ContentManager content, SpriteBatch spriteBatch, Graphics
     public Player Player { get; private set; }
     private KeyboardState lastKeyboard;
     private Texture2D pixel;
-    private GameObject youAreDeadText;
+    private TextButton respawnButton;
 
     private SpriteButton inventoryMenuButton;
     private CraftMenu craftMenu;
@@ -77,9 +77,8 @@ public class GameScene(ContentManager content, SpriteBatch spriteBatch, Graphics
         CraftMenuSize, CallPlayerCraft, closeButtonAtlas);
 
         // UI
-        var youAreDeadTexture = Content.Load<Texture2D>("Sprites/UI/YouAreDead");
-        youAreDeadText = new GameObject(youAreDeadTexture, new Vector2(VIRTUAL_WIDTH / 2 - YouAreDeadTextSize.X / 2,
-        VIRTUAL_HEIGHT / 2 - YouAreDeadTextSize.Y / 2), YouAreDeadTextSize);
+        respawnButton = new TextButton("Respawn", new Vector2(VIRTUAL_WIDTH / 2, VIRTUAL_HEIGHT / 2), Color.White,
+        Color.Yellow, RespawnPlayer);
 
         // Background
         var cloudsAtlas = new Atlas(Content.Load<Texture2D>("Sprites/CloudsAtlas"), CloudSize / BG_MOD);
@@ -100,6 +99,9 @@ public class GameScene(ContentManager content, SpriteBatch spriteBatch, Graphics
         Tile.StaticUpdate(gameTime);
         Background.Update(gameTime);
 
+        if (Player.IsDead)
+            respawnButton.Update(gameTime);
+
         var keyboard = Keyboard.GetState();
 
         // Functions
@@ -116,7 +118,6 @@ public class GameScene(ContentManager content, SpriteBatch spriteBatch, Graphics
 
         if (!SignTile.BlockedInput)
             Player.Update(gameTime);
-
 
         if (Crafting)
             craftMenu.Update(gameTime);
@@ -169,7 +170,7 @@ public class GameScene(ContentManager content, SpriteBatch spriteBatch, Graphics
         // UI (not applying transform matrix)
         SpriteBatch.Begin(samplerState: SamplerState.PointClamp);
 
-        if (Player.InInventory)
+        if (Player.InInventory && !Player.IsDead)
         {
             SpriteBatch.Draw(pixel, new Rectangle(0, 0, VIRTUAL_WIDTH,
             VIRTUAL_HEIGHT), new Color(0, 0, 0, 150));
@@ -203,12 +204,6 @@ public class GameScene(ContentManager content, SpriteBatch spriteBatch, Graphics
         Player.Inventory.DrawHotbar(SpriteBatch);
         Player.DrawHearts(SpriteBatch);
 
-        if (Player.IsDead)
-        {
-            SpriteBatch.Draw(pixel, new Rectangle(0, 0, VIRTUAL_WIDTH, VIRTUAL_HEIGHT), new Color(87, 7, 12, 50));
-            youAreDeadText.Draw(SpriteBatch);
-        }
-
         var mouse = Mouse.GetState();
         var normalizedCursorPos = mouse.NormalizeForWindow();
         var cursorRectangle = new Rectangle(normalizedCursorPos.X, normalizedCursorPos.Y, 1, 1);
@@ -218,7 +213,7 @@ public class GameScene(ContentManager content, SpriteBatch spriteBatch, Graphics
         bool hotbarSlot = false;
         ArmorSlot armorSlotToDescription = null;
 
-        if (Player.InInventory && InventoryMenu == InventoryMenu.Inventory)
+        if (Player.InInventory && InventoryMenu == InventoryMenu.Inventory && !Player.IsDead)
         {
             foreach (var slot in Player.Inventory.Slots)
                 if (slot.Rectangle.Intersects(cursorRectangle) && slot.Item != null)
@@ -246,7 +241,7 @@ public class GameScene(ContentManager content, SpriteBatch spriteBatch, Graphics
                 }
         }
 
-        if (!Player.InInventory)
+        if (!Player.InInventory && !Player.IsDead)
         {
             var cursorWorldRectangle = new Rectangle
             (
@@ -290,18 +285,26 @@ public class GameScene(ContentManager content, SpriteBatch spriteBatch, Graphics
             Color.White, SpriteBatch, TextDrawingMode.Center);
         }
 
-        if (drawDescription)
+        if (drawDescription && !Player.IsDead)
         {
             if (slotToDescription != null)
                 DrawItemDescription(slotToDescription, hotbarSlot);
             else if (armorSlotToDescription != null)
                 DrawItemDescription(armorSlotToDescription);
         }
-
+        
         if (SignTile.BlockedInput)
             foreach (var tile in World.Tiles)
-                if (tile is SignTile sign && sign.Writing)
+                if (tile is SignTile sign && sign.Writing && !Player.IsDead)
                     sign.DrawInputMenu(SpriteBatch, pixel);
+
+        if (Player.IsDead)
+        {
+            SpriteBatch.Draw(pixel, new Rectangle(0, 0, VIRTUAL_WIDTH, VIRTUAL_HEIGHT), new Color(87, 7, 12, 35));
+            Text.Draw("You are dead...", new Vector2(VIRTUAL_WIDTH / 2, 100), Color.White, SpriteBatch,
+            TextDrawingMode.Center, true, Color.Black);
+            respawnButton.Draw(SpriteBatch);
+        }
 
         if (debugMenuOpened)
             DrawDebugMenu();
@@ -514,4 +517,6 @@ public class GameScene(ContentManager content, SpriteBatch spriteBatch, Graphics
     {
         Instance.Player.Craft(Instance.craftMenu.CraftData);
     }
+
+    public static void RespawnPlayer() => Instance.Player.Respawn();
 }
