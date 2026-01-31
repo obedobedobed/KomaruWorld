@@ -55,6 +55,7 @@ public class Player : GameObject
     // Game
     private float deltaTime = 0f;
     private InventoryMenu inventoryMenu;
+    private Vector2 spawnPoint;
     public bool IsDead => health <= 0;
 
     // Hitbox
@@ -168,6 +169,9 @@ public class Player : GameObject
             hearts[i] = new GameObject(heartAtlas, new Vector2(xPos + xAdder, yPos), HeartSize, 0);
             xAdder += HeartSize.X + UI_SPACING;
         }
+
+        // Setuping spawnpoint
+        spawnPoint = position;
     }
 
     public void SetupSFX(SoundEffect place, SoundEffect jump, SoundEffect collect)
@@ -762,5 +766,6 @@ public class Player : GameObject
     public void Respawn()
     {
         health = MAX_HEALTH;
+        Position = spawnPoint;
     }
 }
