@@ -10,13 +10,13 @@ Survival game with Komaru the cat
 4. Open terminal in .csproj file directory
 5. Enter command: `dotnet publish -c Release -r (win-x64/linux-x64/osx-x64) --self-contained=true -p:PublishSingleFile=true -p:PublishTrimmed=true`
 
-# TODO List (29% completed)
+# TODO List (31% completed)
 1. Tiles and items system [V]
 2. Inventory [\*] - 90% completed
 3. Crafting system [*\] - 95% completed
 4. Armor [\*] - 50% completed
-5. Mobs and AI [\*] - 20% completed
-6. Combat system [\*] - 15%
+5. Mobs and AI [\*] - 25% completed
+6. Combat system [\*] - 30%
 7. NPCs and dialogues [X]
 8. Main menu [X]
 9. World creation [X]
